@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="zjunit">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/zapsdtest/zjunit/junit-jupiter-api-5.10.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/zapsdtest/zjunit/apiguardian-api-1.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/zapsdtest/zjunit/junit-jupiter-api-5.13.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/zapsdtest/zjunit/junit-jupiter-params-5.10.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/zapsdtest/zjunit/junit-jupiter-engine-5.13.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/zapsdtest/zjunit/junit-jupiter-engine-5.10.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/zapsdtest/zjunit/junit-platform-console-standalone-1.12.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/zapsdtest/zjunit/opentest4j-1.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/zapsdtest/zjunit/junit-platform-commons-1.12.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
