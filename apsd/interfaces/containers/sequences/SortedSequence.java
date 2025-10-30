@@ -10,7 +10,7 @@ public interface SortedSequence<Data extends Comparable<? super Data>> extends S
   /* ************************************************************************ */
   /* Override specific member functions from MembershipContainer              */
   /* ************************************************************************ */
-    @Override
+    /*@Override
     default boolean Exists(Data data){
         if (data == null) return false;
         long n = Size().ToLong();
@@ -31,13 +31,15 @@ public interface SortedSequence<Data extends Comparable<? super Data>> extends S
             }
         }
         return false;
-    }
+    }*/
+    @Override
+    boolean Exists(Data data);
 
   /* ************************************************************************ */
   /* Override specific member functions from Sequence                         */
   /* ************************************************************************ */
 
-  @Override
+  /*@Override
   default Natural Search(Data data){
         if (data == null) return Natural.Of(-1L);
         long n = Size().ToLong();
@@ -58,5 +60,7 @@ public interface SortedSequence<Data extends Comparable<? super Data>> extends S
             }
         }
         return Natural.Of(-1L);
-  }
+  }*/
+    @Override
+    Natural Search(Data data);
 }
