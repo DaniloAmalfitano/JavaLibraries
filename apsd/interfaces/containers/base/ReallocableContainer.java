@@ -12,10 +12,10 @@ public interface ReallocableContainer extends ClearableContainer,Reallocable { /
   Natural Capacity();
 
   default void Grow() {
-    Realloc(Natural.Of((long)(GROW_FACTOR * this.Capacity().ToLong())));
+    Grow(Natural.ZERO);
   }
   default void Grow(Natural number) {
-    Realloc(Natural.Of(this.Capacity().ToLong() + number.ToLong()));
+    Realloc(Natural.Of((long)(Size().ToLong() + number.ToLong() * GROW_FACTOR)));
   }
 
   default void Shrink(){
@@ -30,12 +30,16 @@ public interface ReallocableContainer extends ClearableContainer,Reallocable { /
   /* ************************************************************************ */
 
   @Override
-  Natural Size();
+  default Natural Size() {
+    return Capacity();
+  }
 
   /* ************************************************************************ */
   /* Override specific member functions from ClearableContainer               */
   /* ************************************************************************ */
 
-  @Override //Non so se devo overridare questa.
-  void Clear();
+  @Override
+  default void Clear(){
+    Realloc(Natural.ZERO);
+  }
 }

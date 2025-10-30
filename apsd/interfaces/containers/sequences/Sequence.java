@@ -10,68 +10,28 @@ public interface Sequence<Data> extends IterableContainer<Data>{ // Must extend 
 
   // GetAt
   default Data GetAt(Natural idx) {
-      if(IsInBound(idx)) {
-          final Box<Data> result = new Box<>(null);
-          final Box<Long> counter = new Box<>(0L);
-
-          ForwardIterator<Data> iterator = this.FIterator();
-          iterator.ForEachForward(data -> {
-              if (counter.Get() == idx.ToLong()) {
-                  result.Set(data);
-                  return true;
-              }
-              counter.Set(counter.Get() + 1);
-              return false;
-          });
-
-          return result.Get();
-      }
-      return null;
+      long index = ExcIfOutOfBound(idx);
+      ForwardIterator<Data> iterator = this.FIterator();
+      iterator.Next(Natural.Of(index));
+      return iterator.GetCurrent();
   }
-
-  /*default Data GetAt(Natural idx) {
-      if(IsInBound(idx)) {
-          ForwardIterator<Data> iterator = this.FIterator();
-          long counter = 0;
-
-          while (!iterator.IsValid()) {
-              if (counter == idx.ToLong()) {
-                  return iterator.GetCurrent();
-              }
-              iterator.Next();
-              counter++;
-          }
-      }
-      return null;
-  }*/
 
   // GetFirst
     default Data GetFirst(){
-      if(Size().ToLong() == 0)
-          throw new IndexOutOfBoundsException("Sequence is empty!");
       return GetAt(Natural.ZERO);
     }
   // GetLast
     default Data GetLast(){
-        if(Size().ToLong() == 0)
-            throw new IndexOutOfBoundsException("Sequence is empty!");
-        return GetAt(Natural.Of(Size().ToLong() - 1));
+        return GetAt(IsEmpty() ? Natural.ZERO : Size().Decrement());
     }
 
   default Natural Search(Data data) {
-        final Box<Natural> index = new Box<>(Natural.ZERO);
-        final Box<Natural> result = new Box<>(null);
-
-        ForwardIterator<Data> iterator = this.FIterator();
-        iterator.ForEachForward(dat -> {
-            if ((data == null && dat == null) || (data != null && data.equals(dat))) {
-                result.Set(index.Get());
-                return true;
-            }
-            index.Set(Natural.Of(index.Get().ToLong() + 1));
-            return false;
-        });
-        return result.Get();
+      final Box<Long> index = new Box<>(-1L);
+      TraverseForward(elem -> {
+          index.Set(index.Get() + 1);
+          return ((data == null && elem == null) || (data != null && data.equals(elem)));
+      });
+      return Natural.Of(index.Get());
   }
 
 
@@ -91,5 +51,4 @@ public interface Sequence<Data> extends IterableContainer<Data>{ // Must extend 
 
   // SubSequence
     Sequence<Data> SubSequence(Natural start, Natural end);
-
 }

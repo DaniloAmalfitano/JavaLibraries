@@ -36,7 +36,7 @@ public interface Stack<Data> extends ClearableContainer, InsertableContainer<Dat
   /* Override specific member functions from ClearableContainer               */
   /* ************************************************************************ */
 
-  @Override
+    @Override
     default void Clear(){
         while(!IsEmpty()){
             Pop();
