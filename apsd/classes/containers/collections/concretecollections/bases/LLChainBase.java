@@ -22,7 +22,7 @@ abstract public class LLChainBase<Data> { // Must implement Chain
 
   // LLChainBase
 
-  // public LLChainBase(TraversableContainer<Data> con) {
+  // public LLChainBase(TraversableContainer<Data> con) { //Se il dato è null non va bene, modificare, questa deve essere una collezione, ma gli passo un cointainer
   //   size.Assign(con.Size());
   //   final Box<Boolean> first = new Box<>(true);
   //   con.TraverseForward(dat -> {
@@ -37,7 +37,7 @@ abstract public class LLChainBase<Data> { // Must implement Chain
   //     return false;
   //   });
   // }
-
+    // abstract protected LLChainBase<Data> newChain(long size, LLNode<Data> headref, LLNode<Data> tailref);
   // NewChain
 
   /* ************************************************************************ */
@@ -61,6 +61,15 @@ abstract public class LLChainBase<Data> { // Must implement Chain
   /* ************************************************************************ */
   /* Override specific member functions from RemovableContainer               */
   /* ************************************************************************ */
+        /*
+    protected class ListFrIterator(ListFRefIterator itr) implements ForwardIterator<Box<LLNode<Data>> {
+    protected ForwardIterator<Box<LLNode<Data>> FrefIterator() {;
+        return new ListFRefIterator();
+      }
+    protected class ListBRefIterator(ListBRefIterator itr) implements BackwardIterator<Box<LLNodeData>> {
+    //Creo un array di riferimenti ai nodi per poter tornare indietro
+      }
+     */
 
   // @Override
   // public boolean Remove(Data dat) {
@@ -103,5 +112,6 @@ abstract public class LLChainBase<Data> { // Must implement Chain
   /* ************************************************************************ */
 
   // ...
+
 
 }
