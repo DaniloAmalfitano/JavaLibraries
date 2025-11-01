@@ -91,27 +91,36 @@ abstract public class LLChainBase<Data> { // Must implement Chain
   /* ************************************************************************ */
   /* Override specific member functions from IterableContainer                */
   /* ************************************************************************ */
-
+    //Per i GetFirst/Last tailred.Get().Get() Dereferenzi due volte
   // ...
 
   /* ************************************************************************ */
   /* Override specific member functions from Sequence                         */
   /* ************************************************************************ */
 
-  // ...
+  // ... SubSequence
 
 
   /* ************************************************************************ */
   /* Override specific member functions from RemovableAtSequence              */
   /* ************************************************************************ */
 
-  // ...
+  // ...//AtNRemove
+    /*Verifico se la posizione esista, se no restituisco un eccezione*, vedo se devo inserire in testa, coda o mezzo
+        if(idx== Size.ToLong()-1) return lastNremove
+        altrimenti forwarditerator
+        box<LLNode<Data>> curr  ecc
+        RemoveFirst
+        verifico se è null, ritorno
+        verifico se la testa è uguale alla coda, metto entrambi a null
+        altrimenti headRef.Set(Headref.Get().GetNext().Get())
+     */
 
   /* ************************************************************************ */
   /* Override specific member functions from Collection                       */
   /* ************************************************************************ */
 
-  // ...
+  // ... La filter è sbagliata //prd = node -> prd=cur.Get();
 
 
 }

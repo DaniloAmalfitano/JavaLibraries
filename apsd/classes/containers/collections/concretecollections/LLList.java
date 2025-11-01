@@ -32,7 +32,9 @@ public class LLList<Data> { // Must extend LLChainBase and implement List
   /* Override specific member functions from MutableSequence                  */
   /* ************************************************************************ */
 
-  // ...
+  // ... List.super.SetAt(index, data), con if dat == null return;
+    // SubSequence(startindex, endindex) return (MutableSequence<Data>) List.super.SubSequence(startindex, endindex);
+    //Nell'insert last, nell'if tailref.IsNull() metti headref.IsNull()
 
   /* ************************************************************************ */
   /* Override specific member functions from InsertableAtSequence             */

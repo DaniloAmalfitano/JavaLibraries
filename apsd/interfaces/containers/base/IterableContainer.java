@@ -10,22 +10,6 @@ public interface IterableContainer<Data> extends TraversableContainer<Data>{ // 
   ForwardIterator<Data> FIterator();
   BackwardIterator<Data> BIterator();
 
-    /*default boolean IsEqual(IterableContainer<Data> iterableC) { //Lavoraci
-        if (iterableC == null) {
-            return false;
-        }
-        ForwardIterator<Data> it1 = this.FIterator();
-        ForwardIterator<Data> it2 = iterableC.FIterator();
-
-        boolean mismatch = it1.ForEachForward(dat -> {
-            if (!it2.IsValid()) {
-                return true;
-            }
-            Data other = it2.DataNNext();
-            return !dat.equals(other);
-        });
-        return !mismatch && !it2.IsValid();
-    }*/
     default boolean IsEqual(IterableContainer<Data> iterableC) {
         if (iterableC == null) return false;
         if (this.Size() != iterableC.Size()) return false;

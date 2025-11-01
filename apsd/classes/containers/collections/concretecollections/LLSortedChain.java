@@ -25,7 +25,7 @@ public class LLSortedChain<Data> { // Must extend LLChainBase and implement Sort
   /* Specific member functions of LLSortedChain                               */
   /* ************************************************************************ */
 
-  // ...
+  // ...//PredFind rifallo usando un iteratore, è più semplice
 
   /* ************************************************************************ */
   /* Override specific member functions from InsertableContainer              */
@@ -62,5 +62,7 @@ public class LLSortedChain<Data> { // Must extend LLChainBase and implement Sort
   /* ************************************************************************ */
 
   // ...
+    //Nella search ragiona mettendo il box all'esterno
+    //In remove occurrences pred = node è sbagliato
 
 }
