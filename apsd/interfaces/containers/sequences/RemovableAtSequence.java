@@ -6,8 +6,8 @@ import apsd.classes.utilities.Natural;
 public interface RemovableAtSequence<Data> extends Sequence<Data>{ // Must extend Sequence
 
   // RemoveAt
-    default void RemoveAt(long index){
-        long idx = ExcIfOutOfBound(Natural.Of(index));
+    default void RemoveAt(Natural index){
+        long idx = ExcIfOutOfBound(index);
         AtNRemove(Natural.Of(idx));
     }
   // AtNRemove
@@ -30,5 +30,4 @@ public interface RemovableAtSequence<Data> extends Sequence<Data>{ // Must exten
     default Data LastNRemove(){
       return AtNRemove(IsEmpty() ? Natural.ZERO : Size().Decrement());
     }
-
 }
