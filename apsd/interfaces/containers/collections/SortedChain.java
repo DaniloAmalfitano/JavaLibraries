@@ -5,34 +5,34 @@ import apsd.interfaces.containers.sequences.SortedSequence;
 
 public interface SortedChain<Data extends Comparable<? super Data>> extends OrderedChain<Data>, SortedSequence<Data>{ // Must extend OrderedChain and SortedSequence
 
-  // SearchPredecessor
-  default Natural SearchPredecessor(Data element) {
-      if (Size().ToLong() == 0) return Natural.ZERO.Decrement();
-      Natural lower = Natural.ZERO;
-      Natural higher = Size();
-      while (lower.compareTo(higher) < 0) {
-          Natural medium = Natural.Of(lower.ToLong() + ((higher.ToLong() - lower.ToLong()) / 2));
-          if (GetAt(medium).compareTo(element) < 0) {
-              lower = medium.Increment();
-          } else {
-              higher = medium;
-          }
-      }
-      return lower.Decrement();
-  }
+    // SearchPredecessor
+    default Natural SearchPredecessor(Data element) {
+        if (Size().ToLong() == 0) return Natural.ZERO.Decrement();
+        Natural lower = Natural.ZERO;
+        Natural higher = Size().Decrement();
+        while (lower.compareTo(higher) <= 0) {
+            Natural medium = Natural.Of(lower.ToLong() + ((higher.ToLong() - lower.ToLong()) / 2));
+            if (GetAt(medium).compareTo(element) < 0) {
+                lower = medium.Increment();
+            } else {
+                higher = medium.Decrement();
+            }
+        }
+        return lower.Decrement();
+    }
 
 
     // SearchSuccessor
     default Natural SearchSuccessor(Data element) {
         if (Size().ToLong() == 0) return Natural.ZERO;
         Natural lower = Natural.ZERO;
-        Natural higher = Size();
-        while (lower.compareTo(higher) < 0) {
+        Natural higher = Size().Decrement();
+        while (lower.compareTo(higher) <= 0) {
             Natural medium = Natural.Of(lower.ToLong() + ((higher.ToLong() - lower.ToLong()) / 2));
             if (GetAt(medium).compareTo(element) <= 0) {
                 lower = medium.Increment();
             } else {
-                higher = medium;
+                higher = medium.Decrement();
             }
         }
         return lower;
@@ -45,9 +45,10 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
   // ...
     @Override
     default Natural Search(Data data) {
+        if (Size().ToLong() == 0) return Natural.Of(-1L);
         Natural lower = Natural.ZERO;
-        Natural higher = Size();
-        while (lower.compareTo(higher) < 0) {
+        Natural higher = Size().Decrement();
+        while (lower.compareTo(higher) <= 0) {
             Natural medium = Natural.Of(lower.ToLong() + ((higher.ToLong() - lower.ToLong()) / 2));
             int cmp = GetAt(medium).compareTo(data);
             if (cmp == 0) {
@@ -55,7 +56,7 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
             } else if (cmp < 0) {
                 lower = medium.Increment();
             } else {
-                higher = medium;
+                higher = medium.Decrement();
             }
         }
         return Natural.Of(-1L);
