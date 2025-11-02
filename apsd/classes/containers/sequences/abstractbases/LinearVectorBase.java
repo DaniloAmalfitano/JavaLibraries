@@ -1,7 +1,7 @@
 package apsd.classes.containers.sequences.abstractbases;
 
-// import apsd.classes.utilities.Natural;
-// import apsd.interfaces.containers.base.TraversableContainer;
+import apsd.classes.utilities.Natural;
+import apsd.interfaces.containers.base.TraversableContainer;
 
 /** Object: Abstract (static) linear vector base implementation. */
 abstract public class LinearVectorBase<Data> { // Must extend VectorBase

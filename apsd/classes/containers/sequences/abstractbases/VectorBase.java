@@ -15,6 +15,9 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
   protected Data[] arr;
 
   // VectorBase
+    public VectorBase() {
+        ArrayAlloc(new Natural(0));
+    }
     public VectorBase(Data[] arr) {
         //if (arr == null) throw new NullPointerException("Array cannot be null!");
         this.arr = arr;
