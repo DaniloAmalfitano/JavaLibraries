@@ -15,6 +15,10 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
   protected Data[] arr;
 
   // VectorBase
+    public VectorBase() {
+        ArrayAlloc(new Natural(0));
+    }
+
     public VectorBase(Data[] arr) {
         //if (arr == null) throw new NullPointerException("Array cannot be null!");
         this.arr = arr;
@@ -23,6 +27,7 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
         if(size == null) throw new NullPointerException("Size cannot be null!");
         ArrayAlloc(size);
     }
+
   // NewVector
     abstract protected VectorBase<Data> NewVector(Data[] arr);
 
@@ -157,11 +162,12 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
     @SuppressWarnings("unchecked")
     public MutableSequence<Data> SubSequence(Natural start, Natural end) {
         if(IsInBound(start) && IsInBound(end) && start.ToLong() <= end.ToLong()) {
-            Natural newSize = Natural.Of(end.ToLong() - start.ToLong());
-            Data[] newArr = (Data[]) (new Object[(int)newSize.ToLong()]);
-            for(int i = 0; i < newSize.ToLong(); i++) {
+            int newSize = (int)(end.ToLong() - start.ToLong());
+            Data[] newArr = (Data[]) (new Object[(int)newSize]);
+            /*for(int i = 0; i < newSize.ToLong(); i++) {
                 newArr[i] = GetAt(Natural.Of(start.ToLong() + i));
-            }
+            }*/
+            System.arraycopy(arr, 0, newArr, 0, newSize);
             return NewVector(newArr);
         }
         return null;
