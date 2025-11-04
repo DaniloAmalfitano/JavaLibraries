@@ -31,20 +31,19 @@ public interface TraversableContainer<Data> extends MembershipContainer<Data> { 
   /* Override specific member functions from Container                        */
   /* ************************************************************************ */
 
-    // Override Size?
-    /*@Override
-    default Natural Size() {
+    @Override
+    default Natural Size(){
         final MutableNatural count = new MutableNatural();
         TraverseForward(_ -> {count.Increment(); return false;});
         return count.ToNatural();
-    }*/
-    @Override
-    Natural Size();
+    }
 
   /* ************************************************************************ */
   /* Override specific member functions from MembershipContainer              */
   /* ************************************************************************ */
 
     @Override
-    boolean Exists(Data data);
+    default boolean Exists(Data element){
+        return this.TraverseForward(elem -> (element == null && elem == null) || (element != null && element.equals(elem)));
+    }
 }

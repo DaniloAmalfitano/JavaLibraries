@@ -84,6 +84,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
         }
         this.size -= howMany.ToLong();
     }
+
     @Override
     public void ShiftRight(Natural pos, Natural howMany){
         if(pos == null) throw new IllegalArgumentException("Position argument is null.");

@@ -72,4 +72,5 @@ public class CircularVector<Data> extends CircularVectorBase<Data>{ // Must exte
             return false;
         });
     }
+
 }

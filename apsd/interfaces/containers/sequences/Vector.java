@@ -29,15 +29,21 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
        }
      }
    }
+   default void ShiftLeft(Natural pos) {
+     ShiftLeft(pos, Natural.ONE);
+   }
+   default void ShiftRight(Natural pos) {
+        ShiftRight(pos, Natural.ONE);
+   }
 
   // ShiftFirstLeft
-    default void ShiftFirstLeft(Natural num) {
-      ShiftLeft(Natural.Of(0), num);
+    default void ShiftFirstLeft() {
+      ShiftLeft(Natural.Of(0), Natural.ONE);
     }
 
   // ShiftLastLeft
-    default void ShiftLastLeft(Natural num) {
-      ShiftLeft(IsEmpty() ? Natural.Of(0) : Size().Decrement(), num);
+    default void ShiftLastLeft() {
+      ShiftLeft(IsEmpty() ? Natural.Of(0) : Size().Decrement(), Natural.ONE);
     }
 
   // ShiftRight
@@ -61,13 +67,13 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
     }
 
   // ShiftFirstRight
-    default void ShiftFirstRight(Natural num) {
-      ShiftRight(Natural.Of(0), num);
+    default void ShiftFirstRight() {
+      ShiftRight(Natural.Of(0), Natural.ONE);
     }
 
   // ShiftLastRight
-    default void ShiftLastRight(Natural num) {
-      ShiftRight(IsEmpty() ? Natural.Of(0) : Size().Decrement(), num);
+    default void ShiftLastRight() {
+      ShiftRight(IsEmpty() ? Natural.Of(0) : Size().Decrement(), Natural.ONE);
     }
 
   // SubVector
