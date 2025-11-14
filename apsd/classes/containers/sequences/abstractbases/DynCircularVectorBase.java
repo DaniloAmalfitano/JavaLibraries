@@ -1,5 +1,6 @@
 package apsd.classes.containers.sequences.abstractbases;
 
+import apsd.classes.containers.sequences.DynCircularVector;
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.TraversableContainer;
 import apsd.interfaces.containers.sequences.DynVector;
@@ -13,12 +14,21 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     public DynCircularVectorBase(){
         super();
     }
+
     public DynCircularVectorBase(long size){
         super();
         this.size = size;
     }
+    public DynCircularVectorBase(TraversableContainer<Data> con){
+        super(con);
+        this.size = con.Size().ToLong();
+    }
 
-  /* ************************************************************************ */
+    public DynCircularVectorBase(Data[] arr) {
+        super(arr);
+        this.size = arr.length;
+    }
+    /* ************************************************************************ */
   /* Override specific member functions from Container                        */
   /* ************************************************************************ */
 

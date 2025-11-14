@@ -16,10 +16,9 @@ public interface Stack<Data> extends ClearableContainer, InsertableContainer<Dat
       return top;
     }
   // SwapTop
-    default void SwapTop(){
-        Data top = Top();
+    default void SwapTop(Data dat){
         Pop();
-        Push(top);
+        Push(dat);
     }
   // TopNSwap
     default Data TopNSwap(Data dat){

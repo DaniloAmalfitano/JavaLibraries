@@ -12,7 +12,7 @@ public interface Sequence<Data> extends IterableContainer<Data>{ // Must extend 
   default Data GetAt(Natural idx) {
       long index = ExcIfOutOfBound(idx);
       ForwardIterator<Data> iterator = this.FIterator();
-      iterator.Next(Natural.Of(index));
+      iterator.Next(index);
       return iterator.GetCurrent();
   }
 

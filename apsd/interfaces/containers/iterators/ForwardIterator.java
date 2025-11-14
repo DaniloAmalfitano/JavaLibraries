@@ -13,8 +13,8 @@ public interface ForwardIterator<Data> extends Iterator<Data>{ // Must extend It
           DataNNext();
       }
     }
-    default void Next(Natural n) {
-      for (long i = 0;i < n.ToLong(); i++) {
+    default void Next(long n) {
+      for (long i = 0;i < n; i++) {
           Next();
       }
     }

@@ -26,6 +26,14 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
         if(size == null) throw new NullPointerException("Size cannot be null!");
         ArrayAlloc(size);
     }
+    public VectorBase(TraversableContainer<Data> con) {
+        if(con == null) throw new NullPointerException("TraversableContainer cannot be null!");
+        ArrayAlloc(con.Size());
+        final MutableNatural index = new MutableNatural();
+        con.TraverseForward(dat ->{
+            SetAt(dat, index.GetNIncrement()); return false;
+        });
+    }
   // NewVector
     abstract protected VectorBase<Data> NewVector(Data[] arr);
 
@@ -46,9 +54,9 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
     }
 
     //IsEmpty
-    /*public boolean IsEmpty() {
+    public boolean IsEmpty() {
       return arr.length == 0;
-    }*/
+    }
 
   /* ************************************************************************ */
   /* Override specific member functions from ResizableContainer               */
@@ -157,16 +165,13 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
 
   // ...
     @Override
-    @SuppressWarnings("unchecked")
     public MutableSequence<Data> SubSequence(Natural start, Natural end) {
-        if(IsInBound(start) && IsInBound(end) && start.ToLong() <= end.ToLong()) {
-            Natural newSize = Natural.Of(end.ToLong() - start.ToLong());
-            Data[] newArr = (Data[]) (new Object[(int)newSize.ToLong()]);
-            for(int i = 0; i < newSize.ToLong(); i++) {
-                newArr[i] = GetAt(Natural.Of(start.ToLong() + i));
-            }
-            return NewVector(newArr);
-        }
-        return null;
+        if(start == null || end == null) throw new NullPointerException("Start or end index cannot be null!");
+        if(start.ToLong() < 0 || end.ToLong() > arr.length || start.ToLong() > end.ToLong())
+            throw new IndexOutOfBoundsException("Start or end index out of bounds!");
+        int newsize = (int)(end.ToLong() - start.ToLong());
+        Data[] newarr = (Data[]) new Object[newsize];
+        System.arraycopy(arr, (int)start.ToLong(), newarr, 0, newsize);
+        return NewVector(newarr);
     }
 }

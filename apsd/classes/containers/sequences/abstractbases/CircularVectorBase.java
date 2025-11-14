@@ -16,7 +16,9 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
     public CircularVectorBase(Data[] arr) {
         super.arr = arr;
     }
-
+    public CircularVectorBase(TraversableContainer<Data> con) {
+        super(con);
+    }
     /* ************************************************************************ */
     /* Override specific member functions from ReallocableContainer             */
     /* ************************************************************************ */
