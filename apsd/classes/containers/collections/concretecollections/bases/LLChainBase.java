@@ -177,10 +177,10 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
     protected class ListFIterator implements MutableForwardIterator<Data> {
         protected final ForwardIterator<Box<LLNode<Data>>> itr;
 
-        protected ListFIterator() {
+        public ListFIterator() {
             itr = FRefIterator();
         }
-        protected ListFIterator(ListFIterator itr) {
+        public ListFIterator(ListFIterator itr) {
             this.itr = itr.itr;
         }
 
@@ -228,10 +228,10 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
     protected class ListBIterator implements MutableBackwardIterator<Data> {
         protected final BackwardIterator<Box<LLNode<Data>>> itr;
 
-        protected ListBIterator() {
+        public ListBIterator() {
             itr = BRefIterator();
         }
-        protected ListBIterator(ListBIterator itr) {
+        public ListBIterator(ListBIterator itr) {
             this.itr = itr.itr;
         }
 
@@ -247,7 +247,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
 
         @Override
         public boolean IsValid() {
-                return itr.IsValid();
+            return itr.IsValid();
         }
 
         @Override
@@ -311,6 +311,20 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
             curr = curr.Get().GetNext();
         }
         return curr.Get().Get();
+    }
+    @Override
+    public Data GetFirst() {
+        if (headref.IsNull()) {
+            throw new IndexOutOfBoundsException("The chain is empty.");
+        }
+        return GetAt(Natural.ZERO);
+    }
+    @Override
+    public Data GetLast() {
+        if (tailref.IsNull()) {
+            throw new IndexOutOfBoundsException("The chain is empty.");
+        }
+        return GetAt(Size().Decrement());
     }
 
     public Sequence<Data> SubSequence(Natural start, Natural end) {
@@ -376,6 +390,14 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
         verifico se la testa è uguale alla coda, metto entrambi a null
         altrimenti headRef.Set(Headref.Get().GetNext().Get())
      */
+    @Override
+    public void RemoveFirst() {
+        AtNRemove(Natural.ZERO);
+    }
+    @Override
+    public void RemoveLast() {
+        AtNRemove(Size().Decrement());
+    }
 
   /* ************************************************************************ */
   /* Override specific member functions from Collection                       */
