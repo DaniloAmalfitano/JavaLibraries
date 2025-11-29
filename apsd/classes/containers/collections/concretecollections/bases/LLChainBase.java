@@ -314,17 +314,16 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
     }
     @Override
     public Data GetFirst() {
-        if (headref.IsNull()) {
+        if (headref.IsNull())
             throw new IndexOutOfBoundsException("The chain is empty.");
-        }
-        return GetAt(Natural.ZERO);
+        return headref.Get().Get();
     }
     @Override
     public Data GetLast() {
         if (tailref.IsNull()) {
             throw new IndexOutOfBoundsException("The chain is empty.");
         }
-        return GetAt(Size().Decrement());
+        return tailref.Get().Get();
     }
 
     public Sequence<Data> SubSequence(Natural start, Natural end) {

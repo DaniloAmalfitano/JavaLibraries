@@ -13,7 +13,6 @@ public class CircularVector<Data> extends CircularVectorBase<Data>{ // Must exte
   }
 
   public CircularVector(Natural inisize){
-
       super.ArrayAlloc(inisize);
   }
 

@@ -64,7 +64,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
         if(data == null){
             return;
         }
-        if(headref.IsNull()) throw new IndexOutOfBoundsException();
+        if(headref.IsNull()) throw new IndexOutOfBoundsException("Cannot be empty!");
         headref.Get().Set(data);
     }
     @Override

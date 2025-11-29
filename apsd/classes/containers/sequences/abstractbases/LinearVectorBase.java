@@ -27,14 +27,32 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data>{ // Must e
   /* ************************************************************************ */
 
   // ...
-    @Override
+    /*@Override
     public void Realloc(Natural size){
         if(size == null) throw new NullPointerException("Size cannot be null!");
         Data[] oldArr = arr;
         ArrayAlloc(size);
         int minSize = size.compareTo(Natural.Of(arr.length)) < 0 ? (int)size.ToLong() : arr.length;
         System.arraycopy(oldArr, 0, arr, 0, minSize);
+    }*/
+
+    @Override
+    public void Realloc(Natural size) {
+        if (size == null) throw new NullPointerException("Size cannot be null!");
+        Data[] oldArr = arr;
+        ArrayAlloc(size);
+
+        int newCap = arr.length;
+        int requested = (int) size.ToLong();
+        int srcLen = (oldArr != null) ? oldArr.length : 0;
+
+        int copyLen = Math.min(srcLen, Math.min(requested, newCap));
+
+        if (copyLen > 0) {
+            System.arraycopy(oldArr, 0, arr, 0, copyLen);
+        }
     }
+
 
   /* ************************************************************************ */
   /* Override specific member functions from Sequence                         */

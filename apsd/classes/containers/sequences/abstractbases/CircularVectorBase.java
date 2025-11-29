@@ -23,17 +23,65 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
     /* Override specific member functions from ReallocableContainer             */
     /* ************************************************************************ */
 
-    // ...
-    @Override
+    /*@Override
     public void Realloc(Natural size) {
         if (size == null) throw new NullPointerException("Size cannot be null!");
         Data[] oldarr = arr;
+        long requested = size.ToLong();
         super.ArrayAlloc(size);
-        long minSize = size.ToLong() < oldarr.length ? size.ToLong() : oldarr.length;
-        for (int i = 0; i < minSize; i++) {
-            arr[i] = oldarr[(int) (start + i) % oldarr.length];
+
+        if (oldarr == null || oldarr.length == 0) {
+            start = 0L;
+            return;
         }
+        int srcLen = oldarr.length;
+        int destLen = arr.length;
+        int copyLen = (int) Math.min(Math.min(requested, srcLen), destLen);
+
+        for (int i = 0; i < copyLen; i++) {
+            arr[i] = oldarr[(int) ((start + i) % srcLen)];
+        }
+
+        start = 0L;
+    }*/
+    /*@Override
+    public void Realloc(Natural size) {
+        if (size == null) throw new NullPointerException("Size cannot be null!");
+        Data[] oldArr = arr;
+        long oldStart = start;
+        long currentSize = Size().ToLong();
+
+        super.ArrayAlloc(size);
+
+        if (oldArr == null) return;
+        int limit = (int) Math.min(currentSize, size.ToLong()); // copy only existing elements
+
+        for (int i = 0; i < limit; i++) {
+            arr[i] = oldArr[(int) ((oldStart + i) % oldArr.length)];
+        }
+        start = 0L;
+    }*/
+    @Override
+    public void Realloc(Natural size) {
+        if (size == null) throw new NullPointerException("Size cannot be null!");
+        Data[] oldArr = arr;
+        long oldStart = start;
+
+        super.ArrayAlloc(size);
+
+        if (oldArr == null || oldArr.length == 0) {
+            start = 0L;
+            return;
+        }
+        int limit = (int) Math.min(oldArr.length, size.ToLong());
+
+        for (int i = 0; i < limit; i++) {
+            arr[i] = oldArr[(int) ((oldStart + i) % oldArr.length)];
+        }
+        start = 0L;
     }
+
+
 
     /* ************************************************************************ */
     /* Override specific member functions from Sequence                         */

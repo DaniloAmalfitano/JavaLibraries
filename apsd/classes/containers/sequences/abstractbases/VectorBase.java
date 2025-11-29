@@ -19,7 +19,7 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
         ArrayAlloc(new Natural(0));
     }
     public VectorBase(Data[] arr) {
-        //if (arr == null) throw new NullPointerException("Array cannot be null!");
+        if (arr == null) throw new NullPointerException("Array cannot be null!");
         this.arr = arr;
     }
     public VectorBase(Natural size) {

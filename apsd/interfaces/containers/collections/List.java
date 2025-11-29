@@ -7,8 +7,8 @@ import apsd.classes.utilities.Natural;
 public interface List<Data> extends MutableSequence<Data>, InsertableAtSequence<Data>, Chain<Data>{ // Must extend MutableSequence, InsertableAtSequence, and Chain
 
   // SubList
-    default void SubList(Natural start,Natural end){
-        SubSequence(start,end);
+    default List<Data> SubList(Natural start,Natural end){
+        return (List<Data>)SubSequence(start,end);
     }
     default boolean Insert(Data data){
         InsertAt(data,Size());

@@ -73,14 +73,14 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
   /* ************************************************************************ */
 
   // ...
-    @Override
-    public void Expand(Natural newSize){
-        if(newSize == null) throw new NullPointerException("Size cannot be null!");
-        if(newSize.ToLong() > arr.length){
-            Realloc(newSize);
-        }
-        size = newSize.ToLong();
-    }
+      @Override
+      public void Expand(Natural increment) {
+          if (increment == null) throw new IllegalArgumentException("Increment argument is null.");
+          long newCapacity = this.Capacity().ToLong() + increment.ToLong();
+          super.Realloc(new Natural(newCapacity));
+          this.size += increment.ToLong();  // ← Add this line to increase size
+      }
+
     @Override
     public void Reduce(Natural newSize){
         if(newSize == null) throw new NullPointerException("Size cannot be null!");
