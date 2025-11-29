@@ -35,7 +35,7 @@ public interface Collection<Data> extends  ClearableContainer, InsertableContain
     @Override
     default void Clear(){
         while(!IsEmpty()){
-            Filter(_ -> false);
+            Filter(data -> false);
         }
     }
 }
