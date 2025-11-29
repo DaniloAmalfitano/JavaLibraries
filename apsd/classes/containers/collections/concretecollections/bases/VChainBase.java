@@ -66,10 +66,10 @@ abstract public class VChainBase<Data> implements Chain<Data>{ // Must implement
   /* Override specific member functions from IterableContainer                */
   /* ************************************************************************ */
 
-  public ForwardIterator<Data> ForwardIterator() {
+  public ForwardIterator<Data> FIterator() {
       return vec.FIterator();
   }
-    public BackwardIterator<Data> BackwardIterator() {
+    public BackwardIterator<Data> BIterator() {
         return vec.BIterator();
     }
 
