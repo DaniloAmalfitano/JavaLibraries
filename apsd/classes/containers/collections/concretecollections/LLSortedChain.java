@@ -233,7 +233,7 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
                 len = len - newLen -1;
             } else {
                 len = newLen;
-                index += + newLen + 1;
+                index += newLen + 1;
             }
         }
         return (index == size.ToLong()) ? null : Natural.Of(index);
