@@ -60,17 +60,16 @@ public class WQueue<Data> implements Queue<Data>{ // Must implement Queue
     @Override
     public void Dequeue(){
         if (!lst.IsEmpty()) {
-            lst.RemoveAt(Natural.ZERO);
+            lst.RemoveFirst();
         }
     }
     @Override
     public Data HeadNDequeue(){
-        if (lst.IsEmpty()) {
-            return null;
+        if (!lst.IsEmpty()) {
+            Data data = lst.AtNRemove(Natural.ZERO);
+            return data;
         }
-        Data data = lst.GetAt(Natural.ZERO);
-        lst.RemoveAt(Natural.ZERO);
-        return data;
+        return null;
     }
     @Override
     public void Enqueue(Data data) {

@@ -42,42 +42,64 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
             return false;
         }
         Natural pos = Natural.ZERO;
-        while (pos.compareTo(vec.Size()) < 0 && vec.GetAt(pos).compareTo(data) < 0) {
+        while (pos.compareTo(vec.Size()) < 0) {
+            Data currentElement = vec.GetAt(pos);
+            if (currentElement == null) {
+                break;
+            }
+            int cmp = currentElement.compareTo(data);
+            if (cmp == 0) {
+                return false; // Duplicate found
+            }
+            if (cmp > 0) {
+                break; // Found insertion point
+            }
             pos = pos.Increment();
         }
         vec.InsertAt(data, pos);
         return true;
     }
 
-  /* ************************************************************************ */
+    /* ************************************************************************ */
   /* Override specific member functions from Chain                            */
   /* ************************************************************************ */
 
     @Override
     public boolean InsertIfAbsent(Data data) {
-        if (data == null) {
-            return false;
-        }
+        if (data == null) return false;
         Natural pos = Natural.ZERO;
-        while (pos.compareTo(vec.Size()) < 0 && vec.GetAt(pos).compareTo(data) < 0) {
+        while (pos.compareTo(vec.Size()) < 0) {
+            Data currentElement = vec.GetAt(pos);
+            if (currentElement == null || currentElement.compareTo(data) >= 0) {
+                if (currentElement != null && currentElement.compareTo(data) == 0) return false;
+                vec.InsertAt(data, pos);
+                return true;
+            }
             pos = pos.Increment();
-        }
-        if (pos.compareTo(vec.Size()) < 0 && vec.GetAt(pos).compareTo(data) == 0) {
-            return false;
         }
         vec.InsertAt(data, pos);
         return true;
     }
+
+
     @Override
     public void RemoveOccurrences(Data data) {
         if (data == null) {
             return;
         }
         Natural pos = Natural.ZERO;
-        while (pos.compareTo(vec.Size()) < 0 && vec.GetAt(pos).compareTo(data) < 0) {
+        while (pos.compareTo(vec.Size()) < 0) {
+            Data currentElement = vec.GetAt(pos);
+            if (currentElement == null || currentElement.compareTo(data) >= 0) {
+                break;
+            }
             pos = pos.Increment();
         }
-        while (pos.compareTo(vec.Size()) < 0 && vec.GetAt(pos).compareTo(data) == 0) {
+        while (pos.compareTo(vec.Size()) < 0) {
+            Data currentElement = vec.GetAt(pos);
+            if (currentElement == null || currentElement.compareTo(data) != 0) {
+                break;
+            }
             vec.RemoveAt(pos);
         }
     }

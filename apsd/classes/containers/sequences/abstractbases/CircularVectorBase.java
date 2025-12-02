@@ -22,45 +22,6 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
     /* ************************************************************************ */
     /* Override specific member functions from ReallocableContainer             */
     /* ************************************************************************ */
-
-    /*@Override
-    public void Realloc(Natural size) {
-        if (size == null) throw new NullPointerException("Size cannot be null!");
-        Data[] oldarr = arr;
-        long requested = size.ToLong();
-        super.ArrayAlloc(size);
-
-        if (oldarr == null || oldarr.length == 0) {
-            start = 0L;
-            return;
-        }
-        int srcLen = oldarr.length;
-        int destLen = arr.length;
-        int copyLen = (int) Math.min(Math.min(requested, srcLen), destLen);
-
-        for (int i = 0; i < copyLen; i++) {
-            arr[i] = oldarr[(int) ((start + i) % srcLen)];
-        }
-
-        start = 0L;
-    }*/
-    /*@Override
-    public void Realloc(Natural size) {
-        if (size == null) throw new NullPointerException("Size cannot be null!");
-        Data[] oldArr = arr;
-        long oldStart = start;
-        long currentSize = Size().ToLong();
-
-        super.ArrayAlloc(size);
-
-        if (oldArr == null) return;
-        int limit = (int) Math.min(currentSize, size.ToLong()); // copy only existing elements
-
-        for (int i = 0; i < limit; i++) {
-            arr[i] = oldArr[(int) ((oldStart + i) % oldArr.length)];
-        }
-        start = 0L;
-    }*/
     @Override
     public void Realloc(Natural size) {
         if (size == null) throw new NullPointerException("Size cannot be null!");
@@ -81,76 +42,60 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
         start = 0L;
     }
 
-
-
     /* ************************************************************************ */
     /* Override specific member functions from Sequence                         */
     /* ************************************************************************ */
 
     // ...
-    /*@Override
-    public void ShiftLeft(Natural index, Natural howMany) {
-        if (index == null) throw new NullPointerException("Index cannot be null!");
-        if (howMany == null) throw new NullPointerException("HowMany cannot be null!");
-
-        long idx = ExcIfOutOfBound(index);
-        long size = Size().ToLong();
-        long len = howMany.ToLong();
-        if (len <= 0 || idx >= size) return;
-
-        if (len > size - idx) len = size - idx;
-
-        for (long i = idx; i + len < size; i++) {
-            SetAt(GetAt(Natural.Of(i + len)), Natural.Of(i));
-        }
-        for (long i = size - len; i < size; i++) {
-            SetAt(null, Natural.Of(i));
-        }
-    }*/
-
     @Override
-    public void ShiftLeft(Natural index, Natural howMany) {
-        long idx  = ExcIfOutOfBound(index);
+    public void ShiftLeft(Natural position, Natural num) {
+        long index = ExcIfOutOfBound(position);
         long size = Size().ToLong();
-        long len = howMany.ToLong();
-        len = (len <= size) ? len : size - idx;
-        if(idx < size - (idx + len)){
-            long iniwtr = idx - 1 + len;
-            long wrt = iniwtr;
-            for(long rdr = wrt - len; rdr <=0; rdr--,wrt--){
-                Natural natrdr = Natural.Of(wrt);
+        long len = num.ToLong();
+        len = Math.min(len, size - index);
+        if (index < size - (index + len)) {
+            long iniwrt = index - 1 + len;
+            long wrt = iniwrt;
+            for (long rdr = index - 1; rdr >= 0; rdr--, wrt--) {
+                Natural natrdr = Natural.Of(rdr);
                 SetAt(GetAt(natrdr), Natural.Of(wrt));
                 SetAt(null, natrdr);
             }
-            for(; iniwtr - wrt < len; wrt--){
+            for (; iniwrt - wrt < len; wrt--) {
                 SetAt(null, Natural.Of(wrt));
             }
-            start = (start+len)%size;
+            start = (start + len) % arr.length;
+        } else {
+            long wrt = index;       // Dove scriviamo
+            long rdr = index + len; // Da dove leggiamo
+            while (rdr < size) {
+                SetAt(GetAt(Natural.Of(rdr)), Natural.Of(wrt));
+                rdr++;
+                wrt++;
+            }
+            while (wrt < size) {
+                SetAt(null, Natural.Of(wrt));
+                wrt++;
+            }
         }
-        else
-            super.ShiftLeft(index, howMany);
     }
     @Override
-    public void ShiftRight(Natural index, Natural howMany) {
-        long idx  = ExcIfOutOfBound(index);
+    public void ShiftRight(Natural position, Natural num) {
+        long index = ExcIfOutOfBound(position);
         long size = Size().ToLong();
-        long len = howMany.ToLong();
-        len = (len <= size) ? len : size - idx;
-        if(idx < size - (idx + len)){
-            long iniwtr = size - 1 - len - (size - (idx + len));
-            long wrt = iniwtr;
-            for(long rdr = wrt + len; rdr < size; rdr++,wrt++){
-                Natural natrdr = Natural.Of(wrt);
-                SetAt(GetAt(natrdr), Natural.Of(wrt));
-                SetAt(null, natrdr);
-            }
-            for(; wrt - iniwtr < len; wrt++){
-                SetAt(null, Natural.Of(wrt));
-            }
-            start = (start - len + size)%size;
+        long len = num.ToLong();
+        if (arr == null || arr.length == 0) return;
+        for (long i = size - 1; i >= index; i--) {
+            long wrt = i + len;
+            Natural natRdr = Natural.Of(i);
+            Data dataToMove = GetAt(natRdr);
+            long physicalWrtIndex = (start + wrt) % arr.length;
+            arr[(int) physicalWrtIndex] = dataToMove;
         }
-        else
-            super.ShiftRight(index, howMany);
+        for (long i = index; i < index + len; i++) {
+            long physicalNullIndex = (start + i) % arr.length;
+            arr[(int) physicalNullIndex] = null;
+        }
     }
 
     /* ************************************************************************ */
@@ -168,15 +113,17 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
     @Override
     public Data GetAt(Natural index) {
         if (index == null) throw new NullPointerException("Index cannot be null!");
-        if (IsInBound(index))
-            return arr[(int) ((start + index.ToLong()) % arr.length)];
-        return null;
+        if (index.ToLong() < 0 || index.ToLong() >= arr.length) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong());
+        }
+        return arr[(int) ((start + index.ToLong()) % arr.length)];
     }
+
     @Override
     public void SetAt(Data value, Natural index) {
         if (index == null) throw new NullPointerException("Index cannot be null!");
-        if (IsInBound(index))
-            arr[(int) ((start + index.ToLong()) % arr.length)] = value;
+        long idx = ExcIfOutOfBound(index);
+        arr[(int) ((start + idx) % arr.length)] = value;
     }
     @Override
     public void ArrayAlloc(Natural size) {

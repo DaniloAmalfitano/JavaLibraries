@@ -28,10 +28,10 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
   }
   public WSetBase(Chn chn, TraversableContainer<Data> con){
       this.chn = chn;
-        con.TraverseForward(dat -> {
-            this.chn.InsertIfAbsent(dat);
-            return false;
-        });
+    con.TraverseForward(dat -> {
+        this.chn.InsertIfAbsent(dat);
+        return false;
+    });
   }
 
   abstract protected void ChainAlloc();
@@ -58,6 +58,10 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
   /* Override specific member functions from InsertableContainer              */
   /* ************************************************************************ */
 
+    /*@Override
+    public boolean Insert(Data data) {
+        return chn.InsertIfAbsent(data);
+    }*/
     @Override
     public boolean Insert(Data data) {
         return chn.InsertIfAbsent(data);
@@ -120,7 +124,7 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
         return this;
     }*/ //Non ho fatto io questo metodo, non me ne prendo i meriti
 
-    @Override
+    /*@Override
     public void Intersection(Set<Data> other){
       if(other != null){
         this.chn.Clear();
@@ -130,5 +134,11 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
           return false;
         });
       }
-    }//Questo l'ho fatto io, infatti fa cagare
+    }*///Questo l'ho fatto io, infatti fa cagare
+    @Override
+    public void Intersection(Set<Data> other) {
+        if (other == null) return;
+        chn.Filter(other::Exists);
+    }
+
 }

@@ -13,19 +13,28 @@ public interface DynVector<Data> extends ResizableContainer,InsertableAtSequence
   // ...
     @Override
     default void InsertAt(Data data, Natural index){
-        long idx = ExcIfOutOfBound(index);
+        long idx = index.ToLong();
+        if (idx < 0 || idx > Size().ToLong()) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + Size().ToLong() + "!");
+        }
         if(idx == Size().ToLong()){
             Expand();
             SetAt(data, index);
         } else {
-            Expand();
+            //Expand();
             ShiftRight(Natural.Of(idx), Natural.Of(1));
             SetAt(data, index);
         }
     }
     @Override
     default Data AtNRemove(Natural index){
-        return null;
+        long idx = ExcIfOutOfBound(index);
+        Data data = GetAt(Natural.Of(idx));
+        if (idx < Size().ToLong() - 1)
+            ShiftLeft(Natural.Of(idx + 1), Natural.Of(1));
+        Shrink();
+        Reduce();
+        return data;
     }
 
   /* ************************************************************************ */

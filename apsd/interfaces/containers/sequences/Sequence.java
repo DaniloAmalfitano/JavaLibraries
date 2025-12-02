@@ -18,21 +18,30 @@ public interface Sequence<Data> extends IterableContainer<Data>{ // Must extend 
 
   // GetFirst
     default Data GetFirst(){
+      if(IsEmpty()) throw new IndexOutOfBoundsException("Sequence is empty!");
       return GetAt(Natural.ZERO);
     }
   // GetLast
     default Data GetLast(){
-        return GetAt(IsEmpty() ? Natural.ZERO : Size().Decrement());
+      if(IsEmpty()) throw new IndexOutOfBoundsException("Sequence is empty!");
+      return GetAt(Size().Decrement());
     }
 
-  default Natural Search(Data data) {
-      final Box<Long> index = new Box<>(-1L);
-      TraverseForward(elem -> {
-          index.Set(index.Get() + 1);
-          return ((data == null && elem == null) || (data != null && data.equals(elem)));
-      });
-      return Natural.Of(index.Get());
-  }
+    default Natural Search(Data data) {
+        long index = 0;
+        ForwardIterator<Data> itr = FIterator();
+        while (itr.IsValid()) {
+            Data elem = itr.GetCurrent();
+            boolean match = (data == null && elem == null) || (data != null && data.equals(elem));
+            if (match) {
+                return Natural.Of(index);
+            }
+
+            itr.Next();
+            index++;
+        }
+        return null;
+    }
 
 
   // IsInBound

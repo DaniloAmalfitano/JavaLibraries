@@ -74,6 +74,7 @@ public class VList<Data> extends VChainBase<Data> implements List<Data>{ // Must
           return;
       }
       vec.InsertAt(data, index); //Dubbio immenso, probabilmente sbagliato
+
   }
 
   @Override

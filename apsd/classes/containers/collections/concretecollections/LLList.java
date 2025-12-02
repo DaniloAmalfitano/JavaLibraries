@@ -76,44 +76,51 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
         tailref.Get().Set(data);
     }
     @Override
-    public MutableSequence<Data> SubSequence(Natural startindex, Natural endindex){
+    public MutableSequence<Data> SubSequence(Natural startindex, Natural endindex) {
         return (MutableSequence<Data>) super.SubSequence(startindex, endindex);
     }
     @Override
     public void InsertAt(Data data, Natural index){
         if(data == null) return;
         long idx = index.ToLong();
-        if(idx < 0 || idx > size.ToLong()) throw new IndexOutOfBoundsException();
-        if(idx == Size().ToLong())
-            InsertLast(data);
-        else{
-            ForwardIterator<Box<LLNode<Data>>> itr = FRefIterator();
-            itr.Next(idx);
-            Box<LLNode<Data>> currentRef = itr.GetCurrent();
-            currentRef.Set(new LLNode<>(data, currentRef.Get()));
+        if(idx < 0 || idx > size.ToLong()) throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + size.ToLong() + "!");
+        if(idx == size.ToLong()) {
+            LLNode<Data> newNode = new LLNode<>(data, null);
+            if (headref.IsNull()) {
+                headref.Set(newNode);
+                tailref.Set(newNode);
+            } else {
+                tailref.Get().SetNext(newNode);
+                tailref.Set(newNode);
+            }
             size.Increment();
+            return;  // ✅ ESCE SUBITO
         }
+        Box<LLNode<Data>> curr = headref;
+        Box<LLNode<Data>> prev = new Box<>();
+        for (long i = 0; i < idx; i++) {
+            prev.Set(curr.Get());
+            curr = curr.Get().GetNext();
+        }
+        LLNode<Data> newNode = new LLNode<>(data, curr.Get());
+        if (prev.IsNull()) {
+            headref.Set(newNode);
+        } else {
+            prev.Get().SetNext(newNode);
+        }
+        size.Increment();
     }
     @Override
     public void InsertFirst(Data data){
         if(data == null) return;
-        LLNode<Data> newNode = new LLNode<>(data, headref.Get());
-        headref.Set(newNode);
-        if(tailref.IsNull())
-            tailref.Set(newNode);
-        size.Increment();
+        if (IsEmpty()) throw new IndexOutOfBoundsException();
+        InsertAt(data, Natural.Of(0));
     }
     @Override
     public void InsertLast(Data data){
         if(data == null) return;
-        LLNode<Data> newNode = new LLNode<>(data, null);
-        if(headref.IsNull()){
-            tailref.Set(newNode);
-        }
-        else{
-            tailref.Get().SetNext(newNode);
-        }
-        size.Increment();
+        if (IsEmpty()) throw new IndexOutOfBoundsException();
+        InsertAt(data, Size().Decrement());
     }
 
 

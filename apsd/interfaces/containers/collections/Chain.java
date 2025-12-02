@@ -6,14 +6,7 @@ import apsd.interfaces.containers.sequences.RemovableAtSequence;
 public interface Chain<Data> extends RemovableAtSequence<Data>, Set<Data>{ // Must extend RemovableAtSequence
 
   // InsertIfAbsent
-    default boolean InsertIfAbsent(Data data){
-        if(!Exists(data)){
-            Insert(data);
-            return true;
-        }
-        return false;
-    }
-
+  default boolean InsertIfAbsent(Data dat){ return !this.Exists(dat) && this.Insert(dat);}
 
   // RemoveOccurrences
     default void RemoveOccurrences(Data data){

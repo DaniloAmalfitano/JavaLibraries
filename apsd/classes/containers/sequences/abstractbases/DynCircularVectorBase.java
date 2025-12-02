@@ -35,7 +35,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   // ...
     @Override
     public Natural Size() {
-        return new Natural(size);
+        return Natural.Of(size);
     }
 
   /* ************************************************************************ */
@@ -74,39 +74,23 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
         if(decrement == null) throw new IllegalArgumentException("Decrement argument is null.");
         Realloc(new Natural((decrement.ToLong() > this.Capacity().ToLong()) ? 0L :
                 Math.max((this.Capacity().ToLong() - decrement.ToLong()), this.size))); //Assicura che non riduca mai sotto la size attuale
-    }
+        this.size -= decrement.ToLong();
+  }
   /* ************************************************************************ */
   /* Specific member functions of Vector                                      */
   /* ************************************************************************ */
 
   // ...
     @Override
-    public void Realloc(Natural newCapacity) {
-        super.Realloc(newCapacity);
-    }
-    public void ShiftLeft(Natural pos, Natural howMany){
-        if(pos == null) throw new IllegalArgumentException("Position argument is null.");
-        if(howMany == null) throw new IllegalArgumentException("HowMany argument is null.");
-        if(pos.ToLong() + howMany.ToLong() > this.size){
-            throw new IndexOutOfBoundsException("ShiftLeft range exceeds vector size.");
-        }
-        for(long i = pos.ToLong(); i < this.size - howMany.ToLong(); i++){
-            this.SetAt(this.GetAt(new Natural(i + howMany.ToLong())),new Natural(i));
-        }
-        this.size -= howMany.ToLong();
+    public void ShiftLeft(Natural position, Natural num) {
+      super.ShiftLeft(position, num);
+      Reduce(num);
     }
 
     @Override
-    public void ShiftRight(Natural pos, Natural howMany){
-        if(pos == null) throw new IllegalArgumentException("Position argument is null.");
-        if(howMany == null) throw new IllegalArgumentException("HowMany argument is null.");
-        if(this.size + howMany.ToLong() > this.Capacity().ToLong()){
-            throw new IndexOutOfBoundsException("ShiftRight exceeds vector capacity.");
-        }
-        for(long i = this.size - 1L; i >= pos.ToLong(); i--){
-            this.SetAt(this.GetAt(new Natural(i)),new Natural(i + howMany.ToLong()));
-        }
-        this.size += howMany.ToLong();
+    public void ShiftRight(Natural position, Natural num) {
+        Expand(num);
+        super.ShiftRight(position, num);
     }
     @Override
     public void ArrayAlloc(Natural arraySize){

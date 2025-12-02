@@ -41,70 +41,65 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
     protected LLNode<Data> PredFind(Data dat){
         if(dat == null) return null;
         Box<LLNode<Data>> curr = headref;
-        long len = Size().ToLong();
+        long lenght = Size().ToLong();
         LLNode<Data> pred = null;
-        while(len > 0){
-            long newLen = (len-1) / 2;
+        while(lenght > 0) {
+            long newLenght = (lenght - 1) / 2;
             Box<LLNode<Data>> next = curr;
-            for(long idx = 0; idx < newLen; idx++){
+            for (long idx = 0; idx < newLenght; idx++) {
                 next = next.Get().GetNext();
             }
-            if(next.Get().Get().compareTo(dat) < 0){
+            if (next.Get().Get().compareTo(dat) < 0) {
                 pred = next.Get();
                 curr = next.Get().GetNext();
-                len = len - newLen - 1;
+                lenght = lenght - newLenght - 1;
             } else {
-                len = newLen;
+                lenght = newLenght;
             }
         }
         return pred;
     }
 
-    protected LLNode<Data> PredPredFind(Data dat){
-        if(dat == null) return null;
-        Box<LLNode<Data>> curr = headref;
+    public LLNode<Data> PredPredFind(Data dat) {
+        if (dat == null) return null;
+        ForwardIterator<Box<LLNode<Data>>> itr = FRefIterator();
         long len = Size().ToLong();
-        LLNode<Data> pred = null;
-        LLNode<Data> predpred = null;
-        while(len > 0){
-            long newLen = (len-1) / 2;
-            Box<LLNode<Data>> next = curr;
-            for(long idx = 0; idx < newLen; idx++){
-                next = next.Get().GetNext();
-            }
-            if(next.Get().Get().compareTo(dat) < 0){
-                predpred = pred;
-                pred = next.Get();
-                curr = next.Get().GetNext();
-                len = len - newLen - 1;
+        LLNode<Data> predPred = null;
+        while (len > 1) {
+            long newLen = (len - 1) / 2;
+            ForwardIterator<Box<LLNode<Data>>> next = new ListFRefIterator((ListFRefIterator) itr);
+            next.Next(newLen - 1);
+            LLNode<Data> temp = next.GetCurrent().Get();
+            if (next.GetCurrent().Get().Get().compareTo(dat) < 0) {
+                predPred = temp;
+                itr = next;
+                len = len - newLen;
             } else {
                 len = newLen;
             }
         }
-        return predpred;
+        return predPred;
     }
-    protected LLNode<Data> PredSuccFind(Data dat){
+
+    public LLNode<Data> PredSuccFind(Data dat){
         if(dat == null) return null;
-        Box<LLNode<Data>> curr = headref;
+        ForwardIterator<Box<LLNode<Data>>> itr = FRefIterator();
         long len = Size().ToLong();
-        LLNode<Data> pred = null;
-        LLNode<Data> succ = null;
-        while(len > 0){
-            long newLen = (len-1) / 2;
-            Box<LLNode<Data>> next = curr;
-            for(long idx = 0; idx < newLen; idx++){
-                next = next.Get().GetNext();
-            }
-            if(next.Get().Get().compareTo(dat) < 0){
-                pred = next.Get();
-                curr = next.Get().GetNext();
-                len = len - newLen - 1;
+        LLNode<Data> predSucc = null;
+        while(len > 1){
+            long newLen = len / 2;
+            ForwardIterator<Box<LLNode<Data>>> next = new ListFRefIterator((ListFRefIterator) itr);
+            next.Next(newLen - 1);
+            LLNode<Data> temp = next.GetCurrent().Get();
+            if(next.GetCurrent().Get().Get().compareTo(dat) <= 0){
+                predSucc = temp;
+                itr = next;
+                len = len - newLen;
             } else {
-                succ = next.Get();
                 len = newLen;
             }
         }
-        return succ;
+        return predSucc;
     }
 
 
@@ -118,7 +113,8 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
         if(dat == null) return false;
         LLNode<Data> pred = PredFind(dat);
         Box<LLNode<Data>> curr = (pred == null) ? headref : pred.GetNext();
-        LLNode<Data> newNode = new LLNode<>(dat, curr.Get());
+        LLNode<Data> node = curr.Get();
+        LLNode<Data> newNode = new LLNode<>(dat, node);
         curr.Set(newNode);
         if(tailref.Get() == pred){
             tailref.Set(newNode);
@@ -243,22 +239,18 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
   /* ************************************************************************ */
   /* Override specific member functions from OrderedSet                       */
   /* ************************************************************************ */
-    @Override
-    public boolean InsertIfAbsent(Data dat){
-        if(dat == null) return false;
-        LLNode<Data> pred = PredFind(dat);
-        Box<LLNode<Data>> curr = (pred == null) ? headref : pred.GetNext();
-        if(!curr.IsNull() && curr.Get().Get().equals(dat)){
-            return false;
-        }
-        LLNode<Data> newNode = new LLNode<>(dat, curr.Get());
-        curr.Set(newNode);
-        if(tailref.Get() == pred){
-            tailref.Set(newNode);
-        }
-        size.Increment();
-        return true;
-    }
+  @Override
+  public boolean InsertIfAbsent(Data dat) {
+      if(dat == null) return false;
+      Natural index = Search(dat);
+      if(index == null){
+          Insert(dat);
+          return true;
+      } else {
+          return false;
+      }
+  }
+
 
   /* ************************************************************************ */
   /* Override specific member functions from Chain                            */

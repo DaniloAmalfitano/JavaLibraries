@@ -8,7 +8,7 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
   // ShiftLeft
     @Override
     default Natural Size() {
-      return ReallocableContainer.super.Size();
+      return MutableSequence.super.Size();
     }
 
    default void ShiftLeft(Natural pos, Natural num) {
@@ -46,25 +46,26 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
       ShiftLeft(IsEmpty() ? Natural.Of(0) : Size().Decrement(), Natural.ONE);
     }
 
-  // ShiftRight
-    default void ShiftRight(Natural pos, Natural num) {
-      long idx = ExcIfOutOfBound(pos);
-      long size = Size().ToLong();
-      long len = num.ToLong();
-      len = (len <= size - idx) ? len : size - idx;
-      if (len > 0) {
-        long endwrt = size - 1;
-        long wrt = endwrt;
-        for (long rdr = wrt - len; rdr >= idx; rdr--, wrt--) {
-          Natural natrdr = Natural.Of(rdr);
-          SetAt(GetAt(natrdr), Natural.Of(wrt));
-          SetAt(null, natrdr);
-        }
-        for (; endwrt - wrt < len; wrt--) {
-          SetAt(null, Natural.Of(wrt));
-        }
+  default void ShiftRight(Natural pos, Natural num) {
+    long idx = ExcIfOutOfBound(pos);
+    long size = Size().ToLong();
+    long len = num.ToLong();
+    len = (len <= size - idx) ? len : size - idx;
+
+    if (len > 0) {
+      long iniwrt = size - 1;
+      long wrt = iniwrt;
+      for (long rdr = wrt - len; rdr >= idx; rdr--, wrt--) {
+        Natural natrdr = Natural.Of(rdr);
+        SetAt(GetAt(natrdr), Natural.Of(wrt));
+        SetAt(null, natrdr);
+      }
+
+      for (long i = idx; i < idx + len; i++) {
+        SetAt(null, Natural.Of(i));
       }
     }
+  }
 
   // ShiftFirstRight
     default void ShiftFirstRight() {
@@ -93,6 +94,6 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
   // ...
     @Override
     default boolean IsEmpty() {
-      return ReallocableContainer.super.IsEmpty();
+      return MutableSequence.super.IsEmpty();
     }
 }

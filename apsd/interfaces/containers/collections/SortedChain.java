@@ -43,24 +43,26 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
   /* ************************************************************************ */
 
   // ...
-    @Override
-    default Natural Search(Data data) {
-        if (Size().ToLong() == 0) return Natural.Of(-1L);
-        Natural lower = Natural.ZERO;
-        Natural higher = Size().Decrement();
-        while (lower.compareTo(higher) <= 0) {
-            Natural medium = Natural.Of(lower.ToLong() + ((higher.ToLong() - lower.ToLong()) / 2));
-            int cmp = GetAt(medium).compareTo(data);
-            if (cmp == 0) {
-                return medium;
-            } else if (cmp < 0) {
-                lower = medium.Increment();
-            } else {
-                higher = medium.Decrement();
-            }
-        }
-        return Natural.Of(-1L);
-    }
+  @Override
+  default Natural Search(Data data) {
+      if (data == null || IsEmpty()) {
+          return null;
+      }
+      Natural lower = Natural.ZERO;
+      Natural higher = Size().Decrement();
+      while (lower.compareTo(higher) <= 0) {
+          Natural medium = Natural.Of(lower.ToLong() + ((higher.ToLong() - lower.ToLong()) / 2));
+          int cmp = GetAt(medium).compareTo(data);
+          if (cmp == 0) {
+              return medium;
+          } else if (cmp < 0) {
+              lower = medium.Increment();
+          } else {
+              higher = medium.Decrement();
+          }
+      }
+      return null;
+  }
 
   /* ************************************************************************ */
   /* Override specific member functions from Set                              */
@@ -89,10 +91,14 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
   // ...
     @Override
     default Data Min(){
+        if(IsEmpty())
+            return null;
          return GetAt(Natural.ZERO);
     }
     @Override
     default Data Max(){
+        if(IsEmpty())
+            return null;
          return GetAt(Size().Decrement());
     }
     @Override
@@ -116,10 +122,10 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
          return max;
     }
     @Override
-    default Data Predecessor(Data data){
+    default Data Predecessor(Data data) {
         Natural index = SearchPredecessor(data);
-        if (index.compareTo(Natural.ZERO.Decrement()) > 0)
-            return GetAt(index);
+        if (index == null) return null;
+        if (index.ToLong() >= 0 && index.compareTo(Size()) < 0) return GetAt(index);
         return null;
     }
     @Override
