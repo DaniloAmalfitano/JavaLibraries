@@ -11,30 +11,26 @@ public interface DynVector<Data> extends ResizableContainer,InsertableAtSequence
   /* ************************************************************************ */
 
   // ...
+  @Override
+  default void InsertAt(Data element, Natural idx) {
+      if (element == null) throw new NullPointerException("Element cannot be null");
+      if (idx == null) throw new NullPointerException("Index cannot be null");
+      long index = idx.ToLong();
+      long size  = Size().ToLong();
+      long cap   = Capacity().ToLong();
+      if (index < 0 || index > size) throw new IndexOutOfBoundsException("Index out of bounds for insert: " + index + "; Size: " + size + "!");
+      if (size + 1 > cap) Grow();
+      ShiftRight(Natural.Of(index), Natural.ONE);
+      SetAt(element, Natural.Of(index));
+  }
     @Override
-    default void InsertAt(Data data, Natural index){
-        long idx = index.ToLong();
-        if (idx < 0 || idx > Size().ToLong()) {
-            throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + Size().ToLong() + "!");
+    default Data AtNRemove(Natural index) {
+        if(index.ToLong() < 0 || index.ToLong() >= Size().ToLong()){
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong() + "; Size: " + Size().ToLong() + "!");
         }
-        if(idx == Size().ToLong()){
-            Expand();
-            SetAt(data, index);
-        } else {
-            //Expand();
-            ShiftRight(Natural.Of(idx), Natural.Of(1));
-            SetAt(data, index);
-        }
-    }
-    @Override
-    default Data AtNRemove(Natural index){
-        long idx = ExcIfOutOfBound(index);
-        Data data = GetAt(Natural.Of(idx));
-        if (idx < Size().ToLong() - 1)
-            ShiftLeft(Natural.Of(idx + 1), Natural.Of(1));
-        Shrink();
-        Reduce();
-        return data;
+        Data old = GetAt(index);
+        ShiftLeft(index, Natural.ONE);
+        return old;
     }
 
   /* ************************************************************************ */
@@ -50,15 +46,15 @@ public interface DynVector<Data> extends ResizableContainer,InsertableAtSequence
   // ...
     @Override
     default void ShiftLeft(Natural pos, Natural howMany){
-        /*if(howMany.ToLong() == 0)
-            return;*/
+        if(howMany.ToLong() == 0)
+            return;
         Vector.super.ShiftLeft(pos, howMany);
+        Reduce(howMany);
     }
     @Override
     default void ShiftRight(Natural pos, Natural howMany){
         if(howMany.ToLong() == 0)
             return;
-
         long idx = ExcIfOutOfBound(pos);
         if(idx + howMany.ToLong() > Size().ToLong())
             Expand(howMany);

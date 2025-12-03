@@ -94,7 +94,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
                 tailref.Set(newNode);
             }
             size.Increment();
-            return;  // ✅ ESCE SUBITO
+            return;
         }
         Box<LLNode<Data>> curr = headref;
         Box<LLNode<Data>> prev = new Box<>();

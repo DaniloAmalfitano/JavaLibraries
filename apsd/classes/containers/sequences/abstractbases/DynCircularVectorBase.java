@@ -72,10 +72,13 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     @Override
     public void Reduce(Natural decrement) {
         if(decrement == null) throw new IllegalArgumentException("Decrement argument is null.");
-        Realloc(new Natural((decrement.ToLong() > this.Capacity().ToLong()) ? 0L :
-                Math.max((this.Capacity().ToLong() - decrement.ToLong()), this.size))); //Assicura che non riduca mai sotto la size attuale
-        this.size -= decrement.ToLong();
-  }
+        long actualDecrement = Math.min(decrement.ToLong(), this.size);
+        long newSize = this.size - actualDecrement;
+        long newCapacity = Math.max(this.Capacity().ToLong() - decrement.ToLong(), newSize);
+        newCapacity = Math.max(newCapacity, 0L);
+        Realloc(new Natural(newCapacity));
+        this.size = newSize;
+    }
   /* ************************************************************************ */
   /* Specific member functions of Vector                                      */
   /* ************************************************************************ */

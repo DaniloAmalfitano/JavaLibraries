@@ -36,6 +36,11 @@ test: $(TestCls) $(APSDCls)
 runtest: test
 	$(JavaVM) -jar $(JUnitC) execute --scan-class-path --details tree \
 		--class-path .
+# MODIFICA con nome completo
+runtest1: test
+	$(JavaVM) -jar $(JUnitC) execute --scan-class-path --details verbose \
+		--class-path . \
+		--include-classname "zapsdtest.VectorITest"
 
 # Build groups with a single javac invocation
 $(MainCls): $(MainSrc) $(APSDCls)

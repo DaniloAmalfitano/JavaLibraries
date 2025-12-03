@@ -18,25 +18,23 @@ public interface SortedSequence<Data extends Comparable<? super Data>> extends S
   /* Override specific member functions from Sequence                         */
   /* ************************************************************************ */
 
-  @Override
-  default Natural Search(Data data){
-        long n = Size().ToLong();
-        if (n == 0) return null;
-
-        long lower = 0;
-        long higher = n - 1;
-
-        while (lower <= higher) {
-            long mid = (lower + higher)/2;
-            Data midVal = GetAt(Natural.Of(mid));
-            int compare = data.compareTo(midVal);
-            if (compare == 0) return Natural.Of(mid);
-            if (compare < 0) {
-                higher = mid - 1;
+    @Override
+    default Natural Search(Data data){
+        if (data == null) return null;
+        long high = Size().ToLong();
+        long low = 0;;
+        while (low < high) {
+            long mid = low + (high - low) / 2;
+            Data midData = GetAt(Natural.Of(mid));
+            int cmp = midData.compareTo(data);
+            if (cmp < 0) {
+                low = mid + 1;
+            } else if (cmp > 0) {
+                high = mid;
             } else {
-                lower = mid + 1;
+                return Natural.Of(mid);
             }
         }
         return null;
-  }
+    }
 }

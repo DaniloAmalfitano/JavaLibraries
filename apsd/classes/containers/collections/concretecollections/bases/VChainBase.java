@@ -46,14 +46,18 @@ abstract public class VChainBase<Data> implements Chain<Data>{ // Must implement
     }
     @Override
     public boolean Remove(Data dat) {
-        if (dat == null)
+        if (dat == null) {
             return false;
-        Natural pos = vec.Search(dat);
-        if (pos != null) {
-            vec.ShiftLeft(pos);
-            return true;
         }
-        return false;
+        if (Size().IsZero()) {
+            return false;
+        }
+        Natural pos = vec.Search(dat);
+        if (pos == null) {
+            return false;
+        }
+        vec.ShiftLeft(pos);
+        return true;
     }
 
   /* ************************************************************************ */
@@ -92,18 +96,29 @@ abstract public class VChainBase<Data> implements Chain<Data>{ // Must implement
   /* ************************************************************************ */
 
   public Data AtNRemove(Natural index) {
+      if(Size().IsZero()) return null;
       return vec.AtNRemove(index);
   }
   public void RemoveFirst() {
+      if (Size().IsZero()) {
+          return;
+      }
       vec.RemoveFirst();
   }
   public void RemoveLast() {
+      if (Size().IsZero()) {
+          return;
+      }
       vec.RemoveLast();
   }
   public Data FirstNRemove() {
+      if (Size().IsZero()) {
+          return null;
+      }
       return vec.FirstNRemove();
   }
     public Data LastNRemove() {
+        if (Size().IsZero()) return null;
         return vec.LastNRemove();
     }
 

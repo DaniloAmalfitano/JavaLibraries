@@ -150,92 +150,98 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
     @Override
     public Natural Search(Data dat){
         if(dat == null) return null;
-        Box<LLNode<Data>> curr = headref;
-        long lenght = Size().ToLong();
-        long index = 0;
-        while(lenght > 0) {
-            lenght = lenght / 2;
-            Box<LLNode<Data>> next = curr;
-            for (long idx = 0; idx < lenght; idx++) {
-                next = next.Get().GetNext();
-            }
-            Data elem = next.Get().Get();
-            if (elem.compareTo(dat) == 0) {
-                return Natural.Of(index + lenght);
-            } else if (elem.compareTo(dat) < 0) {
-                curr = next;
-                index += lenght;
+        long low = 0;
+        long high = Size().ToLong() - 1;
+        while(low <= high){
+            long mid = low + (high - low) / 2;
+            Data elem = GetAt(Natural.Of(mid));
+            int cmp = elem.compareTo(dat);
+
+            if(cmp == 0){
+                return Natural.Of(mid);
+            } else if(cmp < 0){
+                low = mid + 1;
+            } else {
+                high = mid - 1;
             }
         }
         return null;
     }
 
+
   /* ************************************************************************ */
   /* Override specific member functions from SortedSequence                   */
   /* ************************************************************************ */
 
-    /*@Override
-    public Natural SearchPredecessor(Data dat){
-        if(dat == null) return null;
-        LLNode<Data> pred = PredFind(dat);
-        if(pred == null) return null;
-        Box<LLNode<Data>> curr = headref;
-        long index = 0;
-        while(curr.Get() != pred){
-            curr = curr.Get().GetNext();
-            index++;
-        }
-        return Natural.Of(index);
-    }*/
     @Override
-    public Natural SearchPredecessor(Data dat){
-        if(dat == null) return null;
+    public Natural SearchPredecessor(Data data) {
+        if (data == null || headref.IsNull()) return null;
         Box<LLNode<Data>> curr = headref;
-        long len = Size().ToLong();
-        long index = -1;
-        while(len > 0){
-            long newLen = (len - 1) / 2;
+        long len = size.ToLong();
+        long index = -1L;
+
+        while (len > 0 && !curr.IsNull()) {
+            long step = (len - 1) / 2;
             Box<LLNode<Data>> next = curr;
-            for(long i = 0; i < newLen; i++){
-                next = next.Get().GetNext();
+            for (long i = 0; i < step; i++) {
+                if (next.IsNull()) break;
+                LLNode<Data> node = next.Get();
+                if (node == null) { next = new Box<>(); break; }
+                next = node.GetNext();
             }
-            Data elem = next.Get().Get();
-            if(elem.compareTo(dat) < 0){
-                curr = next.Get().GetNext();
-                index += newLen + 1;
-                len = len - newLen -1;
-            } else {
-                len = newLen;
-            }
+
+            if (next.IsNull()) break;
+            LLNode<Data> node = next.Get();
+            if (node == null) break;
+
+            int cmp = node.Get().compareTo(data);
+            if (cmp < 0) {
+                Box<LLNode<Data>> afterBox = node.GetNext();
+                curr = afterBox.IsNull() ? new Box<>() : afterBox;
+                index += step + 1;
+                len = len - (step + 1);
+            } else len = step;
         }
-        return (index == -1) ? null : Natural.Of(index);
+
+        return (index >= 0) ? Natural.Of(index) : null;
     }
 
     @Override
-    public Natural SearchSuccessor(Data dat){
-        if(dat == null) return null;
+    public Natural SearchSuccessor(Data data) {
+        if (data == null || headref.IsNull()) return null;
         Box<LLNode<Data>> curr = headref;
-        long len = Size().ToLong();
-        long index = len;
-        while(len > 0){
-            long newLen = (len - 1) / 2;
+        long len = size.ToLong();
+        long baseIndex = 0L;
+        long result = -1L;
+
+        while (len > 0 && !curr.IsNull()) {
+            long step = (len - 1) / 2;
             Box<LLNode<Data>> next = curr;
-            for(long i = 0; i < newLen; i++){
-                next = next.Get().GetNext();
+            for (long i = 0; i < step; i++) {
+                if (next.IsNull()) break;
+                LLNode<Data> node = next.Get();
+                if (node == null) { next = new Box<>(); break; }
+                next = node.GetNext();
             }
-            Data elem = next.Get().Get();
-            if(elem.compareTo(dat) <= 0){
-                curr = next.Get().GetNext();
-                len = len - newLen -1;
+
+            if (next.IsNull()) break;
+            LLNode<Data> node = next.Get();
+            if (node == null) break;
+
+            int cmp = node.Get().compareTo(data);
+            if (cmp > 0) {
+                result = baseIndex + step;
+                len = step;
             } else {
-                len = newLen;
-                index += newLen + 1;
+                Box<LLNode<Data>> afterBox = node.GetNext();
+                curr = afterBox.IsNull() ? new Box<>() : afterBox;
+                baseIndex += step + 1;
+                len = len - (step + 1);
             }
         }
-        return (index == size.ToLong()) ? null : Natural.Of(index);
+
+        return (result >= 0) ? Natural.Of(result) : null;
     }
-
-
   /* ************************************************************************ */
   /* Override specific member functions from OrderedSet                       */
   /* ************************************************************************ */

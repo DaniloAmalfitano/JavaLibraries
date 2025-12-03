@@ -58,10 +58,6 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
   /* Override specific member functions from InsertableContainer              */
   /* ************************************************************************ */
 
-    /*@Override
-    public boolean Insert(Data data) {
-        return chn.InsertIfAbsent(data);
-    }*/
     @Override
     public boolean Insert(Data data) {
         return chn.InsertIfAbsent(data);
@@ -102,43 +98,10 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
   /* ************************************************************************ */
   /* Override specific member functions from Set                              */
   /* ************************************************************************ */
-    /*
-    public Set<Data> Intersection(Set<Data> set1, Set<Data> set2) {
-        this.chn.Clear();
-        ForwardIterator<Data> it1 = set1.FIterator();
-        while (it1.IsValid()) {
-            Data d = it1.DataNNext();
-            boolean found = false;
-            ForwardIterator<Data> it2 = set2.FIterator();
-            while (it2.IsValid()) {
-                Data e = it2.DataNNext();
-                if ((d == null && e == null) || (d != null && d.equals(e))) {
-                    found = true;
-                    break;
-                }
-            }
-            if (found) {
-                this.chn.InsertIfAbsent(d);
-            }
-        }
-        return this;
-    }*/ //Non ho fatto io questo metodo, non me ne prendo i meriti
 
-    /*@Override
-    public void Intersection(Set<Data> other){
-      if(other != null){
-        this.chn.Clear();
-        other.TraverseForward(elem -> {
-          if(other.Exists(elem))
-            this.chn.InsertIfAbsent(elem);
-          return false;
-        });
-      }
-    }*///Questo l'ho fatto io, infatti fa cagare
     @Override
     public void Intersection(Set<Data> other) {
-        if (other == null) return;
-        chn.Filter(other::Exists);
+        chn.Intersection(other);
     }
 
 }

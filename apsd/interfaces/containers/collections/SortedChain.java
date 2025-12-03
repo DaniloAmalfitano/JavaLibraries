@@ -103,11 +103,15 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
     }
     @Override
     default void RemoveMin(){
+        if(IsEmpty())
+            return;
          RemoveAt(Natural.ZERO);
     }
     @Override
     default void RemoveMax(){
-         RemoveAt(Size().Decrement());
+        if (IsEmpty())
+            return;
+        RemoveAt(Size().Decrement());
     }
     @Override
     default Data MinNRemove(){
@@ -148,12 +152,12 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
             RemoveAt(index);
     }
     @Override
-    default Data PredecessorNRemove(Data data){
-        Natural index = SearchPredecessor(data);
-        if (index.compareTo(Natural.ZERO.Decrement()) > 0) {
-            Data pred = GetAt(index);
-            RemoveAt(index);
-            return pred;
+    default Data PredecessorNRemove(Data data) {
+        Natural predIdx = SearchPredecessor(data);
+        if (predIdx != null){
+            Data predData = GetAt(predIdx);
+            RemoveAt(predIdx);
+            return predData;
         }
         return null;
     }

@@ -41,18 +41,17 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
         if (data == null) {
             return false;
         }
+
         Natural pos = Natural.ZERO;
         while (pos.compareTo(vec.Size()) < 0) {
             Data currentElement = vec.GetAt(pos);
             if (currentElement == null) {
+                break; // logical end
+            }
+            int cmp = data.compareTo(currentElement);
+            if (cmp <= 0) {
+                // for Insert: insert before first element >= data
                 break;
-            }
-            int cmp = currentElement.compareTo(data);
-            if (cmp == 0) {
-                return false; // Duplicate found
-            }
-            if (cmp > 0) {
-                break; // Found insertion point
             }
             pos = pos.Increment();
         }
@@ -61,19 +60,28 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
     }
 
     /* ************************************************************************ */
-  /* Override specific member functions from Chain                            */
-  /* ************************************************************************ */
+    /* Override specific member functions from Chain                            */
+    /* ************************************************************************ */
 
+    // Set-like: do not insert if already present
     @Override
     public boolean InsertIfAbsent(Data data) {
-        if (data == null) return false;
+        if (data == null) {
+            return false;
+        }
+
         Natural pos = Natural.ZERO;
         while (pos.compareTo(vec.Size()) < 0) {
             Data currentElement = vec.GetAt(pos);
-            if (currentElement == null || currentElement.compareTo(data) >= 0) {
-                if (currentElement != null && currentElement.compareTo(data) == 0) return false;
-                vec.InsertAt(data, pos);
-                return true;
+            if (currentElement == null) {
+                break; // logical end
+            }
+            int cmp = data.compareTo(currentElement);
+            if (cmp == 0) {
+                return false; // already present
+            }
+            if (cmp < 0) {
+                break; // insert before currentElement
             }
             pos = pos.Increment();
         }
@@ -81,23 +89,33 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
         return true;
     }
 
-
     @Override
     public void RemoveOccurrences(Data data) {
         if (data == null) {
             return;
         }
+
         Natural pos = Natural.ZERO;
+        // find first element >= data
         while (pos.compareTo(vec.Size()) < 0) {
             Data currentElement = vec.GetAt(pos);
-            if (currentElement == null || currentElement.compareTo(data) >= 0) {
+            if (currentElement == null) {
+                return; // no more data
+            }
+            int cmp = data.compareTo(currentElement);
+            if (cmp <= 0) {
                 break;
             }
             pos = pos.Increment();
         }
+
+        // remove consecutive == data
         while (pos.compareTo(vec.Size()) < 0) {
             Data currentElement = vec.GetAt(pos);
-            if (currentElement == null || currentElement.compareTo(data) != 0) {
+            if (currentElement == null) {
+                break;
+            }
+            if (data.compareTo(currentElement) != 0) {
                 break;
             }
             vec.RemoveAt(pos);

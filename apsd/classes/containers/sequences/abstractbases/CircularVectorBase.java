@@ -24,23 +24,30 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
     /* ************************************************************************ */
     @Override
     public void Realloc(Natural size) {
-        if (size == null) throw new NullPointerException("Size cannot be null!");
+        if (size == null) {
+            throw new NullPointerException("Size cannot be null!");
+        }
         Data[] oldArr = arr;
         long oldStart = start;
-
+        long oldLogicalSize = (arr == null) ? 0L : Size().ToLong();
         super.ArrayAlloc(size);
-
+        long newCapacity = arr.length;
+        start = 0L;
         if (oldArr == null || oldArr.length == 0) {
-            start = 0L;
             return;
         }
-        int limit = (int) Math.min(oldArr.length, size.ToLong());
-
-        for (int i = 0; i < limit; i++) {
-            arr[i] = oldArr[(int) ((oldStart + i) % oldArr.length)];
+        long effectiveCopyCount = Math.min(oldLogicalSize, newCapacity);
+        if (effectiveCopyCount == 0) {
+            return;
         }
-        start = 0L;
+        int copyCount = (int) effectiveCopyCount;
+        for (int i = 0; i < copyCount; i++) {
+            int oldIdx = (int) ((oldStart + i) % oldArr.length);
+            arr[i] = oldArr[oldIdx];
+        }
     }
+
+
 
     /* ************************************************************************ */
     /* Override specific member functions from Sequence                         */

@@ -15,7 +15,6 @@ public interface Chain<Data> extends RemovableAtSequence<Data>, Set<Data>{ // Mu
         }
     }
 
-
   // SubChain
     default Chain<Data> SubChain(Natural start, Natural end){
         return (Chain<Data>) SubSequence(start, end);

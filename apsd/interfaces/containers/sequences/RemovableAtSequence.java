@@ -7,18 +7,26 @@ public interface RemovableAtSequence<Data> extends Sequence<Data>{ // Must exten
 
   // RemoveAt
     default void RemoveAt(Natural index){
-        long idx = ExcIfOutOfBound(index);
-        AtNRemove(Natural.Of(idx));
+        if(index.ToLong() < 0 || index.ToLong() >= Size().ToLong()){
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong() + "; Size: " + Size().ToLong() + "!");
+        }
+        AtNRemove(Natural.Of(index.ToLong()));
     }
   // AtNRemove
     Data AtNRemove (Natural index);
 
   // RemoveFirst
     default void RemoveFirst(){
+      if(IsEmpty()){
+        throw new IndexOutOfBoundsException("Cannot remove from empty sequence!");
+      }
       AtNRemove(Natural.ZERO);
     }
   // FirstNRemove
     default Data FirstNRemove(){
+      if(IsEmpty()){
+        throw new IndexOutOfBoundsException("Cannot remove from empty sequence!");
+      }
       return AtNRemove(Natural.ZERO);
     }
 

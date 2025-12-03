@@ -16,24 +16,24 @@ public interface Set<Data> extends Collection<Data>{ // Must extend Collection
     }
 
   // Difference
-    default void Difference(Set<Data> other){
-      if(other == null) return;
-      other.TraverseForward(elem -> {
-          this.Remove(elem);
-          return false;
-      });
+  default void Difference(Set<Data> set){
+    if(set == null) return;
+    set.TraverseForward(dat->{
+      if (dat == null) {
+        Remove(null);
+      } else {
+        while (Exists(dat)) {
+          Remove(dat);
+        }
+      }
+      return false;
+    });
   }
 
   // Intersection
-    default void Intersection(Set<Data> other){
-      if(other != null){
-        this.TraverseForward(elem -> {
-          if(!other.Exists(elem))
-            Remove(elem);
-          return false;
-        });
-      }
-    }
+  default void Intersection(Set<Data> set){
+    Filter(set::Exists);
+  }
 
   /* ************************************************************************ */
   /* Override specific member functions from IterableContainer                */

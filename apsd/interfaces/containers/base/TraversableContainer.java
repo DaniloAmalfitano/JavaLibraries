@@ -14,13 +14,13 @@ public interface TraversableContainer<Data> extends MembershipContainer<Data> { 
   // TraverseBackward
     boolean TraverseBackward(Predicate<Data> pred);
 
-  default <Acc> Acc FoldForward(Accumulator<Data, Acc> fun, Acc ini) {
-      final Box<Acc> acc = new Box<>(ini);
-      if (fun != null) TraverseForward(dat -> { acc.Set(fun.Apply(dat, acc.Get())); return false; });
-      return acc.Get();
-  }
+    default <Acc> Acc FoldForward(Accumulator<Data, Acc> fun, Acc ini) {
+        final Box<Acc> acc = new Box<>(ini);
+        if (fun != null) TraverseForward(dat -> { acc.Set(fun.Apply(dat, acc.Get())); return false; });
+        return acc.Get();
+    }
 
-  // FoldBackward
+    // FoldBackward
     default <Acc> Acc FoldBackward(Accumulator<Data, Acc> fun, Acc ini) {
         final Box<Acc> acc = new Box<>(ini);
         if (fun != null) TraverseBackward(dat -> { acc.Set(fun.Apply(dat, acc.Get())); return false; });

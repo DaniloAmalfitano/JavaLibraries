@@ -401,29 +401,29 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   }*/
   // AtNRemove
   @Override
-  public Data AtNRemove(Natural pos) {
-      long idx = ExcIfOutOfBound(pos);
-      Box<LLNode<Data>> curr = headref;
-      Box<LLNode<Data>> prev = new Box<>();
-      for (long i = 0; i < idx; i++) {
-          prev.Set(curr.Get());
-          curr = curr.Get().GetNext();
-      }
-      Data removedData = curr.Get().Get();
-      if (prev.IsNull()) {
-          headref.Set(curr.Get().GetNext().Get());
-          if (headref.IsNull()) {
-              tailref.Set(null);
-          }
-      } else {
+  public Data AtNRemove(Natural index) {
+      long idx = index.ToLong();
+      if (idx < 0 || idx >= size.ToLong()) throw new IndexOutOfBoundsException("Index out of bounds: " + idx);
 
-          prev.Get().SetNext(curr.Get().GetNext().Get());
-          if (curr.Get() == tailref.Get()) {
-              tailref.Set(prev.Get());
+      final Box<Data> removed = new Box<>();
+      final Box<Long> curidx = new Box<>(0L);
+      final Box<LLNode<Data>> prd = new Box<>();
+
+      FRefIterator().ForEachForward(cur -> {
+          LLNode<Data> node = cur.Get();
+          if (curidx.Get() == idx) {
+              removed.Set(node.Get());
+              cur.Set(node.GetNext().Get());
+              if (tailref.Get() == node) { tailref.Set(prd.Get()); }
+              size.Decrement();
+              return true;
           }
-      }
-      size.Decrement();
-      return removedData;
+          prd.Set(node);
+          curidx.Set(curidx.Get() + 1);
+          return false;
+      });
+
+      return removed.Get();
   }
 
 
