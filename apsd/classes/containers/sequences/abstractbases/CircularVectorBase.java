@@ -27,22 +27,27 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
         if (size == null) {
             throw new NullPointerException("Size cannot be null!");
         }
+        if(arr == null) {
+            super.ArrayAlloc(size);
+            start = 0L;
+            return;
+        }
         Data[] oldArr = arr;
         long oldStart = start;
-        long oldLogicalSize = (arr == null) ? 0L : Size().ToLong();
+        long oldLogicalSize = Size().ToLong();
+        int oldCapacity = oldArr.length;
         super.ArrayAlloc(size);
-        long newCapacity = arr.length;
+        int newCapacity = (arr == null) ? 0 : arr.length;
         start = 0L;
-        if (oldArr == null || oldArr.length == 0) {
+        if (oldLogicalSize == 0) {
             return;
         }
-        long effectiveCopyCount = Math.min(oldLogicalSize, newCapacity);
-        if (effectiveCopyCount == 0) {
+        if (newCapacity == 0) {
             return;
         }
-        int copyCount = (int) effectiveCopyCount;
+        int copyCount = (int) Math.min(oldLogicalSize, newCapacity);
         for (int i = 0; i < copyCount; i++) {
-            int oldIdx = (int) ((oldStart + i) % oldArr.length);
+            int oldIdx = (int) ((oldStart + i) % oldCapacity);
             arr[i] = oldArr[oldIdx];
         }
     }
@@ -73,8 +78,8 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
             }
             start = (start + len) % arr.length;
         } else {
-            long wrt = index;       // Dove scriviamo
-            long rdr = index + len; // Da dove leggiamo
+            long wrt = index;
+            long rdr = index + len;
             while (rdr < size) {
                 SetAt(GetAt(Natural.Of(rdr)), Natural.Of(wrt));
                 rdr++;
@@ -134,6 +139,9 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
     }
     @Override
     public void ArrayAlloc(Natural size) {
+        if( size == null) {
+            throw new NullPointerException("Size cannot be null!");
+        }
         super.ArrayAlloc(size);
         start = 0L;
     }

@@ -111,16 +111,31 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
         size.Increment();
     }
     @Override
-    public void InsertFirst(Data data){
-        if(data == null) return;
-        if (IsEmpty()) throw new IndexOutOfBoundsException();
-        InsertAt(data, Natural.Of(0));
+    public void InsertFirst(Data data) {
+        if (data == null) throw new NullPointerException("Data cannot be null!");
+        LLNode<Data> node = new LLNode<>(data);
+        if (headref.IsNull()) {
+            headref.Set(node);
+            tailref.Set(node);
+        } else {
+            node.SetNext(headref.Get());
+            headref.Set(node);
+        }
+        size.Increment();
     }
+
     @Override
-    public void InsertLast(Data data){
-        if(data == null) return;
-        if (IsEmpty()) throw new IndexOutOfBoundsException();
-        InsertAt(data, Size().Decrement());
+    public void InsertLast(Data data) {
+        if (data == null) throw new NullPointerException("Data cannot be null!");
+        LLNode<Data> node = new LLNode<>(data);
+        if (tailref.IsNull()) {
+            headref.Set(node);
+            tailref.Set(node);
+        } else {
+            tailref.Get().SetNext(node);
+            tailref.Set(node);
+        }
+        size.Increment();
     }
 
 

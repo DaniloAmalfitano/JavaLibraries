@@ -7,9 +7,13 @@ import apsd.classes.utilities.Natural;
 public interface List<Data> extends MutableSequence<Data>, InsertableAtSequence<Data>, Chain<Data>{ // Must extend MutableSequence, InsertableAtSequence, and Chain
 
   // SubList
-    default List<Data> SubList(Natural start,Natural end){
-        return (List<Data>)SubSequence(start,end);
-    }
+  default List<Data> SubList(Natural start, Natural end) {
+      long startIndex = ExcIfOutOfBound(start);
+      long endIndex = ExcIfOutOfBound(end);
+      if (startIndex > endIndex) throw new IllegalArgumentException("Start index cannot be greater than end index.");
+      return (List<Data>) SubSequence(start, end);
+  }
+
     default boolean Insert(Data data){
         InsertAt(data,Size());
         return true;

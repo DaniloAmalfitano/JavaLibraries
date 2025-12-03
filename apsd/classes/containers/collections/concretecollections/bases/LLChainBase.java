@@ -286,6 +286,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
     @Override
     public boolean Remove(Data dat) {
         if (dat == null) return false;
+        if( Size().IsZero()) return  false;
         Box<LLNode<Data>> prev = new Box<>();
         ForwardIterator<Box<LLNode<Data>>> itr = FRefIterator();
         while (itr.IsValid()) {
@@ -374,36 +375,13 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
   /* Override specific member functions from RemovableAtSequence              */
   /* ************************************************************************ */
 
-  // ...//AtNRemove
-  /*@Override
-  public Data AtNRemove(Natural pos) {
-      long idx = ExcIfOutOfBound(pos);
-      Box<LLNode<Data>> curr = headref;
-      Box<LLNode<Data>> prev = new Box<>();
-      for (long i = 0; i < idx; i++) {
-          prev.Set(curr.Get());
-          curr = curr.Get().GetNext();
-      }
-      Data removedData = curr.Get().Get();
-      if (prev.IsNull()) {
-          headref.Set(curr.Get().GetNext().Get());
-          if (headref.IsNull()) {
-              tailref.Set(null);
-          }
-      } else {
-          prev.Get().SetNext(curr.Get().GetNext().Get());
-          if (curr.Get() == tailref.Get()) {
-              tailref.Set(prev.Get());
-          }
-      }
-      this.size.Decrement();
-      return removedData;
-  }*/
+
   // AtNRemove
   @Override
   public Data AtNRemove(Natural index) {
       long idx = index.ToLong();
       if (idx < 0 || idx >= size.ToLong()) throw new IndexOutOfBoundsException("Index out of bounds: " + idx);
+      if(Size().IsZero()) throw new IndexOutOfBoundsException("Cannot remove from empty chain.");
 
       final Box<Data> removed = new Box<>();
       final Box<Long> curidx = new Box<>(0L);

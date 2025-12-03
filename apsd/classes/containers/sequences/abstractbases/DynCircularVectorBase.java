@@ -98,7 +98,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     @Override
     public void ArrayAlloc(Natural arraySize){
         if(arraySize == null) throw new IllegalArgumentException("ArraySize argument is null.");
-        this.Realloc(arraySize);
-        this.size = arraySize.ToLong();
+        super.ArrayAlloc(arraySize);
+        start = 0L;
     }
 }

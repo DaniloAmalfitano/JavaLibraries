@@ -16,7 +16,9 @@ import apsd.interfaces.containers.sequences.DynVector;
 /** Object: Concrete list implementation on (dynamic circular) vector. */
 public class VList<Data> extends VChainBase<Data> implements List<Data>{ // Must extend VChainBase and implement List
 
-   public VList(){}
+   public VList(){
+        super();
+   }
 
    public VList(TraversableContainer<Data> con){
         super(con);
@@ -31,21 +33,17 @@ public class VList<Data> extends VChainBase<Data> implements List<Data>{ // Must
         return new VList<>(vec);
     }
 
-    protected VList<Data> newChain(DynVector<Data> vec) {
-       return new VList<>(vec);
-  }
-
   /* ************************************************************************ */
   /* Override specific member functions from MutableIterableContainer         */
   /* ************************************************************************ */
 
     @Override
     public MutableForwardIterator<Data> FIterator() {
-        return vec.FIterator(); //Dubbio immenso, probabilmente sbagliato ma mi tiltava continuare con un errore
+        return vec.FIterator();
     }
     @Override
     public MutableBackwardIterator<Data> BIterator() {
-        return vec.BIterator(); //Dubbio immenso, probabilmente sbagliato ma mi tiltava continuare con un errore
+        return vec.BIterator();
     }
 
 
@@ -57,12 +55,12 @@ public class VList<Data> extends VChainBase<Data> implements List<Data>{ // Must
         if(data == null){
             return;
         }
-        vec.SetAt(data, index); //Dubbio immenso, probabilmente sbagliato ma mi tiltava continuare con un errore, però ho meno dubbio degli iteratori
+        vec.SetAt(data, index);
     }
 
     @Override
     public MutableSequence<Data> SubSequence(Natural start, Natural end) {
-        return vec.SubVector(start, end); //Dubbio immenso, probabilmente sbagliato
+        return vec.SubVector(start, end);
     }
 
   /* ************************************************************************ */
@@ -73,22 +71,6 @@ public class VList<Data> extends VChainBase<Data> implements List<Data>{ // Must
       if (data == null) {
           return;
       }
-      vec.InsertAt(data, index); //Dubbio immenso, probabilmente sbagliato
-
+      vec.InsertAt(data, index);
   }
-
-  @Override
-  public void InsertFirst(Data data) {
-      if (data == null) {
-          return;
-      }
-      InsertAt(data, Natural.ZERO);
-  }
-  @Override
-    public void InsertLast(Data data) {
-        if (data == null) {
-            return;
-        }
-        InsertAt(data, Size().Decrement());
-    }
 }

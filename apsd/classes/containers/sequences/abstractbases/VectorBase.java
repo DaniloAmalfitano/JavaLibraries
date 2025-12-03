@@ -38,10 +38,10 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
     abstract protected VectorBase<Data> NewVector(Data[] arr);
 
    @SuppressWarnings("unchecked")
-   protected void ArrayAlloc(Natural newsize) {
-     long size = newsize.ToLong();
-     if (size >= Integer.MAX_VALUE) { throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!"); }
-     arr = (Data[]) new Object[(int) size];
+   protected void ArrayAlloc(Natural newSize) {
+       long size = newSize.ToLong();
+       if (size >= Integer.MAX_VALUE) throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!");
+       arr = (Data[]) new Object[(int) size];
    }
 
   /* ************************************************************************ */
@@ -50,7 +50,7 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
 
     //Clear
     public void Clear() {
-        ArrayAlloc(new Natural(0));
+        ArrayAlloc(Natural.ZERO);
     }
 
     //IsEmpty
@@ -65,7 +65,7 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
   // ...
     //Per ora la capacity è uguale alla size perchè Vector è statico
     public Natural Capacity() {
-      return new Natural(arr.length);
+      return Natural.Of(arr.length);
     }
 
   /* ************************************************************************ */
