@@ -4,9 +4,8 @@ import apsd.classes.utilities.Natural;
  import apsd.interfaces.containers.sequences.InsertableAtSequence;
  import apsd.interfaces.containers.sequences.MutableSequence;
 
-public interface List<Data> extends MutableSequence<Data>, InsertableAtSequence<Data>, Chain<Data>{ // Must extend MutableSequence, InsertableAtSequence, and Chain
+public interface List<Data> extends MutableSequence<Data>, InsertableAtSequence<Data>, Chain<Data>{
 
-  // SubList
   default List<Data> SubList(Natural start, Natural end) {
       long startIndex = ExcIfOutOfBound(start);
       long endIndex = ExcIfOutOfBound(end);
@@ -14,16 +13,13 @@ public interface List<Data> extends MutableSequence<Data>, InsertableAtSequence<
       return (List<Data>) SubSequence(start, end);
   }
 
-    @Override
-    default boolean Insert(Data data) {
-        InsertFirst(data);
-        return true;
-    }
-
   /* ************************************************************************ */
   /* Override specific member functions from ExtensibleContainer              */
   /* ************************************************************************ */
 
-  // ...
-
+    @Override
+  default boolean Insert(Data data) {
+      InsertFirst(data);
+      return true;
+  }
 }

@@ -2,20 +2,18 @@ package apsd.interfaces.containers.collections;
 
 import apsd.interfaces.containers.base.IterableContainer;
 
-public interface Set<Data> extends Collection<Data>{ // Must extend Collection
+public interface Set<Data> extends Collection<Data>{
 
-  // Union
-    default void Union(Set<Data> other){
-      if(other != null){
-        other.TraverseForward(elem -> {
-          if(!this.Exists(elem))
-            Insert(elem);
-          return false;
-        });
-      }
+  default void Union(Set<Data> other){
+    if(other != null){
+      other.TraverseForward(elem -> {
+        if(!this.Exists(elem))
+          Insert(elem);
+        return false;
+      });
     }
+  }
 
-  // Difference
   default void Difference(Set<Data> set){
     if(set == null) return;
     set.TraverseForward(dat->{
@@ -29,8 +27,6 @@ public interface Set<Data> extends Collection<Data>{ // Must extend Collection
       return false;
     });
   }
-
-  // Intersection
   default void Intersection(Set<Data> set){
     Filter(set::Exists);
   }
@@ -39,9 +35,8 @@ public interface Set<Data> extends Collection<Data>{ // Must extend Collection
   /* Override specific member functions from IterableContainer                */
   /* ************************************************************************ */
 
-  // ...
-    @Override
-    default boolean IsEqual(IterableContainer<Data> other) {
-        return other != null && this.Size().equals(other.Size()) && this.TraverseForward(elem -> !other.Exists(elem));
-    }
+  @Override
+  default boolean IsEqual(IterableContainer<Data> other) {
+    return other != null && this.Size().equals(other.Size()) && this.TraverseForward(elem -> !other.Exists(elem));
+  }
 }

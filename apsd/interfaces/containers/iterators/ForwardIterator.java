@@ -4,8 +4,7 @@ import apsd.classes.utilities.Natural;
 import apsd.interfaces.traits.Predicate;
 
 /** Interface: Iteratore in avanti. */
-public interface ForwardIterator<Data> extends Iterator<Data>{ // Must extend Iterator
-
+public interface ForwardIterator<Data> extends Iterator<Data>{
     Data DataNNext();
 
     default void Next() {
@@ -14,7 +13,8 @@ public interface ForwardIterator<Data> extends Iterator<Data>{ // Must extend It
       }
     }
     default void Next(long n) {
-      for (long i = 0;i < n; i++) {
+        if(n<0) throw new IllegalArgumentException("Negative argument: " + n);
+        for (long i = 0;i < n; i++) {
           Next();
       }
     }

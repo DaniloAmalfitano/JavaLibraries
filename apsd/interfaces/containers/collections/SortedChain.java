@@ -3,9 +3,7 @@ package apsd.interfaces.containers.collections;
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.sequences.SortedSequence;
 
-public interface SortedChain<Data extends Comparable<? super Data>> extends OrderedChain<Data>, SortedSequence<Data>{ // Must extend OrderedChain and SortedSequence
-
-    // SearchPredecessor
+public interface SortedChain<Data extends Comparable<? super Data>> extends OrderedChain<Data>, SortedSequence<Data>{
     default Natural SearchPredecessor(Data element) {
         if (Size().ToLong() == 0) return Natural.ZERO.Decrement();
         Natural lower = Natural.ZERO;
@@ -21,8 +19,6 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
         return lower.Decrement();
     }
 
-
-    // SearchSuccessor
     default Natural SearchSuccessor(Data element) {
         if (Size().ToLong() == 0) return Natural.ZERO;
         Natural lower = Natural.ZERO;
@@ -42,7 +38,6 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
   /* Override specific member functions from Sequence                         */
   /* ************************************************************************ */
 
-  // ...
   @Override
   default Natural Search(Data data) {
       if (data == null || IsEmpty()) {
@@ -87,43 +82,39 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
   /* ************************************************************************ */
   /* Override specific member functions from OrderedSet                       */
   /* ************************************************************************ */
-
-  // ...
     @Override
     default Data Min(){
-        if(IsEmpty())
-            return null;
-         return GetAt(Natural.ZERO);
+      if(IsEmpty())
+          return null;
+      return GetAt(Natural.ZERO);
     }
     @Override
     default Data Max(){
-        if(IsEmpty())
-            return null;
-         return GetAt(Size().Decrement());
+      if(IsEmpty())
+          return null;
+      return GetAt(Size().Decrement());
     }
     @Override
     default void RemoveMin(){
-        if(IsEmpty())
-            return;
-         RemoveAt(Natural.ZERO);
+      if(IsEmpty()) return;
+      RemoveAt(Natural.ZERO);
     }
     @Override
     default void RemoveMax(){
-        if (IsEmpty())
-            return;
-        RemoveAt(Size().Decrement());
+      if (IsEmpty()) return;
+      RemoveAt(Size().Decrement());
     }
     @Override
     default Data MinNRemove(){
-         Data min = GetAt(Natural.ZERO);
-         RemoveAt(Natural.ZERO);
-         return min;
+        Data min = GetAt(Natural.ZERO);
+        RemoveAt(Natural.ZERO);
+        return min;
     }
     @Override
     default Data MaxNRemove(){
-         Data max = GetAt(Size().Decrement());
-         RemoveAt(Size().Decrement());
-         return max;
+        Data max = GetAt(Size().Decrement());
+        RemoveAt(Size().Decrement());
+        return max;
     }
     @Override
     default Data Predecessor(Data data) {
@@ -135,15 +126,13 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
     @Override
     default Data Successor(Data data){
         Natural index = SearchSuccessor(data);
-        if (index.compareTo(Size()) < 0)
-            return GetAt(index);
+        if (index.compareTo(Size()) < 0) return GetAt(index);
         return null;
     }
     @Override
     default void RemovePredecessor(Data data){
         Natural index = SearchPredecessor(data);
-        if (index.compareTo(Natural.ZERO.Decrement()) > 0)
-            RemoveAt(index);
+        if(index.compareTo(Natural.ZERO.Decrement()) > 0) RemoveAt(index);
     }
     @Override
     default void RemoveSuccessor(Data data) {
