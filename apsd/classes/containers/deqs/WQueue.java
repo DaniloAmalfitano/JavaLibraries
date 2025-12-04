@@ -51,30 +51,31 @@ public class WQueue<Data> implements Queue<Data>{ // Must implement Queue
   /* ************************************************************************ */
 
     @Override
-    public Data Head(){
-        if (lst.IsEmpty()) {
-            return null;
-        }
+    public Data Head() {
+        if (Size().ToLong() == 0) return null;
         return lst.GetAt(Natural.ZERO);
     }
+
+    // Dequeue
     @Override
-    public void Dequeue(){
-        if (!lst.IsEmpty()) {
-            lst.RemoveFirst();
-        }
+    public void Dequeue() {
+        if (Size().ToLong() == 0) return;
+        lst.RemoveFirst();
     }
+
+    // HeadNDequeue
     @Override
-    public Data HeadNDequeue(){
-        if (!lst.IsEmpty()) {
-            Data data = lst.AtNRemove(Natural.ZERO);
-            return data;
-        }
-        return null;
+    public Data HeadNDequeue() {
+        if (Size().ToLong() == 0) return null;
+        Data head = Head();
+        Dequeue();
+        return head;
     }
+
+    // Enqueue
     @Override
-    public void Enqueue(Data data) {
-        if (data != null) {
-            lst.Insert(data);
-        }
+    public void Enqueue(Data dat) {
+        if (dat == null) throw new IllegalArgumentException("Data cannot be null");
+        lst.InsertLast(dat);
     }
 }

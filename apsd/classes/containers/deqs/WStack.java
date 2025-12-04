@@ -55,12 +55,12 @@ public class WStack<Data> implements Stack<Data>{ // Must implement Stack
       if (lst.IsEmpty()) {
           return null;
       }
-      return lst.GetAt(lst.Size().Decrement());
+      return lst.GetAt(Natural.ZERO);
   }
   @Override
    public void Pop() {
        if (!lst.IsEmpty()) {
-           lst.RemoveAt(lst.Size().Decrement());
+           lst.RemoveAt(Natural.ZERO);
        }
    }
    @Override
