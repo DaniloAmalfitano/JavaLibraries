@@ -54,93 +54,111 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
 
     @Override
     public void SetAt(Data data, Natural index) {
-        if(data == null){
-            return;
+        if (index.ToLong() >= Size().ToLong() || index.ToLong() < 0) throw new IndexOutOfBoundsException("Index: " + index);
+        LLNode<Data> node = headref.Get();
+        long i = 0;
+        long target = index.ToLong();
+        while (i < target && node != null) {
+            node = node.GetNext().Get();
+            i++;
         }
-        List.super.SetAt(data, index);
+        if (node == null) {
+            throw new IllegalStateException("Internal list structure corrupted");
+        }
+        node.Set(data);
     }
+
+    // SetFirst
     @Override
-    public void SetFirst(Data data){
-        if(data == null){
-            return;
-        }
-        if(headref.IsNull()) throw new IndexOutOfBoundsException("Cannot be empty!");
+    public void SetFirst(Data data) {
+        if (headref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
         headref.Get().Set(data);
     }
+
+    // SetLast
     @Override
-    public void SetLast(Data data){
-        if(data == null){
-            return;
-        }
-        if(headref.IsNull()) throw new IndexOutOfBoundsException();
+    public void SetLast(Data data) {
+        if (tailref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
         tailref.Get().Set(data);
     }
+
+    // SubSequence
     @Override
     public MutableSequence<Data> SubSequence(Natural startindex, Natural endindex) {
-        return (MutableSequence<Data>) super.SubSequence(startindex, endindex);
-    }
-    @Override
-    public void InsertAt(Data data, Natural index){
-        if(data == null) return;
-        long idx = index.ToLong();
-        if(idx < 0 || idx > size.ToLong()) throw new IndexOutOfBoundsException("Index out of bounds: " + idx + "; Size: " + size.ToLong() + "!");
-        if(idx == size.ToLong()) {
-            LLNode<Data> newNode = new LLNode<>(data, null);
-            if (headref.IsNull()) {
-                headref.Set(newNode);
-                tailref.Set(newNode);
-            } else {
-                tailref.Get().SetNext(newNode);
-                tailref.Set(newNode);
+        if (startindex.ToLong() < 0 || endindex.ToLong() > size.ToLong() || startindex.ToLong() > endindex.ToLong()) {
+            throw new IndexOutOfBoundsException("Invalid start or end index");
+        }
+        LLList<Data> subList = new LLList<Data>();
+        LLNode<Data> cur = headref.Get();
+        long index = 0;
+        while (cur != null && index < endindex.ToLong()) {
+            if (index >= startindex.ToLong()) {
+                subList.InsertLast(cur.Get());
             }
-            size.Increment();
-            return;
+            cur = cur.GetNext().Get();
+            index++;
         }
-        Box<LLNode<Data>> curr = headref;
-        Box<LLNode<Data>> prev = new Box<>();
-        for (long i = 0; i < idx; i++) {
-            prev.Set(curr.Get());
-            curr = curr.Get().GetNext();
-        }
-        LLNode<Data> newNode = new LLNode<>(data, curr.Get());
-        if (prev.IsNull()) {
-            headref.Set(newNode);
-        } else {
-            prev.Get().SetNext(newNode);
-        }
-        size.Increment();
+        return subList;
     }
+
+    /* ************************************************************************ */
+    /* Override specific member functions from InsertableAtSequence             */
+    /* ************************************************************************ */
+
+    // ...
+    // InsertAt
+    @Override
+    public void InsertAt(Data data, Natural index) {
+        long idx = index.ToLong();
+        if (idx < 0 || idx > size.ToLong()) throw new IndexOutOfBoundsException("Index: " + idx);
+        if (idx == 0) {
+            InsertFirst(data);
+        } else if (idx == size.ToLong()) {
+            InsertLast(data);
+        } else {
+            LLNode<Data> node = headref.Get();
+            long i = 0;
+            while (i < idx - 1 && node != null) {
+                node = node.GetNext().Get();
+                i++;
+            }
+            LLNode<Data> newNode = new LLNode<Data>(data);
+            newNode.SetNext(node.GetNext().Get());
+            node.SetNext(newNode);
+            size.Increment();
+        }
+    }
+
+    // InsertFirst
     @Override
     public void InsertFirst(Data data) {
-        if (data == null) throw new NullPointerException("Data cannot be null!");
-        LLNode<Data> node = new LLNode<>(data);
-        if (headref.IsNull()) {
-            headref.Set(node);
-            tailref.Set(node);
-        } else {
-            node.SetNext(headref.Get());
-            headref.Set(node);
+        LLNode<Data> newNode = new LLNode<Data>(data);
+        newNode.SetNext(headref.Get());
+        headref.Set(newNode);
+        if (tailref.Get() == null) {
+            tailref.Set(newNode);
         }
         size.Increment();
     }
 
+    // InsertLast
     @Override
     public void InsertLast(Data data) {
-        if (data == null) throw new NullPointerException("Data cannot be null!");
-        LLNode<Data> node = new LLNode<>(data);
-        if (tailref.IsNull()) {
-            headref.Set(node);
-            tailref.Set(node);
+        LLNode<Data> newNode = new LLNode<Data>(data);
+        if (tailref.Get() == null) {
+            headref.Set(newNode);
+            tailref.Set(newNode);
         } else {
-            tailref.Get().SetNext(node);
-            tailref.Set(node);
+            tailref.Get().SetNext(newNode);
+            tailref.Set(newNode);
         }
         size.Increment();
     }
-
-
-  /* ************************************************************************ */
-  /* Override specific member functions from InsertableAtSequence             */
-  /* ************************************************************************ */
-
+    /* ************************************************************************ */
+    /* Override specific member functions from InsertableAtSequence             */
+    /* ************************************************************************ */
 }
+
+
+
+

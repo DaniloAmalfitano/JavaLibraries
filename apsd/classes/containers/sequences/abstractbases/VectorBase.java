@@ -78,7 +78,7 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
 
         @Override
         public boolean IsValid() {
-            return index < arr.length;
+            return index < Size().ToLong();
         }
         @Override
         public Data DataNNext() {
@@ -112,7 +112,7 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
     }
 
     protected class VectorBIterator implements MutableBackwardIterator<Data> {
-        protected long index = arr.length - 1;
+        protected long index = Size().ToLong() - 1;
 
         @Override
         public boolean IsValid() {

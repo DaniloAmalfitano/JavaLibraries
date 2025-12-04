@@ -246,16 +246,12 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
   /* Override specific member functions from OrderedSet                       */
   /* ************************************************************************ */
   @Override
-  public boolean InsertIfAbsent(Data dat) {
-      if(dat == null) return false;
-      Natural index = Search(dat);
-      if(index == null){
-          Insert(dat);
-          return true;
-      } else {
-          return false;
-      }
+  public boolean InsertIfAbsent(Data data) {
+      if (data == null) return false;
+      if (Search(data) != null) return false;
+      return Insert(data);
   }
+
 
 
   /* ************************************************************************ */

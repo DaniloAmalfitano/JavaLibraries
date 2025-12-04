@@ -8,7 +8,7 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
   // ShiftLeft
     @Override
     default Natural Size() {
-      return MutableSequence.super.Size();
+      return ReallocableContainer.super.Size();
     }
 
    default void ShiftLeft(Natural pos, Natural num) {
@@ -94,6 +94,6 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
   // ...
     @Override
     default boolean IsEmpty() {
-      return MutableSequence.super.IsEmpty();
+      return ReallocableContainer.super.IsEmpty();
     }
 }

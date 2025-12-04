@@ -74,14 +74,14 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
         while (pos.compareTo(vec.Size()) < 0) {
             Data currentElement = vec.GetAt(pos);
             if (currentElement == null) {
-                break; // logical end
+                break;
             }
             int cmp = data.compareTo(currentElement);
             if (cmp == 0) {
-                return false; // already present
+                return false;
             }
             if (cmp < 0) {
-                break; // insert before currentElement
+                break;
             }
             pos = pos.Increment();
         }

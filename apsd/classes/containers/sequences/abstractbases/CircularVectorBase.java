@@ -50,6 +50,7 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
             int oldIdx = (int) ((oldStart + i) % oldCapacity);
             arr[i] = oldArr[oldIdx];
         }
+
     }
 
 

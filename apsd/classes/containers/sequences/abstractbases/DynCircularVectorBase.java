@@ -68,7 +68,6 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
       this.size += increment.ToLong();
   }
 
-
     @Override
     public void Reduce(Natural decrement) {
         if(decrement == null) throw new IllegalArgumentException("Decrement argument is null.");
@@ -100,5 +99,13 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
         if(arraySize == null) throw new IllegalArgumentException("ArraySize argument is null.");
         super.ArrayAlloc(arraySize);
         start = 0L;
+    }
+    @Override
+    public void Realloc(Natural newCapacity) {
+        if(newCapacity == null) throw new NullPointerException("Size cannot be null!");
+        super.Realloc(newCapacity);
+        if(size > newCapacity.ToLong()) {
+            size = newCapacity.ToLong();
+        }
     }
 }
