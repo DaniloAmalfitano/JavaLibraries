@@ -130,13 +130,16 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
     @Override
     public boolean Remove(Data dat){
         if(dat == null) return false;
+        if(headref.IsNull()) return false;
         LLNode<Data> pred = PredFind(dat);
         Box<LLNode<Data>> curr = (pred == null) ? headref : pred.GetNext();
+
         if(curr.IsNull() || !curr.Get().Get().equals(dat)){
             return false;
         }
-        curr.Set(curr.Get().GetNext().Get());
-        if(tailref.Get() == curr.Get()){
+        LLNode<Data> nodeToRemove = curr.Get();
+        curr.Set(nodeToRemove.GetNext().Get());
+        if(tailref.Get() == nodeToRemove){
             tailref.Set(pred);
         }
         size.Decrement();

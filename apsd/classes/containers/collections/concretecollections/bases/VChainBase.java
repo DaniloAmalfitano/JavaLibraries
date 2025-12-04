@@ -126,28 +126,32 @@ abstract public class VChainBase<Data> implements Chain<Data>{ // Must implement
   /* Override specific member functions from Collection                       */
   /* ************************************************************************ */
 
-  public boolean Filter(Predicate<Data> pred) {
-      long del = 0L;
-      if(pred == null) throw new NullPointerException("Predicate cannot be null!");
-      MutableForwardIterator <Data> writer = vec.FIterator();
-      for(;writer.IsValid();writer.Next()){
-          if(!pred.Apply(writer.GetCurrent())){
-              del++;
-              writer.SetCurrent(null);
-          }
-      }
-      if(del > 0L){
-          writer.Reset();
-          MutableForwardIterator <Data> reader = vec.FIterator();
-          for(;reader.IsValid();reader.Next()){
-              if(reader.GetCurrent() != null){
-                  reader.SetCurrent(null);
-                  writer.SetCurrent(reader.GetCurrent());
-                  writer.Next();
-              }
-          }
-          vec.Reduce(Natural.Of(del));
-      }
-      return del > 0L;
-  }
+    @Override
+    public boolean Filter(Predicate<Data> fun) {
+        long del = 0;
+        if (fun != null) {
+            MutableForwardIterator<Data> wrt = vec.FIterator();
+            for (; wrt.IsValid(); wrt.Next()) {
+                Data currentData = wrt.GetCurrent();
+                if (!fun.Apply(currentData)) {
+                    del++;
+                    wrt.SetCurrent(null);
+                }
+            }
+            if (del > 0) {
+                wrt.Reset();
+                MutableForwardIterator<Data> rdr = vec.FIterator();
+                for (; rdr.IsValid(); rdr.Next()) {
+                    Data dat = rdr.GetCurrent();
+                    if (dat != null) {
+                        rdr.SetCurrent(null);
+                        wrt.SetCurrent(dat);
+                        wrt.Next();
+                    }
+                }
+                vec.Reduce(Natural.Of(del));
+            }
+        }
+        return (del > 0);
+    }
 }

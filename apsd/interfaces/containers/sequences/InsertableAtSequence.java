@@ -15,6 +15,6 @@ public interface InsertableAtSequence<Data> extends Sequence<Data> { // Must ext
 
   // InsertLast
     default void InsertLast(Data data){
-      InsertAt(data, Size().Decrement());
+      InsertAt(data, Size());
     }
 }

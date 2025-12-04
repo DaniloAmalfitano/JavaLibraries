@@ -126,7 +126,7 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
     @Override
     public Data GetAt(Natural index) {
         if (index == null) throw new NullPointerException("Index cannot be null!");
-        if (index.ToLong() < 0 || index.ToLong() >= arr.length) {
+        if (index.ToLong() < 0 || index.ToLong() >= Size().ToLong()) {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong());
         }
         return arr[(int) ((start + index.ToLong()) % arr.length)];
@@ -138,6 +138,7 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
         long idx = ExcIfOutOfBound(index);
         arr[(int) ((start + idx) % arr.length)] = value;
     }
+
     @Override
     public void ArrayAlloc(Natural size) {
         if( size == null) {

@@ -407,17 +407,13 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
 
     @Override
     public void RemoveFirst() {
-        if (Size().IsZero()) {
-            throw new IndexOutOfBoundsException("Cannot remove from empty chain.");
-        }
+        if (Size().IsZero()) return;
         AtNRemove(Natural.ZERO);
     }
 
     @Override
     public void RemoveLast() {
-        if (Size().IsZero()) {
-            throw new IndexOutOfBoundsException("Cannot remove from empty chain.");
-        }
+        if (Size().IsZero()) return;
         AtNRemove(Size().Decrement());
     }
 

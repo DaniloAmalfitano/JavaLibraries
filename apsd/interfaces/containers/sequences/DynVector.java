@@ -20,7 +20,7 @@ public interface DynVector<Data> extends ResizableContainer,InsertableAtSequence
       long cap   = Capacity().ToLong();
       if (index < 0 || index > size) throw new IndexOutOfBoundsException("Index out of bounds for insert: " + index + "; Size: " + size + "!");
       if (size + 1 > cap) Grow();
-      ShiftRight(Natural.Of(index), Natural.ONE);
+      ShiftRight(Natural.Of(index));
       SetAt(element, Natural.Of(index));
   }
     @Override
@@ -55,8 +55,10 @@ public interface DynVector<Data> extends ResizableContainer,InsertableAtSequence
     default void ShiftRight(Natural pos, Natural howMany){
         if(howMany.ToLong() == 0)
             return;
-        long idx = ExcIfOutOfBound(pos);
-        if(idx + howMany.ToLong() > Size().ToLong())
+        if(pos.ToLong() < 0 || pos.ToLong() >= Size().ToLong()){
+            return;
+        }
+        if(pos.ToLong() + howMany.ToLong() > Size().ToLong())
             Expand(howMany);
         Vector.super.ShiftRight(pos, howMany);
     }

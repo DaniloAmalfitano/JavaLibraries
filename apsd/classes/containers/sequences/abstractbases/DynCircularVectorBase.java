@@ -64,7 +64,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   public void Expand(Natural increment) {
       if (increment == null) throw new IllegalArgumentException("Increment argument is null.");
       long newCapacity = this.Capacity().ToLong() + increment.ToLong();
-      super.Realloc(new Natural(newCapacity));
+      super.Realloc(Natural.Of(newCapacity));
       this.size += increment.ToLong();
   }
 
@@ -75,7 +75,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
         long newSize = this.size - actualDecrement;
         long newCapacity = Math.max(this.Capacity().ToLong() - decrement.ToLong(), newSize);
         newCapacity = Math.max(newCapacity, 0L);
-        Realloc(new Natural(newCapacity));
+        Realloc(Natural.Of(newCapacity));
         this.size = newSize;
     }
   /* ************************************************************************ */

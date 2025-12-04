@@ -132,7 +132,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
     // InsertFirst
     @Override
     public void InsertFirst(Data data) {
-        LLNode<Data> newNode = new LLNode<Data>(data);
+        LLNode<Data> newNode = new LLNode<>(data);
         newNode.SetNext(headref.Get());
         headref.Set(newNode);
         if (tailref.Get() == null) {
