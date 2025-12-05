@@ -16,15 +16,15 @@ package apsd.classes.containers.collections.concretecollections;
 /** Object: Concrete list implementation on linked-list. */
 public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Must extend LLChainBase and implement List
 
-  public LLList(){
+    public LLList(){
     super();
   }
 
-  public LLList(TraversableContainer<Data> con){
-    super(con);
-  }
+    public LLList(TraversableContainer<Data> con){
+        super(con);
+    }
 
-  protected LLList(long size, LLNode<Data> head, LLNode<Data> tail){
+    protected LLList(long size, LLNode<Data> head, LLNode<Data> tail){
     super(size, head, tail);
   }
 
@@ -33,20 +33,19 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
         return new LLList<>(size, headref, tailref);
     }
 
-    @Override
-  public MutableForwardIterator<Data> FIterator() {
-    return new ListFIterator();
-  }
-  @Override
-  public MutableBackwardIterator<Data> BIterator() {
-    return new ListBIterator();
-  }
-
   /* ************************************************************************ */
   /* Override specific member functions from MutableIterableContainer         */
   /* ************************************************************************ */
 
-  // ...
+    @Override
+    public MutableForwardIterator<Data> FIterator() {
+        return new ListFIterator();
+    }
+
+    @Override
+    public MutableBackwardIterator<Data> BIterator() {
+        return new ListBIterator();
+    }
 
   /* ************************************************************************ */
   /* Override specific member functions from MutableSequence                  */
@@ -74,13 +73,11 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
         headref.Get().Set(data);
     }
 
-    // SetLast
     @Override
     public void SetLast(Data data) {
         if (tailref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
         tailref.Get().Set(data);
     }
-
 
     @Override
     public MutableSequence<Data> SubSequence(Natural startindex, Natural endindex) {
@@ -100,12 +97,11 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
         return subList;
     }
 
+
     /* ************************************************************************ */
     /* Override specific member functions from InsertableAtSequence             */
     /* ************************************************************************ */
 
-    // ...
-    // InsertAt
     @Override
     public void InsertAt(Data data, Natural index) {
         long idx = index.ToLong();

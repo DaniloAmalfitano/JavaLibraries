@@ -49,11 +49,11 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
         this.tailref.Set(tail);
     }
 
-    abstract protected LLChainBase<Data> newChain(long size, LLNode<Data> headref, LLNode<Data> tailref);
-
     /* ************************************************************************ */
     /* Specific member functions from LLChainBase                               */
     /* ************************************************************************ */
+
+    abstract protected LLChainBase<Data> newChain(long size, LLNode<Data> headref, LLNode<Data> tailref);
 
 
 
@@ -61,6 +61,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
     /* Override specific member functions from Container                        */
     /* ************************************************************************ */
 
+    @Override
     public Natural Size() {
         return size.ToNatural();
     }
@@ -69,15 +70,42 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
     /* Override specific member functions from ClearableContainer               */
     /* ************************************************************************ */
 
-    public void Clear() {
-        headref.Set(null);
-        tailref.Set(null);
-        size.Assign(0);
-    }
+
 
     /* ************************************************************************ */
     /* Override specific member functions from RemovableContainer               */
     /* ************************************************************************ */
+
+    @Override
+    public boolean Remove(Data dat) {
+        if (dat == null) return false;
+        if( Size().IsZero()) return  false;
+        Box<LLNode<Data>> prev = new Box<>();
+        ForwardIterator<Box<LLNode<Data>>> itr = FRefIterator();
+        while (itr.IsValid()) {
+            Box<LLNode<Data>> curBox = itr.GetCurrent();
+            LLNode<Data> node = curBox.Get();
+            if (node.Get().equals(dat)) {
+                if (prev.IsNull()) {
+                    headref.Set(node.GetNext().Get());
+                } else {
+                    prev.Get().SetNext(node.GetNext().Get());
+                }
+                if (node == tailref.Get()) {
+                    tailref.Set(prev.Get());
+                }
+                size.Decrement();
+                return true;
+            }
+            prev.Set(node);
+            itr.Next();
+        }
+        return false;
+    }
+
+  /* ************************************************************************ */
+  /* Override specific member functions from IterableContainer                */
+  /* ************************************************************************ */
 
     protected class ListFRefIterator implements ForwardIterator<Box<LLNode<Data>>> {
         protected Box<LLNode<Data>> cur;
@@ -127,7 +155,6 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
         return new ListFRefIterator();
     }
 
-    // Backward Reference Iterator
     protected class ListBRefIterator implements BackwardIterator<Box<LLNode<Data>>> {
         protected long cur = -1L;
         protected Vector<Box<LLNode<Data>>> arr = null;
@@ -281,54 +308,11 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
         return new ListBIterator();
     }
 
-    @Override
-    public boolean Remove(Data dat) {
-        if (dat == null) return false;
-        if( Size().IsZero()) return  false;
-        Box<LLNode<Data>> prev = new Box<>();
-        ForwardIterator<Box<LLNode<Data>>> itr = FRefIterator();
-        while (itr.IsValid()) {
-            Box<LLNode<Data>> curBox = itr.GetCurrent();
-            LLNode<Data> node = curBox.Get();
-            if (node.Get().equals(dat)) {
-                if (prev.IsNull()) {
-                    headref.Set(node.GetNext().Get());
-                } else {
-                    prev.Get().SetNext(node.GetNext().Get());
-                }
-                if (node == tailref.Get()) {
-                    tailref.Set(prev.Get());
-                }
-                size.Decrement();
-                return true;
-            }
-            prev.Set(node);
-            itr.Next();
-        }
-        return false;
-    }
-
-  /* ************************************************************************ */
-  /* Override specific member functions from IterableContainer                */
-  /* ************************************************************************ */
-
 
   /* ************************************************************************ */
   /* Override specific member functions from Sequence                         */
   /* ************************************************************************ */
 
-  // ... SubSequence
-  @Override
-  public Data GetAt(Natural pos) {
-      long idx = ExcIfOutOfBound(pos);
-      Box<LLNode<Data>> curr = headref;
-      for (long i = 0; i < idx; i++) {
-          //if (curr.IsNull()) throw new IllegalStateException();
-          curr = curr.Get().GetNext();
-      }
-      //if (curr.IsNull()) throw new IllegalStateException();
-      return curr.Get().Get();
-  }
     @Override
     public Data GetFirst() {
         if (headref.IsNull())
@@ -373,8 +357,6 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
   /* Override specific member functions from RemovableAtSequence              */
   /* ************************************************************************ */
 
-
-  // AtNRemove
   @Override
   public Data AtNRemove(Natural index) {
       long idx = index.ToLong();
@@ -415,9 +397,27 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
         AtNRemove(Size().Decrement());
     }
 
+    @Override
+    public Data FirstNRemove() {
+      if(Size().IsZero()) return null;
+      return AtNRemove(Natural.ZERO);
+    }
+    @Override
+    public Data LastNRemove() {
+        if(Size().IsZero()) return null;
+        return AtNRemove(Size().Decrement());
+    }
+
   /* ************************************************************************ */
   /* Override specific member functions from Collection                       */
   /* ************************************************************************ */
+    @Override
+    public void Clear() {
+        headref.Set(null);
+        tailref.Set(null);
+        size.Assign(0);
+    }
+
     @Override
     public boolean Filter(Predicate<Data> pred) {
         if (pred == null) return false;

@@ -19,12 +19,15 @@ abstract public class VChainBase<Data> implements Chain<Data>{ // Must implement
     protected VChainBase() {
         vec = new DynCircularVector<>();
     }
+
     public VChainBase(TraversableContainer<Data> con){
         vec = new DynCircularVector<>(con);
     }
+
     protected VChainBase(DynVector<Data> vec) {
         this.vec = vec;
     }
+
     abstract protected VChainBase<Data> NewChain(DynVector<Data> vec);
 
   /* ************************************************************************ */
@@ -40,10 +43,11 @@ abstract public class VChainBase<Data> implements Chain<Data>{ // Must implement
   /* Override specific member functions from ClearableContainer               */
   /* ************************************************************************ */
 
-    @Override
-    public void Clear() {
-        vec.Clear();
-    }
+
+  /* ************************************************************************ */
+  /* Override specific member functions from RemovableContainer               */
+  /* ************************************************************************ */
+
     @Override
     public boolean Remove(Data dat) {
         Natural pos = vec.Search(dat);
@@ -53,16 +57,9 @@ abstract public class VChainBase<Data> implements Chain<Data>{ // Must implement
     }
 
   /* ************************************************************************ */
-  /* Override specific member functions from RemovableContainer               */
-  /* ************************************************************************ */
-
-  // ...
-
-  /* ************************************************************************ */
   /* Override specific member functions from IterableContainer                */
   /* ************************************************************************ */
-
-  public ForwardIterator<Data> FIterator() {
+    public ForwardIterator<Data> FIterator() {
       return vec.FIterator();
   }
     public BackwardIterator<Data> BIterator() {
@@ -73,11 +70,8 @@ abstract public class VChainBase<Data> implements Chain<Data>{ // Must implement
   /* Override specific member functions from Sequence                         */
   /* ************************************************************************ */
 
-    public Data GetFirst() {
-      return vec.GetFirst();
-    }
-    public Data GetLast() {
-        return vec.GetLast();
+    public Data GetAt(Natural index) {
+        return vec.GetAt(index);
     }
 
     public Sequence<Data> SubSequence(Natural startIdx, Natural endIdx) {
@@ -87,30 +81,19 @@ abstract public class VChainBase<Data> implements Chain<Data>{ // Must implement
   /* Override specific member functions from RemovableAtSequence              */
   /* ************************************************************************ */
 
-  public Data AtNRemove(Natural index) {
+    public Data AtNRemove(Natural index) {
       if(Size().IsZero()) return null;
       return vec.AtNRemove(index);
-  }
-  public void RemoveFirst() {
-      if (Size().IsZero()) return;
-      vec.RemoveFirst();
-  }
-  public void RemoveLast() {
-      if (Size().IsZero()) return;
-      vec.RemoveLast();
-  }
-  public Data FirstNRemove() {
-      if (Size().IsZero()) return null;
-      return vec.FirstNRemove();
-  }
-    public Data LastNRemove() {
-        if (Size().IsZero()) return null;
-        return vec.LastNRemove();
     }
 
   /* ************************************************************************ */
   /* Override specific member functions from Collection                       */
   /* ************************************************************************ */
+
+    @Override
+    public void Clear() {
+        vec.Clear();
+    }
 
     @Override
     public boolean Filter(Predicate<Data> fun) {

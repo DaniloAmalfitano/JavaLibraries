@@ -13,23 +13,22 @@ public interface RemovableAtSequence<Data> extends Sequence<Data>{
     Data AtNRemove (Natural index);
 
     default void RemoveFirst(){
-      if(IsEmpty()){
-        throw new IndexOutOfBoundsException("Cannot remove from empty sequence!");
-      }
+      if(IsEmpty()) return;
       AtNRemove(Natural.ZERO);
     }
 
     default Data FirstNRemove(){
-      if(IsEmpty()) throw new IndexOutOfBoundsException("Cannot remove from empty sequence!");
-
+      if(IsEmpty()) return null;
       return AtNRemove(Natural.ZERO);
     }
 
     default void RemoveLast(){
-      AtNRemove(IsEmpty() ? Natural.ZERO : Size().Decrement());
+      if(IsEmpty()) return;
+      AtNRemove(Size().Decrement());
     }
 
     default Data LastNRemove(){
-      return AtNRemove(IsEmpty() ? Natural.ZERO : Size().Decrement());
+      if(IsEmpty()) return null;
+      return AtNRemove(Size().Decrement());
     }
 }
