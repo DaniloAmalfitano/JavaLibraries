@@ -286,73 +286,52 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
     @Override
     public Natural SearchPredecessor(Data data) {
         if (data == null || headref.IsNull()) return null;
+
         Box<LLNode<Data>> curr = headref;
         long len = size.ToLong();
-        long index = -1L;
+        long index = -1;
 
         while (len > 0 && !curr.IsNull()) {
             long step = (len - 1) / 2;
             Box<LLNode<Data>> next = curr;
             for (long i = 0; i < step; i++) {
-                if (next.IsNull()) break;
-                LLNode<Data> node = next.Get();
-                if (node == null) { next = new Box<>(); break; }
-                next = node.GetNext();
+                next = next.Get().GetNext();
             }
-            if (next.IsNull()) break;
-            LLNode<Data> node = next.Get();
-            if (node == null) break;
-
-            int cmp = node.Get().compareTo(data);
+            int cmp = next.Get().Get().compareTo(data);
             if (cmp < 0) {
-                Box<LLNode<Data>> afterBox = node.GetNext();
-                curr = afterBox.IsNull() ? new Box<>() : afterBox;
                 index += step + 1;
-                len = len - (step + 1);
-            } else len = step;
+                curr = next.Get().GetNext();
+                len = len - step - 1;
+            } else {
+                len = step;
+            }
         }
         return (index >= 0) ? Natural.Of(index) : null;
     }
 
     public Natural SearchSuccessor(Data data) {
         if (data == null || headref.IsNull()) return null;
-        long size = Size().ToLong();
-        if (size == 0) return null;
 
-        long low = 0;
-        long high = size;
+        Box<LLNode<Data>> curr = headref;
+        long len = size.ToLong();
+        long index = 0;
 
-        while (low < high) {
-            long mid = low + (high - low) / 2;
-
-            // walk to mid
-            Box<LLNode<Data>> cur = headref;
-            for (long i = 0; i < mid; i++) {
-                if (cur.IsNull()) break;
-                LLNode<Data> n = cur.Get();
-                if (n == null) { cur = new Box<>(); break; }
-                cur = n.GetNext();
+        while (len > 0 && !curr.IsNull()) {
+            long step = (len - 1) / 2;
+            Box<LLNode<Data>> next = curr;
+            for (long i = 0; i < step; i++) {
+                next = next.Get().GetNext();
             }
-
-            if (cur.IsNull()) {
-                // defensive: structure shorter than reported size
-                return null;
-            }
-
-            LLNode<Data> midNode = cur.Get();
-            if (midNode == null) return null; // defensive
-
-            int cmp = midNode.Get().compareTo(data);
+            int cmp = next.Get().Get().compareTo(data);
             if (cmp > 0) {
-                high = mid; // candidate in [low, mid]
+                len = step;
             } else {
-                low = mid + 1; // must be right side
+                index += step + 1;
+                curr = next.Get().GetNext();
+                len = len - step - 1;
             }
         }
-
-        if (low >= size) return null;
-
-        return Natural.Of(low);
+        return (index < size.ToLong()) ? Natural.Of(index) : null;
     }
     @Override
     public boolean InsertIfAbsent(Data data) {
