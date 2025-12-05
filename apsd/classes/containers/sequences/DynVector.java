@@ -38,6 +38,7 @@ public class DynVector<Data> extends DynLinearVectorBase<Data>{ // Must extend D
     protected DynVector<Data> NewVector(Data[] arr){
         return new DynVector<>(arr);
     }
+
     @Override
     public boolean Exists(Data element){
         Box<Natural> index = new Box<>(Natural.Of(0));

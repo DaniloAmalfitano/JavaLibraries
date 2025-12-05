@@ -10,11 +10,10 @@ package apsd.classes.containers.sequences.abstractbases;
  import apsd.interfaces.containers.sequences.Vector;
 
 /** Object: Abstract vector base implementation. */
-abstract public class VectorBase<Data> implements Vector<Data>{ // Must implement Vector
+abstract public class VectorBase<Data> implements Vector<Data>{
 
   protected Data[] arr;
 
-  // VectorBase
     public VectorBase() {
         ArrayAlloc(new Natural(0));
     }
@@ -62,8 +61,6 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
   /* Override specific member functions from ResizableContainer               */
   /* ************************************************************************ */
 
-  // ...
-    //Per ora la capacity è uguale alla size perchè Vector è statico
     public Natural Capacity() {
       return Natural.Of(arr.length);
     }
@@ -72,7 +69,6 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
   /* Override specific member functions from IterableContainer                */
   /* ************************************************************************ */
 
-  // ...
     protected class VectorFIterator implements MutableForwardIterator<Data> {
         protected long index = 0;
 
@@ -153,17 +149,16 @@ abstract public class VectorBase<Data> implements Vector<Data>{ // Must implemen
   /* Override specific member functions from Sequence                         */
   /* ************************************************************************ */
 
-  // ...
     @Override
     abstract public Data GetAt(Natural index);
-    @Override
-    abstract public void SetAt(Data data, Natural index);
 
   /* ************************************************************************ */
   /* Override specific member functions from MutableSequence                  */
   /* ************************************************************************ */
 
-  // ...
+    @Override
+    abstract public void SetAt(Data data, Natural index);
+
     @Override
     public MutableSequence<Data> SubSequence(Natural start, Natural end) {
         if(start == null || end == null) throw new NullPointerException("Start or end index cannot be null!");
