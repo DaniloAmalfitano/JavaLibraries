@@ -9,7 +9,7 @@ package apsd.classes.containers.collections.abstractcollections.bases;
  import apsd.interfaces.traits.Predicate;
 
 /** Object: Abstract wrapper set base implementation via chain. */
-abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Data> { // Must implement Set; Chn must extend Chain
+abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Data> {
 
   protected Chn chn;
 

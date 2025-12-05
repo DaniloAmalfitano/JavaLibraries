@@ -7,7 +7,7 @@ package apsd.classes.containers.deqs;
  import apsd.interfaces.containers.deqs.Queue;
 
 /** Object: Wrapper queue implementation. */
-public class WQueue<Data> implements Queue<Data>{ // Must implement Queue
+public class WQueue<Data> implements Queue<Data>{
 
   protected final List<Data> lst;
 
@@ -41,10 +41,10 @@ public class WQueue<Data> implements Queue<Data>{ // Must implement Queue
   /* Override specific member functions from ClearableContainer               */
   /* ************************************************************************ */
 
-  @Override
-  public void Clear() {
-    lst.Clear();
-  }
+    @Override
+    public void Clear() {
+        lst.Clear();
+    }
 
   /* ************************************************************************ */
   /* Override specific member functions from Queue                            */
@@ -53,17 +53,15 @@ public class WQueue<Data> implements Queue<Data>{ // Must implement Queue
     @Override
     public Data Head() {
         if (Size().ToLong() == 0) return null;
-        return lst.GetAt(Natural.ZERO);
+        return lst.GetFirst();
     }
 
-    // Dequeue
     @Override
     public void Dequeue() {
         if (Size().ToLong() == 0) return;
         lst.RemoveFirst();
     }
 
-    // HeadNDequeue
     @Override
     public Data HeadNDequeue() {
         if (Size().ToLong() == 0) return null;
@@ -72,7 +70,6 @@ public class WQueue<Data> implements Queue<Data>{ // Must implement Queue
         return head;
     }
 
-    // Enqueue
     @Override
     public void Enqueue(Data dat) {
         if (dat == null) throw new IllegalArgumentException("Data cannot be null");

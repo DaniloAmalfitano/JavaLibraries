@@ -15,7 +15,7 @@ package apsd.classes.containers.collections.concretecollections.bases;
  import apsd.interfaces.traits.Predicate;
 
 /** Object: Abstract chain base implementation on linked-list. */
-abstract public class LLChainBase<Data> implements Chain<Data> { // Must implement Chain
+abstract public class LLChainBase<Data> implements Chain<Data> {
 
     protected final MutableNatural size = new MutableNatural();
     protected final Box<LLNode<Data>> headref = new Box<>();

@@ -7,7 +7,7 @@ package apsd.classes.containers.deqs;
  import apsd.interfaces.containers.deqs.Stack;
 
 /** Object: Wrapper stack implementation. */
-public class WStack<Data> implements Stack<Data>{ // Must implement Stack
+public class WStack<Data> implements Stack<Data>{
 
   protected final List<Data> lst;
 
@@ -55,12 +55,12 @@ public class WStack<Data> implements Stack<Data>{ // Must implement Stack
       if (lst.IsEmpty()) {
           return null;
       }
-      return lst.GetAt(Natural.ZERO);
+      return lst.GetFirst();
   }
   @Override
    public void Pop() {
        if (!lst.IsEmpty()) {
-           lst.RemoveAt(Natural.ZERO);
+           lst.RemoveFirst();
        }
    }
    @Override
@@ -82,6 +82,6 @@ public class WStack<Data> implements Stack<Data>{ // Must implement Stack
          return top;
    }
    public void Push(Data data) {
-       lst.Insert(data);
+       lst.InsertFirst(data);
    }
 }
