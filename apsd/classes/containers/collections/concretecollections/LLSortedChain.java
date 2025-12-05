@@ -43,17 +43,17 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
         long lenght = Size().ToLong();
         LLNode<Data> pred = null;
         while(lenght > 0) {
-            long newLenght = (lenght - 1) / 2;
+            long newLength = (lenght - 1) / 2;
             Box<LLNode<Data>> next = curr;
-            for (long idx = 0; idx < newLenght; idx++) {
+            for (long idx = 0; idx < newLength; idx++) {
                 next = next.Get().GetNext();
             }
             if (next.Get().Get().compareTo(dat) < 0) {
                 pred = next.Get();
                 curr = next.Get().GetNext();
-                lenght = lenght - newLenght - 1;
+                lenght = lenght - newLength - 1;
             } else {
-                lenght = newLenght;
+                lenght = newLength;
             }
         }
         return pred;
@@ -115,9 +115,8 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
         LLNode<Data> node = curr.Get();
         LLNode<Data> newNode = new LLNode<>(dat, node);
         curr.Set(newNode);
-        if(tailref.Get() == pred){
+        if(tailref.Get() == pred)
             tailref.Set(newNode);
-        }
         size.Increment();
         return true;
     }
