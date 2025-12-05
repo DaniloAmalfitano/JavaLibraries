@@ -41,22 +41,13 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
         if (data == null) {
             return false;
         }
-
-        Natural pos = Natural.ZERO;
-        while (pos.compareTo(vec.Size()) < 0) {
-            Data currentElement = vec.GetAt(pos);
-            if (currentElement == null) {
-                break; // logical end
-            }
-            int cmp = data.compareTo(currentElement);
-            if (cmp <= 0) {
-                // for Insert: insert before first element >= data
-                break;
-            }
-            pos = pos.Increment();
+        Natural pred = SearchPredecessor(data);
+        Natural pos = (pred == null) ? Natural.ZERO : pred.Increment();
+        if(pos !=null) {
+            vec.InsertAt(data, pos);
+            return true;
         }
-        vec.InsertAt(data, pos);
-        return true;
+        return false;
     }
 
     /* ************************************************************************ */
@@ -69,24 +60,19 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
         if (data == null) {
             return false;
         }
-
-        Natural pos = Natural.ZERO;
-        while (pos.compareTo(vec.Size()) < 0) {
-            Data currentElement = vec.GetAt(pos);
-            if (currentElement == null) {
-                break;
+        Natural pred = SearchPredecessor(data);
+        Natural pos = (pred == null) ? Natural.ZERO : pred.Increment();
+        if(pos !=null) {
+            if (pos.compareTo(vec.Size()) < 0) {
+                Data currentElement = vec.GetAt(pos);
+                if (currentElement != null && data.compareTo(currentElement) == 0) {
+                    return false;
+                }
             }
-            int cmp = data.compareTo(currentElement);
-            if (cmp == 0) {
-                return false;
-            }
-            if (cmp < 0) {
-                break;
-            }
-            pos = pos.Increment();
+            vec.InsertAt(data, pos);
+            return true;
         }
-        vec.InsertAt(data, pos);
-        return true;
+        return false;
     }
 
     @Override

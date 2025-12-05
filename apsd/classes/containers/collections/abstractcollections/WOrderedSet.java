@@ -25,5 +25,5 @@ public class WOrderedSet<Data extends Comparable<? super Data>> extends WOrdered
    }
 
   @Override
-    protected void ChainAlloc() { chn = new VSortedChain<>(); }
+  protected void ChainAlloc() { chn = new VSortedChain<>(); }
 }

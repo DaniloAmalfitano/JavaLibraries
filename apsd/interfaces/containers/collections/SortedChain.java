@@ -4,37 +4,52 @@ import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.sequences.SortedSequence;
 
 public interface SortedChain<Data extends Comparable<? super Data>> extends OrderedChain<Data>, SortedSequence<Data>{
-    default Natural SearchPredecessor(Data element) {
-        if (Size().ToLong() == 0) return Natural.ZERO.Decrement();
-        Natural lower = Natural.ZERO;
-        Natural higher = Size().Decrement();
-        while (lower.compareTo(higher) <= 0) {
-            Natural medium = Natural.Of(lower.ToLong() + ((higher.ToLong() - lower.ToLong()) / 2));
-            if (GetAt(medium).compareTo(element) < 0) {
-                lower = medium.Increment();
+    default Natural SearchPredecessor(Data data) {
+        if (data == null || Size().IsZero()) return null;
+
+        long left = 0;
+        long right = Size().ToLong() - 1;
+        long predecessor = -1;
+
+        while (left <= right) {
+            long mid = left + (right - left) / 2; //? utilizza la distanza per evitare overflow
+            Natural midNat = Natural.Of(mid);
+            Data midVal = GetAt(midNat);
+            if (midVal.compareTo(data) < 0) {
+                predecessor = mid;
+                left = mid + 1;
             } else {
-                higher = medium.Decrement();
+                right = mid - 1;
             }
         }
-        return lower.Decrement();
+
+        return predecessor >= 0 ? Natural.Of(predecessor) : null;
     }
 
-    default Natural SearchSuccessor(Data element) {
-        if (Size().ToLong() == 0) return Natural.ZERO;
-        Natural lower = Natural.ZERO;
-        Natural higher = Size().Decrement();
-        while (lower.compareTo(higher) <= 0) {
-            Natural medium = Natural.Of(lower.ToLong() + ((higher.ToLong() - lower.ToLong()) / 2));
-            if (GetAt(medium).compareTo(element) <= 0) {
-                lower = medium.Increment();
+    default Natural SearchSuccessor(Data data) {
+        if (data == null || Size().IsZero()) return null;
+
+        long left = 0;
+        long right = Size().ToLong() - 1;
+        long successor = -1;
+
+        while (left <= right) {
+            long mid = left + (right - left) / 2; //? utilizza la distanza per evitare overflow
+            Natural midNat = Natural.Of(mid);
+            Data midVal = GetAt(midNat);
+            if (midVal.compareTo(data) > 0) {
+                successor = mid;
+                right = mid - 1;
             } else {
-                higher = medium.Decrement();
+                left = mid + 1;
             }
         }
-        return lower;
+
+        return successor >= 0 ? Natural.Of(successor) : null;
     }
 
-  /* ************************************************************************ */
+
+    /* ************************************************************************ */
   /* Override specific member functions from Sequence                         */
   /* ************************************************************************ */
 

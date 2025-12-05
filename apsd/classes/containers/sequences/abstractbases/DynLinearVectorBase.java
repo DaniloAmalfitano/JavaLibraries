@@ -62,10 +62,7 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
       return Natural.Of(arr.length);
     }
     @Override
-    public void ArrayAlloc(Natural size) {
-      long capacity = size.ToLong();
-      if (capacity >= Integer.MAX_VALUE) throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!");
-      if(capacity < 0) throw new ArithmeticException("Overflow: capacity cannot be negative!");
+    public void ArrayAlloc(Natural size) {//TODO check
       super.ArrayAlloc(size);
     }
   /* ************************************************************************ */

@@ -37,7 +37,6 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
   /* Specific member functions of LLSortedChain                               */
   /* ************************************************************************ */
 
-  // ...//PredFind rifallo usando un iteratore, è più semplice
     protected LLNode<Data> PredFind(Data dat){
         if(dat == null) return null;
         Box<LLNode<Data>> curr = headref;
@@ -254,8 +253,6 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
       if (Search(data) != null) return false;
       return Insert(data);
   }
-
-
 
   /* ************************************************************************ */
   /* Override specific member functions from Chain                            */

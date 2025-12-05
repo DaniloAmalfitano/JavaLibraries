@@ -56,13 +56,6 @@ public class LLNode<Data> implements MutableReference<Data> {
     return Objects.hash(dat, next.Get());
   }
 
-  /*@Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (!(obj instanceof LLNode<?> node)) return false;
-    return (next.Get() == node.next.Get() && Objects.equals(dat, node.dat));
-  }*/
-// java
   @Override
   public boolean equals(Object obj) {
     if (this == obj) return true;
@@ -70,7 +63,6 @@ public class LLNode<Data> implements MutableReference<Data> {
     LLNode<?> node = (LLNode<?>) obj;
     return (next.Get() == node.next.Get() && Objects.equals(dat, node.dat));
   }
-
 
   @Override
   public String toString() {

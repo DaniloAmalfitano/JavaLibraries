@@ -68,7 +68,6 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
         node.Set(data);
     }
 
-    // SetFirst
     @Override
     public void SetFirst(Data data) {
         if (headref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
@@ -82,7 +81,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
         tailref.Get().Set(data);
     }
 
-    // SubSequence
+
     @Override
     public MutableSequence<Data> SubSequence(Natural startindex, Natural endindex) {
         if (startindex.ToLong() < 0 || endindex.ToLong() > size.ToLong() || startindex.ToLong() > endindex.ToLong()) {
@@ -122,6 +121,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
                 node = node.GetNext().Get();
                 i++;
             }
+            if(node == null) throw new IllegalStateException("Internal list structure corrupted");
             LLNode<Data> newNode = new LLNode<Data>(data);
             newNode.SetNext(node.GetNext().Get());
             node.SetNext(newNode);
@@ -129,7 +129,6 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
         }
     }
 
-    // InsertFirst
     @Override
     public void InsertFirst(Data data) {
         LLNode<Data> newNode = new LLNode<>(data);
@@ -141,7 +140,6 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Mu
         size.Increment();
     }
 
-    // InsertLast
     @Override
     public void InsertLast(Data data) {
         LLNode<Data> newNode = new LLNode<Data>(data);

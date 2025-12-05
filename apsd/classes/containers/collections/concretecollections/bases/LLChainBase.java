@@ -185,7 +185,6 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
         return new ListBRefIterator();
     }
 
-    // Forward Data Iterator
     protected class ListFIterator implements MutableForwardIterator<Data> {
         protected final ForwardIterator<Box<LLNode<Data>>> itr;
 
@@ -235,7 +234,6 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
         return new ListFIterator();
     }
 
-    // Backward Data Iterator
     protected class ListBIterator implements MutableBackwardIterator<Data> {
         protected final BackwardIterator<Box<LLNode<Data>>> itr;
 
@@ -262,7 +260,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
         @Override
         public void Reset() {
             itr.Reset();
-        }
+        } //TODO Controllare se sarebbe stato più corretto resettare più volte
         @Override
         public Data GetCurrent() {
             if (!IsValid()) throw new IllegalStateException("Iterator is not valid.");
@@ -325,10 +323,10 @@ abstract public class LLChainBase<Data> implements Chain<Data> { // Must impleme
       long idx = ExcIfOutOfBound(pos);
       Box<LLNode<Data>> curr = headref;
       for (long i = 0; i < idx; i++) {
-          if (curr.IsNull()) throw new IllegalStateException();
+          //if (curr.IsNull()) throw new IllegalStateException();
           curr = curr.Get().GetNext();
       }
-      if (curr.IsNull()) throw new IllegalStateException();
+      //if (curr.IsNull()) throw new IllegalStateException();
       return curr.Get().Get();
   }
     @Override

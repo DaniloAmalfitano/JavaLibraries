@@ -26,33 +26,18 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data>{ // Must e
   /* Override specific member functions from ReallocableContainer             */
   /* ************************************************************************ */
 
-  // ...
-    /*@Override
-    public void Realloc(Natural size){
-        if(size == null) throw new NullPointerException("Size cannot be null!");
-        Data[] oldArr = arr;
-        ArrayAlloc(size);
-        int minSize = size.compareTo(Natural.Of(arr.length)) < 0 ? (int)size.ToLong() : arr.length;
-        System.arraycopy(oldArr, 0, arr, 0, minSize);
-    }*/
-
     @Override
     public void Realloc(Natural size) {
         if (size == null) throw new NullPointerException("Size cannot be null!");
         Data[] oldArr = arr;
         ArrayAlloc(size);
-
         int newCap = arr.length;
-        int requested = (int) size.ToLong();
-        int srcLen = (oldArr != null) ? oldArr.length : 0;
-
-        int copyLen = Math.min(srcLen, Math.min(requested, newCap));
-
+        int newDesiredLength = Math.min((int)size.ToLong(), newCap);
+        int copyLen = Math.min(((oldArr != null) ? oldArr.length : 0),newDesiredLength);
         if (copyLen > 0) {
             System.arraycopy(oldArr, 0, arr, 0, copyLen);
         }
     }
-
 
   /* ************************************************************************ */
   /* Override specific member functions from Sequence                         */
@@ -62,13 +47,13 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data>{ // Must e
     @Override
     public void SetAt(Data element, Natural index){
         if(index == null) throw new NullPointerException("Index cannot be null!");
-        if(index.ToLong() >= arr.length) throw new IndexOutOfBoundsException("Index out of bounds!");
+        if(index.ToLong() <0 || index.ToLong() >= arr.length) throw new IndexOutOfBoundsException("Index out of bounds!");
         arr[(int)index.ToLong()] = element;
     }
     @Override
     public Data GetAt(Natural index){
         if(index == null) throw new NullPointerException("Index cannot be null!");
-        if(index.ToLong() >= arr.length) throw new IndexOutOfBoundsException("Index out of bounds!");
+        if(index.ToLong() <0 || index.ToLong() >= arr.length) throw new IndexOutOfBoundsException("Index out of bounds!");
         return arr[(int)index.ToLong()];
     }
   /* ************************************************************************ */
