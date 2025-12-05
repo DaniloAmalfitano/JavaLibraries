@@ -25,8 +25,7 @@ public class DynCircularVector<Data> extends DynCircularVectorBase<Data>{ // Mus
     super(arr);
   }
 
-  // NewVector
-    public DynCircularVector<Data> NewVector (Data[] arr){
+  public DynCircularVector<Data> NewVector (Data[] arr){
         return new DynCircularVector<>(arr);
     }
 

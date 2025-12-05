@@ -32,8 +32,8 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data>{ // Must e
         Data[] oldArr = arr;
         ArrayAlloc(size);
         int newCap = arr.length;
-        int newDesiredLength = Math.min((int)size.ToLong(), newCap);
-        int copyLen = Math.min(((oldArr != null) ? oldArr.length : 0),newDesiredLength);
+        int newLength = Math.min((int)size.ToLong(), newCap);
+        int copyLen = Math.min(((oldArr != null) ? oldArr.length : 0),newLength);
         if (copyLen > 0) {
             System.arraycopy(oldArr, 0, arr, 0, copyLen);
         }

@@ -24,7 +24,6 @@ public class CircularVector<Data> extends CircularVectorBase<Data>{ // Must exte
         super(arr);
   }
 
-  // NewVector
     @Override
     protected CircularVector<Data> NewVector(Data[] arr){
         return new CircularVector<>(arr);
