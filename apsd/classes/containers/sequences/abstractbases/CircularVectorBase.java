@@ -101,9 +101,8 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
         for (long i = size - 1; i >= index; i--) {
             long wrt = i + len;
             Natural natRdr = Natural.Of(i);
-            Data dataToMove = GetAt(natRdr);
             long physicalWrtIndex = (start + wrt) % arr.length;
-            arr[(int) physicalWrtIndex] = dataToMove;
+            arr[(int) physicalWrtIndex] = GetAt(natRdr);
         }
         for (long i = index; i < index + len; i++) {
             long physicalNullIndex = (start + i) % arr.length;
@@ -135,8 +134,10 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
     @Override
     public void SetAt(Data value, Natural index) {
         if (index == null) throw new NullPointerException("Index cannot be null!");
-        long idx = ExcIfOutOfBound(index);
-        arr[(int) ((start + idx) % arr.length)] = value;
+        if (index.ToLong() < 0 || index.ToLong() >= Size().ToLong()) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong());
+        }
+        arr[(int) ((start + index.ToLong()) % arr.length)] = value;
     }
 
     @Override
