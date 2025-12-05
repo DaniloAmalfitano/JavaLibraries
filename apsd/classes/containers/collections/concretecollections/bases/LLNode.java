@@ -20,7 +20,7 @@ public class LLNode<Data> implements MutableReference<Data> {
   }
 
   public LLNode(LLNode<Data> node) {
-    if (node == null) { throw new NullPointerException("LLNode cannot be null!"); } //Aggiustato perche da sempre null pointer, verifica che vada bene
+    if (node == null) { throw new NullPointerException("LLNode cannot be null!"); }
     dat = node.dat;
     next.Set(node.next.Get() != null ? new LLNode<>(node.next.Get()) : null);
   }

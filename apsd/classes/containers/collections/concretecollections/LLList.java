@@ -14,7 +14,7 @@ package apsd.classes.containers.collections.concretecollections;
  import java.util.ListIterator;
 
 /** Object: Concrete list implementation on linked-list. */
-public class LLList<Data> extends LLChainBase<Data> implements List<Data>{ // Must extend LLChainBase and implement List
+public class LLList<Data> extends LLChainBase<Data> implements List<Data>{
 
     public LLList(){
     super();

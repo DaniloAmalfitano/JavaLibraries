@@ -14,7 +14,7 @@ import apsd.interfaces.containers.sequences.DynVector;
  import apsd.interfaces.containers.sequences.MutableSequence;
 
 /** Object: Concrete list implementation on (dynamic circular) vector. */
-public class VList<Data> extends VChainBase<Data> implements List<Data>{ // Must extend VChainBase and implement List
+public class VList<Data> extends VChainBase<Data> implements List<Data>{
 
    public VList(){
         super();

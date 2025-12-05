@@ -9,7 +9,7 @@ package apsd.classes.containers.collections.concretecollections;
  import apsd.interfaces.containers.iterators.ForwardIterator;
 
 /** Object: Concrete sorted chain implementation on linked-list. */
-public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChainBase<Data> implements SortedChain<Data>{ // Must extend LLChainBase and implement SortedChain
+public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChainBase<Data> implements SortedChain<Data>{
 
   public LLSortedChain(){
       super();
