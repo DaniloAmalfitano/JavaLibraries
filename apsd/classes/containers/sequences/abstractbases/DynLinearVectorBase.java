@@ -84,7 +84,7 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
         if(newSize.ToLong() > arr.length){
             throw new IllegalArgumentException("New size cannot be greater than current capacity!");
         }
-        size = newSize.ToLong();
+        size -= newSize.ToLong();
     }
     @Override
     public void ShiftLeft(Natural idx, Natural howMany){
