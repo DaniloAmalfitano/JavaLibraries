@@ -8,7 +8,6 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
 
     protected long start = 0L;
 
-    // CircularVectorBase
     public CircularVectorBase() {
         super();
     }
@@ -19,6 +18,16 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
     public CircularVectorBase(TraversableContainer<Data> con) {
         super(con);
     }
+
+    @Override
+    public void ArrayAlloc(Natural size) {
+        if( size == null) {
+            throw new NullPointerException("Size cannot be null!");
+        }
+        super.ArrayAlloc(size);
+        start = 0L;
+    }
+
     /* ************************************************************************ */
     /* Override specific member functions from ReallocableContainer             */
     /* ************************************************************************ */
@@ -35,31 +44,49 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
         Data[] oldArr = arr;
         long oldStart = start;
         long oldLogicalSize = Size().ToLong();
-        int oldCapacity = oldArr.length;
+        long oldCapacity = oldArr.length;
         super.ArrayAlloc(size);
-        int newCapacity = (arr == null) ? 0 : arr.length;
+        long newCapacity = arr.length;
         start = 0L;
-        if (oldLogicalSize == 0) {
-            return;
-        }
-        if (newCapacity == 0) {
-            return;
-        }
-        int copyCount = (int) Math.min(oldLogicalSize, newCapacity);
+        if (newCapacity == 0) return;
+        long copyCount = Math.min(oldLogicalSize, newCapacity);
         for (int i = 0; i < copyCount; i++) {
-            int oldIdx = (int) ((oldStart + i) % oldCapacity);
-            arr[i] = oldArr[oldIdx];
+            long oldIdx = ((oldStart + i) % oldCapacity);
+            arr[i] = oldArr[(int)oldIdx];
         }
-
     }
-
-
 
     /* ************************************************************************ */
     /* Override specific member functions from Sequence                         */
     /* ************************************************************************ */
 
-    // ...
+    @Override
+    public Data GetAt(Natural index) {
+        if (index == null) throw new NullPointerException("Index cannot be null!");
+        if (index.ToLong() < 0 || index.ToLong() >= Size().ToLong()) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong());
+        }
+        return arr[(int) ((start + index.ToLong()) % arr.length)];
+    }
+
+
+    /* ************************************************************************ */
+    /* Override specific member functions from MutableSequence                  */
+    /* ************************************************************************ */
+
+    @Override
+    public void SetAt(Data value, Natural index) {
+        if (index == null) throw new NullPointerException("Index cannot be null!");
+        if (index.ToLong() < 0 || index.ToLong() >= Size().ToLong()) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong());
+        }
+        arr[(int) ((start + index.ToLong()) % arr.length)] = value;
+    }
+
+    /* ************************************************************************ */
+    /* Specific member functions of Vector                                      */
+    /* ************************************************************************ */
+
     @Override
     public void ShiftLeft(Natural position, Natural num) {
         long index = ExcIfOutOfBound(position);
@@ -108,44 +135,5 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> { // Mus
             long physicalNullIndex = (start + i) % arr.length;
             arr[(int) physicalNullIndex] = null;
         }
-    }
-
-    /* ************************************************************************ */
-    /* Override specific member functions from MutableSequence                  */
-    /* ************************************************************************ */
-
-    // ...
-
-
-    /* ************************************************************************ */
-    /* Specific member functions of Vector                                      */
-    /* ************************************************************************ */
-
-    // ...
-    @Override
-    public Data GetAt(Natural index) {
-        if (index == null) throw new NullPointerException("Index cannot be null!");
-        if (index.ToLong() < 0 || index.ToLong() >= Size().ToLong()) {
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong());
-        }
-        return arr[(int) ((start + index.ToLong()) % arr.length)];
-    }
-
-    @Override
-    public void SetAt(Data value, Natural index) {
-        if (index == null) throw new NullPointerException("Index cannot be null!");
-        if (index.ToLong() < 0 || index.ToLong() >= Size().ToLong()) {
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong());
-        }
-        arr[(int) ((start + index.ToLong()) % arr.length)] = value;
-    }
-
-    @Override
-    public void ArrayAlloc(Natural size) {
-        if( size == null) {
-            throw new NullPointerException("Size cannot be null!");
-        }
-        super.ArrayAlloc(size);
-        start = 0L;
     }
 }

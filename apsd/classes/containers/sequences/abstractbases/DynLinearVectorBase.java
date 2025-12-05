@@ -57,19 +57,16 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
             size = newCapacity.ToLong();
         }
     }
+
     @Override
     public Natural Capacity() {
       return Natural.Of(arr.length);
     }
-    @Override
-    public void ArrayAlloc(Natural size) {//TODO check
-      super.ArrayAlloc(size);
-    }
+
   /* ************************************************************************ */
   /* Override specific member functions from ResizableContainer               */
   /* ************************************************************************ */
 
-  // ...
       @Override
       public void Expand(Natural increment) {
           if (increment == null) throw new IllegalArgumentException("Increment argument is null.");
@@ -86,32 +83,10 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
         }
         size -= newSize.ToLong();
     }
+
+
     @Override
-    public void ShiftLeft(Natural idx, Natural howMany){
-        if(idx == null || howMany == null) throw new NullPointerException("Index or howMany cannot be null!");
-        if(idx.ToLong() >= size) throw new IndexOutOfBoundsException("Index out of bounds!");
-        int howM = (int) Math.min(howMany.ToLong(), size - idx.ToLong());;
-        for(int i = (int)idx.ToLong(); i < size - howM; i++){
-            arr[i] = arr[i + howM];
-        }
-        for(int i = (int)(size - howM); i < size; i++){
-            arr[i] = null;
-        }
-        size -= howM;
-    }
-    @Override
-    public void ShiftRight(Natural idx, Natural howMany){
-        if(idx == null || howMany == null) throw new NullPointerException("Index or howMany cannot be null!");
-        if(idx.ToLong() > size) throw new IndexOutOfBoundsException("Index out of bounds!");
-        if(howMany.ToLong() > arr.length - size){
-            Realloc(Natural.Of(size + howMany.ToLong()));
-        }
-        for(int i = (int)(size - 1); i >= idx.ToLong(); i--){
-            arr[(int)(i + howMany.ToLong())] = arr[i];
-        }
-        for(int i = (int)idx.ToLong(); i < idx.ToLong() + howMany.ToLong(); i++){
-            arr[i] = null;
-        }
-        size += howMany.ToLong();
+    public void ArrayAlloc(Natural size) {//TODO check
+        super.ArrayAlloc(size);
     }
 }

@@ -32,7 +32,6 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   /* Override specific member functions from Container                        */
   /* ************************************************************************ */
 
-  // ...
     @Override
     public Natural Size() {
         return Natural.Of(size);
@@ -42,7 +41,22 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   /* Override specific member functions from ClearableContainer               */
   /* ************************************************************************ */
 
-  // ...
+
+
+
+  /* ************************************************************************ */
+  /* Override specific member functions from ReallocableContainer             */
+  /* ************************************************************************ */
+
+    @Override
+    public void Realloc(Natural newCapacity) {
+        if(newCapacity == null) throw new NullPointerException("Size cannot be null!");
+        super.Realloc(newCapacity);
+        if(size > newCapacity.ToLong()) {
+            size = newCapacity.ToLong();
+        }
+    }
+
     @Override
     public void Clear() {
         super.Clear();
@@ -50,23 +64,16 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     }
 
   /* ************************************************************************ */
-  /* Override specific member functions from ReallocableContainer             */
-  /* ************************************************************************ */
-
-  // ...
-
-  /* ************************************************************************ */
   /* Override specific member functions from ResizableContainer               */
   /* ************************************************************************ */
 
-  // ...
-  @Override
-  public void Expand(Natural increment) {
-      if (increment == null) throw new IllegalArgumentException("Increment argument is null.");
-      long newCapacity = this.Capacity().ToLong() + increment.ToLong();
-      super.Realloc(Natural.Of(newCapacity));
-      this.size += increment.ToLong();
-  }
+    @Override
+    public void Expand(Natural increment) {
+        if (increment == null) throw new IllegalArgumentException("Increment argument is null.");
+        long newCapacity = this.Capacity().ToLong() + increment.ToLong();
+        super.Realloc(Natural.Of(newCapacity));
+        this.size += increment.ToLong();
+    }
 
     @Override
     public void Reduce(Natural decrement) {
@@ -74,11 +81,11 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
         if (decrement.ToLong() > this.size) throw new IllegalArgumentException("Decrement greater than current size.");
         this.size -= decrement.ToLong();
     }
+
   /* ************************************************************************ */
   /* Specific member functions of Vector                                      */
   /* ************************************************************************ */
 
-  // ...
     @Override
     public void ShiftLeft(Natural position, Natural num) {
       super.ShiftLeft(position, num);
@@ -96,12 +103,5 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
         super.ArrayAlloc(arraySize);
         start = 0L;
     }
-    @Override
-    public void Realloc(Natural newCapacity) {
-        if(newCapacity == null) throw new NullPointerException("Size cannot be null!");
-        super.Realloc(newCapacity);
-        if(size > newCapacity.ToLong()) {
-            size = newCapacity.ToLong();
-        }
-    }
+
 }

@@ -47,13 +47,9 @@ public interface DynVector<Data> extends ResizableContainer,InsertableAtSequence
     }
     @Override
     default void ShiftRight(Natural pos, Natural howMany){
-        if(howMany.ToLong() == 0)
-            return;
-        if(pos.ToLong() < 0 || pos.ToLong() >= Size().ToLong()){
-            return;
-        }
-        if(pos.ToLong() + howMany.ToLong() > Size().ToLong())
-            Expand(howMany);
+        if(howMany.ToLong() == 0) return;
+        if(pos.ToLong() < 0 || pos.ToLong() >= Size().ToLong()) return;
+        Expand(howMany);
         Vector.super.ShiftRight(pos, howMany);
     }
     @Override

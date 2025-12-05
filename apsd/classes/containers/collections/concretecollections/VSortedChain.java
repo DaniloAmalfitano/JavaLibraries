@@ -75,36 +75,23 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
         return false;
     }
 
+    /**
+     * Rimuove tutte le occorrenze consecutive di 'data' dal vettore ordinato 'vec'.
+     * L'operazione è basata su un intervallo determinato da Search e SearchSuccessor.
+     *
+     * @param data L'elemento da rimuovere.
+     */
     @Override
     public void RemoveOccurrences(Data data) {
-        if (data == null) {
-            return;
-        }
-
-        Natural pos = Natural.ZERO;
-        // find first element >= data
-        while (pos.compareTo(vec.Size()) < 0) {
-            Data currentElement = vec.GetAt(pos);
-            if (currentElement == null) {
-                return; // no more data
-            }
-            int cmp = data.compareTo(currentElement);
-            if (cmp <= 0) {
-                break;
-            }
-            pos = pos.Increment();
-        }
-
-        // remove consecutive == data
-        while (pos.compareTo(vec.Size()) < 0) {
-            Data currentElement = vec.GetAt(pos);
-            if (currentElement == null) {
-                break;
-            }
-            if (data.compareTo(currentElement) != 0) {
-                break;
-            }
-            vec.RemoveAt(pos);
-        }
+        if (data == null) return;
+        Natural firstOccurrenceIndex = Search(data);
+        if (firstOccurrenceIndex == null) return;
+        Natural successorIndex = SearchSuccessor(data);
+        long start = firstOccurrenceIndex.ToLong();
+        long end = (successorIndex == null) ? vec.Size().ToLong() : successorIndex.ToLong();
+        long count = end - start;
+        if (count > 0)
+            vec.ShiftLeft(Natural.Of(start), Natural.Of(count));
     }
+
 }
