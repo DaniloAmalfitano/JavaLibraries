@@ -86,15 +86,15 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
   /* ************************************************************************ */
 
     @Override
-    public void ShiftLeft(Natural position, Natural num) {
-      super.ShiftLeft(position, num);
-      Reduce(num);
+    public void ShiftLeft(Natural position, Natural howMany) {
+      super.ShiftLeft(position, howMany);
+      Reduce(howMany);
     }
 
     @Override
-    public void ShiftRight(Natural position, Natural num) {
-        Expand(num);
-        super.ShiftRight(position, num);
+    public void ShiftRight(Natural position, Natural howMany) {
+        Expand(howMany);
+        super.ShiftRight(position, howMany);
     }
     @Override
     public void ArrayAlloc(Natural arraySize){

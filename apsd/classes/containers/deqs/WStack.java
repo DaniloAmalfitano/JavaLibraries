@@ -25,7 +25,8 @@ public class WStack<Data> implements Stack<Data>{
 
    public WStack(List<Data> lst, TraversableContainer<Data> con){
         this.lst = lst;
-        con.TraverseForward(dat -> {this.lst.Insert(dat); return false;});
+        if(con!=null)
+            con.TraverseForward(dat -> {this.lst.Insert(dat); return false;});
    }
 
   /* ************************************************************************ */

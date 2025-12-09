@@ -64,8 +64,8 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
   /* ************************************************************************ */
 
     @Override
-    public boolean Insert(Data data) {
-        return chn.InsertIfAbsent(data);
+    public boolean Insert(Data dat) {
+        return chn.InsertIfAbsent(dat);
     }
 
   /* ************************************************************************ */
@@ -73,8 +73,8 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
   /* ************************************************************************ */
 
     @Override
-    public boolean Remove(Data data) {
-        return chn.Remove(data);
+    public boolean Remove(Data dat) {
+        return chn.Remove(dat);
     }
 
   /* ************************************************************************ */

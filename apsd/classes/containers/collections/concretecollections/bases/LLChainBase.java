@@ -250,9 +250,9 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
             itr.Next();
         }
         @Override
-        public void SetCurrent(Data data) {
-            if (data == null) return;
-            itr.GetCurrent().Get().Set(data);
+        public void SetCurrent(Data dat) {
+            if (dat == null) return;
+            itr.GetCurrent().Get().Set(dat);
         }
     }
 
@@ -298,9 +298,9 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
             itr.Prev();
         }
         @Override
-        public void SetCurrent(Data data) {
-            if (data == null) return;
-            itr.GetCurrent().Get().Set(data);
+        public void SetCurrent(Data dat) {
+            if (dat == null) return;
+            itr.GetCurrent().Get().Set(dat);
         }
     }
     @Override
@@ -364,12 +364,12 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
       if(Size().IsZero()) throw new IndexOutOfBoundsException("Cannot remove from empty chain.");
 
       final Box<Data> removed = new Box<>();
-      final Box<Long> curidx = new Box<>(0L);
+      final Box<Long> curIdx = new Box<>(0L);
       final Box<LLNode<Data>> prd = new Box<>();
 
       FRefIterator().ForEachForward(cur -> {
           LLNode<Data> node = cur.Get();
-          if (curidx.Get() == idx) {
+          if (curIdx.Get() == idx) {
               removed.Set(node.Get());
               cur.Set(node.GetNext().Get());
               if (tailref.Get() == node) { tailref.Set(prd.Get()); }
@@ -377,7 +377,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
               return true;
           }
           prd.Set(node);
-          curidx.Set(curidx.Get() + 1);
+          curIdx.Set(curIdx.Get() + 1);
           return false;
       });
 

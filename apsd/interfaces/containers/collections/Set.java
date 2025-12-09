@@ -36,7 +36,7 @@ public interface Set<Data> extends Collection<Data>{
   /* ************************************************************************ */
 
   @Override
-  default boolean IsEqual(IterableContainer<Data> other) {
-    return other != null && this.Size().equals(other.Size()) && this.TraverseForward(elem -> !other.Exists(elem));
+  default boolean IsEqual(IterableContainer<Data> con) {
+    return con != null && this.Size().equals(con.Size()) && this.TraverseForward(elem -> !con.Exists(elem));
   }
 }

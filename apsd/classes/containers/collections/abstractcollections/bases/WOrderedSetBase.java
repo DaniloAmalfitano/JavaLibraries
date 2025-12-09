@@ -62,27 +62,27 @@ abstract public class WOrderedSetBase<Data extends Comparable<? super Data>, Chn
         return chn.MaxNRemove();
     }
     @Override
-    public Data Predecessor(Data data) {
-        return chn.Predecessor(data);
+    public Data Predecessor(Data dat) {
+        return chn.Predecessor(dat);
     }
     @Override
-    public void RemovePredecessor(Data data) {
-        chn.RemovePredecessor(data);
+    public void RemovePredecessor(Data dat) {
+        chn.RemovePredecessor(dat);
     }
     @Override
-    public void RemoveSuccessor(Data data) {
-        chn.RemoveSuccessor(data);
+    public void RemoveSuccessor(Data dat) {
+        chn.RemoveSuccessor(dat);
     }
     @Override
-    public Data Successor(Data data) {
-        return chn.Successor(data);
+    public Data Successor(Data dat) {
+        return chn.Successor(dat);
     }
     @Override
-    public Data PredecessorNRemove(Data data) {
-        return chn.PredecessorNRemove(data);
+    public Data PredecessorNRemove(Data dat) {
+        return chn.PredecessorNRemove(dat);
     }
     @Override
-    public Data SuccessorNRemove(Data data) {
-        return chn.SuccessorNRemove(data);
+    public Data SuccessorNRemove(Data dat) {
+        return chn.SuccessorNRemove(dat);
     }
 }

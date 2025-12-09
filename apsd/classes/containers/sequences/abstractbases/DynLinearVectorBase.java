@@ -74,12 +74,12 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
       }
 
     @Override
-    public void Reduce(Natural newSize){
-        if(newSize == null) throw new NullPointerException("Size cannot be null!");
-        if(newSize.ToLong() > arr.length){
+    public void Reduce(Natural decrement){
+        if(decrement == null) throw new NullPointerException("Size cannot be null!");
+        if(decrement.ToLong() > arr.length){
             throw new IllegalArgumentException("New size cannot be greater than current capacity!");
         }
-        size -= newSize.ToLong();
+        size -= decrement.ToLong();
     }
 
 

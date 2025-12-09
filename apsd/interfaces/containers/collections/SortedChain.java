@@ -54,15 +54,15 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
   /* ************************************************************************ */
 
   @Override
-  default Natural Search(Data data) {
-      if (data == null || IsEmpty()) {
+  default Natural Search(Data dat) {
+      if (dat == null || IsEmpty()) {
           return null;
       }
       Natural lower = Natural.ZERO;
       Natural higher = Size().Decrement();
       while (lower.compareTo(higher) <= 0) {
           Natural medium = Natural.Of(lower.ToLong() + ((higher.ToLong() - lower.ToLong()) / 2));
-          int cmp = GetAt(medium).compareTo(data);
+          int cmp = GetAt(medium).compareTo(dat);
           if (cmp == 0) {
               return medium;
           } else if (cmp < 0) {

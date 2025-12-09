@@ -54,10 +54,10 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data>{ // Must e
   /* ************************************************************************ */
 
     @Override
-    public void SetAt(Data element, Natural index){
+    public void SetAt(Data dat, Natural index){
         if(index == null) throw new NullPointerException("Index cannot be null!");
         if(index.ToLong() <0 || index.ToLong() >= arr.length) throw new IndexOutOfBoundsException("Index out of bounds!");
-        arr[(int)index.ToLong()] = element;
+        arr[(int)index.ToLong()] = dat;
     }
 
 }

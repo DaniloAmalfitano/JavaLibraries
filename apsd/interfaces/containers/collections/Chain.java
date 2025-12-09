@@ -7,9 +7,9 @@ public interface Chain<Data> extends RemovableAtSequence<Data>, Set<Data>{
 
   default boolean InsertIfAbsent(Data dat){ return !this.Exists(dat) && this.Insert(dat);}
 
-    default void RemoveOccurrences(Data data){
-        while(Exists(data)){
-            Remove(data);
+    default void RemoveOccurrences(Data dat){
+        while(Exists(dat)){
+            Remove(dat);
         }
     }
 
@@ -22,8 +22,8 @@ public interface Chain<Data> extends RemovableAtSequence<Data>, Set<Data>{
   /* ************************************************************************ */
 
     @Override
-  default Natural Search(Data data) {
-      if (data == null) return null;
-      return RemovableAtSequence.super.Search(data);
+  default Natural Search(Data dat) {
+      if (dat == null) return null;
+      return RemovableAtSequence.super.Search(dat);
   }
 }

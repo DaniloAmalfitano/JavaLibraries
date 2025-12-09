@@ -63,24 +63,21 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
     @Override
     public Data GetAt(Natural index) {
         if (index == null) throw new NullPointerException("Index cannot be null!");
-        if (index.ToLong() < 0 || index.ToLong() >= Size().ToLong()) {
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong());
-        }
+        if (index.ToLong() < 0 || index.ToLong() >= Size().ToLong()) throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong());
         return arr[(int) ((start + index.ToLong()) % arr.length)];
     }
-
 
     /* ************************************************************************ */
     /* Override specific member functions from MutableSequence                  */
     /* ************************************************************************ */
 
     @Override
-    public void SetAt(Data value, Natural index) {
+    public void SetAt(Data dat, Natural index) {
         if (index == null) throw new NullPointerException("Index cannot be null!");
         if (index.ToLong() < 0 || index.ToLong() >= Size().ToLong()) {
             throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong());
         }
-        arr[(int) ((start + index.ToLong()) % arr.length)] = value;
+        arr[(int) ((start + index.ToLong()) % arr.length)] = dat;
     }
 
     /* ************************************************************************ */
@@ -88,26 +85,25 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
     /* ************************************************************************ */
 
     @Override
-    public void ShiftLeft(Natural position, Natural num) {
+    public void ShiftLeft(Natural position, Natural howMany) {
         long index = ExcIfOutOfBound(position);
         long size = Size().ToLong();
-        long len = num.ToLong();
-        len = Math.min(len, size - index);
-        if (index < size - (index + len)) {
-            long iniwrt = index - 1 + len;
+        long posToShift = howMany.compareTo(Natural.Of(size-index)) < 0 ? howMany.ToLong() : size - index;
+        if (index < size - (index + posToShift)) {
+            long iniwrt = index - 1 + posToShift;
             long wrt = iniwrt;
             for (long rdr = index - 1; rdr >= 0; rdr--, wrt--) {
                 Natural natrdr = Natural.Of(rdr);
                 SetAt(GetAt(natrdr), Natural.Of(wrt));
                 SetAt(null, natrdr);
             }
-            for (; iniwrt - wrt < len; wrt--) {
+            for (; iniwrt - wrt < posToShift; wrt--) {
                 SetAt(null, Natural.Of(wrt));
             }
-            start = (start + len) % arr.length;
+            start = (start + posToShift) % arr.length;
         } else {
             long wrt = index;
-            long rdr = index + len;
+            long rdr = index + posToShift;
             while (rdr < size) {
                 SetAt(GetAt(Natural.Of(rdr)), Natural.Of(wrt));
                 rdr++;
@@ -119,19 +115,20 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
             }
         }
     }
+
     @Override
-    public void ShiftRight(Natural position, Natural num) {
+    public void ShiftRight(Natural position, Natural howMany) {
         long index = ExcIfOutOfBound(position);
         long size = Size().ToLong();
-        long len = num.ToLong();
+        long posToShift = howMany.ToLong();
         if (arr == null || arr.length == 0) return;
         for (long i = size - 1; i >= index; i--) {
-            long wrt = i + len;
+            long wrt = i + posToShift;
             Natural natRdr = Natural.Of(i);
             long physicalWrtIndex = (start + wrt) % arr.length;
             arr[(int) physicalWrtIndex] = GetAt(natRdr);
         }
-        for (long i = index; i < index + len; i++) {
+        for (long i = index; i < index + posToShift; i++) {
             long physicalNullIndex = (start + i) % arr.length;
             arr[(int) physicalNullIndex] = null;
         }

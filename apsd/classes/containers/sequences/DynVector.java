@@ -40,10 +40,10 @@ public class DynVector<Data> extends DynLinearVectorBase<Data>{ // Must extend D
     }
 
     @Override
-    public boolean Exists(Data element){
+    public boolean Exists(Data dat){
         Box<Natural> index = new Box<>(Natural.Of(0));
         return this.TraverseForward(elem -> {
-            if((element == null && elem == null) || (element != null && element.equals(elem))){
+            if((dat == null && elem == null) || (dat != null && dat.equals(elem))){
                 return true;
             }
             index.Set(Natural.Of(index.Get().ToLong() + 1L));

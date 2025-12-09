@@ -37,14 +37,14 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
   /* ************************************************************************ */
 
     @Override
-    public boolean Insert(Data data) {
-        if (data == null) {
+    public boolean Insert(Data dat) {
+        if (dat == null) {
             return false;
         }
-        Natural pred = SearchPredecessor(data);
+        Natural pred = SearchPredecessor(dat);
         Natural pos = (pred == null) ? Natural.ZERO : pred.Increment();
         if(pos !=null) {
-            vec.InsertAt(data, pos);
+            vec.InsertAt(dat, pos);
             return true;
         }
         return false;
@@ -54,22 +54,21 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
     /* Override specific member functions from Chain                            */
     /* ************************************************************************ */
 
-    // Set-like: do not insert if already present
     @Override
-    public boolean InsertIfAbsent(Data data) {
-        if (data == null) {
+    public boolean InsertIfAbsent(Data dat) {
+        if (dat == null) {
             return false;
         }
-        Natural pred = SearchPredecessor(data);
+        Natural pred = SearchPredecessor(dat);
         Natural pos = (pred == null) ? Natural.ZERO : pred.Increment();
         if(pos !=null) {
             if (pos.compareTo(vec.Size()) < 0) {
                 Data currentElement = vec.GetAt(pos);
-                if (currentElement != null && data.compareTo(currentElement) == 0) {
+                if (currentElement != null && dat.compareTo(currentElement) == 0) {
                     return false;
                 }
             }
-            vec.InsertAt(data, pos);
+            vec.InsertAt(dat, pos);
             return true;
         }
         return false;
@@ -82,11 +81,11 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
      * @param data L'elemento da rimuovere.
      */
     @Override
-    public void RemoveOccurrences(Data data) {
-        if (data == null) return;
-        Natural firstOccurrenceIndex = Search(data);
+    public void RemoveOccurrences(Data dat) {
+        if (dat == null) return;
+        Natural firstOccurrenceIndex = Search(dat);
         if (firstOccurrenceIndex == null) return;
-        Natural successorIndex = SearchSuccessor(data);
+        Natural successorIndex = SearchSuccessor(dat);
         long start = firstOccurrenceIndex.ToLong();
         long end = (successorIndex == null) ? vec.Size().ToLong() : successorIndex.ToLong();
         long count = end - start;
