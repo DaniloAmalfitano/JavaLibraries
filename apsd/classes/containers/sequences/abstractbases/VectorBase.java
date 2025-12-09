@@ -33,7 +33,6 @@ abstract public class VectorBase<Data> implements Vector<Data>{
             SetAt(dat, index.GetNIncrement()); return false;
         });
     }
-  // NewVector
     abstract protected VectorBase<Data> NewVector(Data[] arr);
 
    @SuppressWarnings("unchecked")

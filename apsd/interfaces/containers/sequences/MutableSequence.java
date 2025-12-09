@@ -10,9 +10,11 @@ import apsd.interfaces.containers.base.MutableIterableContainer;
 public interface MutableSequence<Data> extends Sequence<Data>, MutableIterableContainer<Data> {
 
     default void SetAt(Data data, Natural index) {
-        long idx = ExcIfOutOfBound(index);
+        if(index.ToLong() < 0 || index.ToLong() >= Size().ToLong()){
+            throw new IndexOutOfBoundsException("Index " + index + " out of bounds [0.." + Size().Decrement() + "]!");
+        }
         MutableForwardIterator<Data> iterator = FIterator();
-        iterator.Next(idx);
+        iterator.Next(index.ToLong());
         iterator.SetCurrent(data);
     }
 

@@ -11,7 +11,10 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
     public CircularVectorBase() {
         super();
     }
-
+    public CircularVectorBase(Natural size){
+        super(size);
+        start = 0L;
+    }
     public CircularVectorBase(Data[] arr) {
         super.arr = arr;
     }
@@ -36,6 +39,7 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
         if (size == null) {
             throw new NullPointerException("Size cannot be null!");
         }
+
         if(arr == null) {
             super.ArrayAlloc(size);
             start = 0L;
@@ -63,8 +67,8 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
     @Override
     public Data GetAt(Natural index) {
         if (index == null) throw new NullPointerException("Index cannot be null!");
-        if (index.ToLong() < 0 || index.ToLong() >= Size().ToLong()) throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong());
-        return arr[(int) ((start + index.ToLong()) % arr.length)];
+        long idx = ExcIfOutOfBound(index);
+        return arr[(int) ((start + idx) % arr.length)];
     }
 
     /* ************************************************************************ */
@@ -74,10 +78,8 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
     @Override
     public void SetAt(Data dat, Natural index) {
         if (index == null) throw new NullPointerException("Index cannot be null!");
-        if (index.ToLong() < 0 || index.ToLong() >= Size().ToLong()) {
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong());
-        }
-        arr[(int) ((start + index.ToLong()) % arr.length)] = dat;
+        long idx = ExcIfOutOfBound(index);
+        arr[(int) ((start + idx) % arr.length)] = dat;
     }
 
     /* ************************************************************************ */

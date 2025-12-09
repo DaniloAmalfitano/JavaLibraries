@@ -14,9 +14,8 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
         super();
     }
 
-    public DynCircularVectorBase(long size){
-        super();
-        this.size = size;
+    public DynCircularVectorBase(Natural size){
+        super(size);
     }
     public DynCircularVectorBase(TraversableContainer<Data> con){
         super(con);
@@ -70,7 +69,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     public void Expand(Natural increment) {
         if (increment == null) throw new IllegalArgumentException("Increment argument is null.");
         long newCapacity = this.Capacity().ToLong() + increment.ToLong();
-        super.Realloc(Natural.Of(newCapacity));
+        Grow(Natural.Of(newCapacity));
         this.size += increment.ToLong();
     }
 
@@ -78,6 +77,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     public void Reduce(Natural decrement) {
         if (decrement == null) throw new IllegalArgumentException("Decrement argument is null.");
         if (decrement.ToLong() > this.size) throw new IllegalArgumentException("Decrement greater than current size.");
+        Shrink();
         this.size -= decrement.ToLong();
     }
 

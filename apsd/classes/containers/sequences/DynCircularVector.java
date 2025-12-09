@@ -12,8 +12,8 @@ public class DynCircularVector<Data> extends DynCircularVectorBase<Data>{ // Mus
       super();
   }
 
-  public DynCircularVector(Natural inisize){
-      super(inisize.ToLong());
+  public DynCircularVector(Natural size){
+      super(size);
   }
 
   public DynCircularVector(TraversableContainer<Data> con){
@@ -29,5 +29,4 @@ public class DynCircularVector<Data> extends DynCircularVectorBase<Data>{ // Mus
   public DynCircularVector<Data> NewVector (Data[] arr){
         return new DynCircularVector<>(arr);
     }
-
 }

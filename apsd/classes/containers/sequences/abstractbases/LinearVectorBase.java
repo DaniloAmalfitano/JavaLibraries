@@ -46,8 +46,8 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data>{ // Must e
     @Override
     public Data GetAt(Natural index){
         if(index == null) throw new NullPointerException("Index cannot be null!");
-        if(index.ToLong() <0 || index.ToLong() >= arr.length) throw new IndexOutOfBoundsException("Index out of bounds!");
-        return arr[(int)index.ToLong()];
+        long idx = ExcIfOutOfBound(index);
+        return arr[(int)idx];
     }
   /* ************************************************************************ */
   /* Override specific member functions from MutableSequence                  */
@@ -56,8 +56,8 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data>{ // Must e
     @Override
     public void SetAt(Data dat, Natural index){
         if(index == null) throw new NullPointerException("Index cannot be null!");
-        if(index.ToLong() <0 || index.ToLong() >= arr.length) throw new IndexOutOfBoundsException("Index out of bounds!");
-        arr[(int)index.ToLong()] = dat;
+        long idx = ExcIfOutOfBound(index);
+        arr[(int)idx] = dat;
     }
 
 }
