@@ -29,7 +29,8 @@ public class LLNode<Data> implements MutableReference<Data> {
   /* Specific member functions of LLNode                                      */
   /* ************************************************************************ */
 
-  public Box<LLNode<Data>> GetNext() { return next; }
+  public Box<LLNode<Data>> GetNext() {
+    return next; }
 
   public void SetNext(LLNode<Data> nextnode) { next.Set(nextnode); }
 

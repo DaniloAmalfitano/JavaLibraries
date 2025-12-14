@@ -1,5 +1,6 @@
 package apsd.interfaces.containers.collections;
 
+
 import apsd.interfaces.containers.base.IterableContainer;
 
 public interface Set<Data> extends Collection<Data>{
@@ -14,19 +15,12 @@ public interface Set<Data> extends Collection<Data>{
     }
   }
 
-  default void Difference(Set<Data> set){
-    if(set == null) return;
-    set.TraverseForward(dat->{
-      if (dat == null) {
-        Remove(null);
-      } else {
-        while (Exists(dat)) {
-          Remove(dat);
-        }
-      }
-      return false;
-    });
+  default void Difference(Set<Data> other){
+    if(other != null){
+      Filter(elem -> !other.Exists(elem));
+    }
   }
+
   default void Intersection(Set<Data> set){
     Filter(set::Exists);
   }

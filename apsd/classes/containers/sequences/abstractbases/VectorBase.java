@@ -38,7 +38,7 @@ abstract public class VectorBase<Data> implements Vector<Data>{
    @SuppressWarnings("unchecked")
    protected void ArrayAlloc(Natural newSize) {
        long size = newSize.ToLong();
-       if (size >= Integer.MAX_VALUE) throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!");
+       if (size >= Integer.MAX_VALUE) return;
        arr = (Data[]) new Object[(int) size];
    }
 

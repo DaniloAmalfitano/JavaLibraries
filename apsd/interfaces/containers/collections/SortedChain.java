@@ -53,28 +53,33 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
   /* Override specific member functions from Sequence                         */
   /* ************************************************************************ */
 
-  @Override
-  default Natural Search(Data dat) {
-      if (dat == null || IsEmpty()) {
-          return null;
-      }
-      Natural lower = Natural.ZERO;
-      Natural higher = Size().Decrement();
-      while (lower.compareTo(higher) <= 0) {
-          Natural medium = Natural.Of(lower.ToLong() + ((higher.ToLong() - lower.ToLong()) / 2));
-          int cmp = GetAt(medium).compareTo(dat);
-          if (cmp == 0) {
-              return medium;
-          } else if (cmp < 0) {
-              lower = medium.Increment();
-          } else {
-              higher = medium.Decrement();
-          }
-      }
-      return null;
-  }
+    @Override
+    default Natural Search(Data dat) {
+        if (dat == null || IsEmpty()) {
+            return null;
+        }
+        Natural lower = Natural.ZERO;
+        Natural higher = Size().ToLong() > 0 ? Size().Decrement() : null;
 
-  /* ************************************************************************ */
+        while (lower != null && higher != null && lower.compareTo(higher) <= 0) {
+            long midIndex = lower.ToLong() + (higher.ToLong() - lower.ToLong()) / 2;
+            Natural medium = Natural.Of(midIndex);
+
+            int cmp = GetAt(medium).compareTo(dat);
+            if (cmp == 0) {
+                return medium;
+            } else if (cmp < 0) {
+                lower = medium.Increment();
+            } else {
+                higher = medium.ToLong() > 0 ? medium.Decrement() : null;
+            }
+        }
+
+        return null;
+    }
+
+
+    /* ************************************************************************ */
   /* Override specific member functions from Set                              */
   /* ************************************************************************ */
 
@@ -141,6 +146,7 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
     @Override
     default Data Successor(Data data){
         Natural index = SearchSuccessor(data);
+        if (index == null) return null;
         if (index.compareTo(Size()) < 0) return GetAt(index);
         return null;
     }

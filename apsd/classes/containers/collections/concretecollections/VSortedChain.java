@@ -74,12 +74,6 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
         return false;
     }
 
-    /**
-     * Rimuove tutte le occorrenze consecutive di 'data' dal vettore ordinato 'vec'.
-     * L'operazione è basata su un intervallo determinato da Search e SearchSuccessor.
-     *
-     * @param data L'elemento da rimuovere.
-     */
     @Override
     public void RemoveOccurrences(Data dat) {
         if (dat == null) return;
