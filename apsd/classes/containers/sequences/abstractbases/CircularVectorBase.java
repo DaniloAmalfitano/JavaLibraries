@@ -121,18 +121,16 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
     @Override
     public void ShiftRight(Natural position, Natural howMany) {
         long index = ExcIfOutOfBound(position);
-        long size = Size().ToLong();
-        long posToShift = howMany.ToLong();
-        if (arr == null || arr.length == 0) return;
+        long size  = Size().ToLong();
+        if (howMany.ToLong() <= 0 || index >= size) return;
         for (long i = size - 1; i >= index; i--) {
-            long wrt = i + posToShift;
-            Natural natRdr = Natural.Of(i);
-            long physicalWrtIndex = (start + wrt) % arr.length;
-            arr[(int) physicalWrtIndex] = GetAt(natRdr);
+            long dest = i + howMany.ToLong();
+            if (dest < size) {
+                SetAt(GetAt(Natural.Of(i)), Natural.Of(dest));
+            }
         }
-        for (long i = index; i < index + posToShift; i++) {
-            long physicalNullIndex = (start + i) % arr.length;
-            arr[(int) physicalNullIndex] = null;
+        for (long i = index; i < index + howMany.ToLong() && i < size; i++) {
+            SetAt(null, Natural.Of(i));
         }
     }
 }
