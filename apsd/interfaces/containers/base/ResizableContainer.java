@@ -30,8 +30,6 @@ public interface ResizableContainer extends ReallocableContainer{
 
   @Override
   default void Grow(Natural dimension) {
-    if(Size().ToLong() + dimension.ToLong() * 2 > Integer.MAX_VALUE)
-      throw new OutOfMemoryError("Requested size exceeds maximum array size!");
     if ((long) (THRESHOLD_FACTOR * (Size().ToLong() + dimension.ToLong())) >= Capacity().ToLong())
       ReallocableContainer.super.Grow(dimension);
   }
