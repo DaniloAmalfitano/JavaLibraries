@@ -88,48 +88,40 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
 
     @Override
     public void ShiftLeft(Natural position, Natural howMany) {
-        long index = ExcIfOutOfBound(position);
+        long logicalStart = position.ToLong();
         long size = Size().ToLong();
-        long posToShift = howMany.compareTo(Natural.Of(size-index)) < 0 ? howMany.ToLong() : size - index;
-        if (index < size - (index + posToShift)) {
-            long iniwrt = index - 1 + posToShift;
-            long wrt = iniwrt;
-            for (long rdr = index - 1; rdr >= 0; rdr--, wrt--) {
-                Natural natrdr = Natural.Of(rdr);
-                SetAt(GetAt(natrdr), Natural.Of(wrt));
-                SetAt(null, natrdr);
-            }
-            for (; iniwrt - wrt < posToShift; wrt--) {
-                SetAt(null, Natural.Of(wrt));
-            }
-            start = (start + posToShift) % arr.length;
-        } else {
-            long wrt = index;
-            long rdr = index + posToShift;
-            while (rdr < size) {
-                SetAt(GetAt(Natural.Of(rdr)), Natural.Of(wrt));
-                rdr++;
-                wrt++;
-            }
-            while (wrt < size) {
-                SetAt(null, Natural.Of(wrt));
-                wrt++;
-            }
+        long shiftAmount = Math.min(howMany.ToLong(), size - logicalStart);
+        if (shiftAmount <= 0) {
+            return;
         }
+        if (logicalStart == 0) {
+            for (long i = 0; i < shiftAmount; i++)
+                SetAt(null, Natural.Of(i));
+            start = (start + shiftAmount) % arr.length;
+            return;
+        }
+        long newSize = size - shiftAmount;
+        long oldIndex = logicalStart + shiftAmount;
+        for (; oldIndex < size; oldIndex++) {
+            long newIndex = oldIndex - shiftAmount;
+            SetAt(GetAt(Natural.Of(oldIndex)), Natural.Of(newIndex));
+        }
+        for (long i = newSize; i < size; i++)
+            SetAt(null, Natural.Of(i));
     }
 
     @Override
-    public void ShiftRight(Natural position, Natural howMany) {
-        long index = ExcIfOutOfBound(position);
-        long size  = Size().ToLong();
-        if (howMany.ToLong() <= 0 || index >= size) return;
-        for (long i = size - 1; i >= index; i--) {
-            long dest = i + howMany.ToLong();
-            if (dest < size) {
-                SetAt(GetAt(Natural.Of(i)), Natural.Of(dest));
-            }
+    public void ShiftRight(Natural pos, Natural num) {
+        if (pos == null || num == null) return;
+
+        long idx = ExcIfOutOfBound(pos);
+        long size = Size().ToLong();
+        long shiftAmount = Math.min(num.ToLong(), size - idx);
+        if (shiftAmount <= 0) return;
+        for (long i = size - 1; i >= idx + shiftAmount; i--) {
+            SetAt(GetAt(Natural.Of(i - shiftAmount)), Natural.Of(i));
         }
-        for (long i = index; i < index + howMany.ToLong() && i < size; i++) {
+        for (long i = idx; i < idx + shiftAmount; i++) {
             SetAt(null, Natural.Of(i));
         }
     }
