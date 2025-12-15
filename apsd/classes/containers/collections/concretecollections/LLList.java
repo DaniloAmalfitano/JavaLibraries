@@ -29,7 +29,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{
   }
 
     @Override
-    protected LLChainBase<Data> newChain(long size, LLNode<Data> headref, LLNode<Data> tailref) {
+    protected LLChainBase<Data> NewChain(long size, LLNode<Data> headref, LLNode<Data> tailref) {
         return new LLList<>(size, headref, tailref);
     }
 

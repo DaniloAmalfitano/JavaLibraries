@@ -68,8 +68,7 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
     @Override
     public void Expand(Natural increment) {
         if (increment == null) throw new IllegalArgumentException("Increment argument is null.");
-        long newCapacity = this.Capacity().ToLong() + increment.ToLong();
-        Grow(Natural.Of(newCapacity));
+        Grow(Natural.Of(increment.ToLong()));
         this.size += increment.ToLong();
     }
 

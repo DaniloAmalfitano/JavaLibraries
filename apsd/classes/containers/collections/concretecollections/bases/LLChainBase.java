@@ -53,7 +53,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
     /* Specific member functions from LLChainBase                               */
     /* ************************************************************************ */
 
-    abstract protected LLChainBase<Data> newChain(long size, LLNode<Data> headref, LLNode<Data> tailref);
+    abstract protected LLChainBase<Data> NewChain(long size, LLNode<Data> headref, LLNode<Data> tailref);
 
 
 
@@ -350,7 +350,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
                 curr = curr.GetNext().Get();
             }
         }
-        return newChain(e - s + 1, newHead, newTail);
+        return NewChain(e - s + 1, newHead, newTail);
     }
 
   /* ************************************************************************ */

@@ -28,7 +28,7 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
   }
 
     @Override
-    protected LLChainBase<Data> newChain(long size, LLNode<Data> headref, LLNode<Data> tailref) {
+    protected LLChainBase<Data> NewChain(long size, LLNode<Data> headref, LLNode<Data> tailref) {
         return new LLSortedChain<>(size, headref, tailref);
     }
 
