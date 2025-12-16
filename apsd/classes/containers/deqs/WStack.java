@@ -78,8 +78,7 @@ public class WStack<Data> implements Stack<Data>{
    @Override
    public Data TopNSwap(Data dat){
          Data top = Top();
-         Pop();
-         Push(dat);
+         SwapTop(dat);
          return top;
    }
    @Override

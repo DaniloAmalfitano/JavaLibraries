@@ -6,7 +6,6 @@ package apsd.classes.containers.collections.concretecollections;
  import apsd.classes.utilities.Natural;
  import apsd.interfaces.containers.base.TraversableContainer;
  import apsd.interfaces.containers.collections.SortedChain;
- import apsd.interfaces.containers.iterators.ForwardIterator;
 
 /** Object: Concrete sorted chain implementation on linked-list. */
 public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChainBase<Data> implements SortedChain<Data>{

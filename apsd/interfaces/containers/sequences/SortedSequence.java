@@ -23,7 +23,7 @@ public interface SortedSequence<Data extends Comparable<? super Data>> extends S
     default Natural Search(Data data){
         if (data == null) return null;
         long high = Size().ToLong();
-        long low = 0;;
+        long low = 0;
         while (low < high) {
             long mid = low + (high - low) / 2;
             Data midData = GetAt(Natural.Of(mid));

@@ -2,16 +2,13 @@ package apsd.classes.containers.collections.concretecollections;
 
  import apsd.classes.containers.collections.concretecollections.bases.LLChainBase;
  import apsd.classes.containers.collections.concretecollections.bases.LLNode;
- import apsd.classes.utilities.Box;
  import apsd.classes.utilities.Natural;
  import apsd.interfaces.containers.base.TraversableContainer;
  import apsd.interfaces.containers.collections.List;
- import apsd.interfaces.containers.iterators.ForwardIterator;
  import apsd.interfaces.containers.iterators.MutableBackwardIterator;
  import apsd.interfaces.containers.iterators.MutableForwardIterator;
  import apsd.interfaces.containers.sequences.MutableSequence;
 
- import java.util.ListIterator;
 
 /** Object: Concrete list implementation on linked-list. */
 public class LLList<Data> extends LLChainBase<Data> implements List<Data>{
@@ -116,7 +113,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{
                 i++;
             }
             if(node == null) throw new IllegalStateException("Internal list structure corrupted");
-            LLNode<Data> newNode = new LLNode<Data>(dat);
+            LLNode<Data> newNode = new LLNode<>(dat);
             newNode.SetNext(node.GetNext().Get());
             node.SetNext(newNode);
             size.Increment();

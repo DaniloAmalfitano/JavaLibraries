@@ -1,6 +1,5 @@
 package apsd.interfaces.containers.sequences;
 
-import apsd.classes.utilities.Box;
 import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.IterableContainer;
 import apsd.interfaces.containers.iterators.ForwardIterator;

@@ -13,7 +13,6 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
     }
     public CircularVectorBase(Natural size){
         super(size);
-        start = 0L;
     }
     public CircularVectorBase(Data[] arr) {
         super.arr = arr;

@@ -12,8 +12,7 @@ public class DynVector<Data> extends DynLinearVectorBase<Data>{
   }
 
   public DynVector(Natural inisize){
-      super.ArrayAlloc(inisize);
-      this.size = inisize.ToLong();
+      super(inisize);
   }
 
   public DynVector(TraversableContainer<Data> con){

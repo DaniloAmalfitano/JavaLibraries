@@ -75,7 +75,7 @@ abstract public class VChainBase<Data> implements Chain<Data>{
     }
 
     public Sequence<Data> SubSequence(Natural startIdx, Natural endIdx) {
-        return vec.SubVector(startIdx, endIdx);
+        return NewChain(vec.SubVector(startIdx, endIdx));
     }
   /* ************************************************************************ */
   /* Override specific member functions from RemovableAtSequence              */

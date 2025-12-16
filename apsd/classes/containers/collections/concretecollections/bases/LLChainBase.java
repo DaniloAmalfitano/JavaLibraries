@@ -4,7 +4,6 @@ package apsd.classes.containers.collections.concretecollections.bases;
  import apsd.classes.utilities.Box;
  import apsd.classes.utilities.MutableNatural;
  import apsd.classes.utilities.Natural;
- import apsd.interfaces.containers.base.RemovableContainer;
  import apsd.interfaces.containers.base.TraversableContainer;
  import apsd.interfaces.containers.collections.Chain;
  import apsd.interfaces.containers.iterators.BackwardIterator;
@@ -78,29 +77,22 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
 
     @Override
     public boolean Remove(Data dat) {
-        if (dat == null) return false;
-        if( Size().IsZero()) return false;
-        Box<LLNode<Data>> prev = new Box<>();
-        ForwardIterator<Box<LLNode<Data>>> itr = FRefIterator();
-        while (itr.IsValid()) {
-            Box<LLNode<Data>> curBox = itr.GetCurrent();
-            LLNode<Data> node = curBox.Get();
-            if (node.Get().equals(dat)) {
-                if (prev.IsNull()) {
-                    headref.Set(node.GetNext().Get());
-                } else {
-                    prev.Get().SetNext(node.GetNext().Get());
-                }
-                if (node == tailref.Get()) {
+        if (Size().IsZero()) return false;
+        final Box<LLNode<Data>> prev = new Box<>();
+
+        return FRefIterator().ForEachForward(cur -> {
+            LLNode<Data> node = cur.Get();
+            if ((dat == null && node.Get() == null) || (dat != null && dat.equals(node.Get()))) {
+                cur.Set(node.GetNext() == null ? null : node.GetNext().Get());
+                if (tailref.Get() == node) {
                     tailref.Set(prev.Get());
                 }
                 size.Decrement();
                 return true;
             }
             prev.Set(node);
-            itr.Next();
-        }
-        return false;
+            return false;
+        });
     }
 
   /* ************************************************************************ */
@@ -287,7 +279,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
         @Override
         public void Reset() {
             itr.Reset();
-        } //TODO Controllare se sarebbe stato più corretto resettare più volte
+        }
         @Override
         public Data GetCurrent() {
             if (!IsValid()) throw new IllegalStateException("Iterator is not valid.");

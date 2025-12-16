@@ -1,7 +1,6 @@
 package apsd.classes.containers.sequences.abstractbases;
 
 import apsd.classes.utilities.Natural;
-import apsd.interfaces.containers.base.TraversableContainer;
 import apsd.interfaces.containers.sequences.DynVector;
 
 /** Object: Abstract dynamic linear vector base implementation. */
@@ -19,7 +18,6 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
 
     public DynLinearVectorBase(Natural size) {
         super(size);
-        this.size = size.ToLong();
     }
 
   /* ************************************************************************ */

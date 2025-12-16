@@ -1,7 +1,5 @@
 package apsd.classes.containers.collections.concretecollections;
 
-import apsd.classes.containers.collections.concretecollections.bases.LLNode;
-import apsd.interfaces.containers.iterators.ForwardIterator;
 import apsd.interfaces.containers.sequences.DynVector;
 
  import apsd.classes.containers.collections.concretecollections.bases.VChainBase;
@@ -10,7 +8,6 @@ import apsd.interfaces.containers.sequences.DynVector;
  import apsd.interfaces.containers.collections.List;
  import apsd.interfaces.containers.iterators.MutableBackwardIterator;
  import apsd.interfaces.containers.iterators.MutableForwardIterator;
- import apsd.interfaces.containers.sequences.DynVector;
  import apsd.interfaces.containers.sequences.MutableSequence;
 
 /** Object: Concrete list implementation on (dynamic circular) vector. */

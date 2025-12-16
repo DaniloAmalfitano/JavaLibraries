@@ -3,7 +3,6 @@ package apsd.classes.containers.sequences.abstractbases;
  import apsd.classes.utilities.MutableNatural;
  import apsd.classes.utilities.Natural;
  import apsd.interfaces.containers.base.TraversableContainer;
- import apsd.interfaces.containers.iterators.ForwardIterator;
  import apsd.interfaces.containers.iterators.MutableBackwardIterator;
  import apsd.interfaces.containers.iterators.MutableForwardIterator;
  import apsd.interfaces.containers.sequences.MutableSequence;
@@ -156,6 +155,7 @@ abstract public class VectorBase<Data> implements Vector<Data>{
     @Override
     abstract public void SetAt(Data data, Natural index);
 
+    @SuppressWarnings("unchecked")
     @Override
     public MutableSequence<Data> SubSequence(Natural start, Natural end) {
         if(start == null || end == null) throw new NullPointerException("Start or end index cannot be null!");

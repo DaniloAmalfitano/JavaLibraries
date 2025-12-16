@@ -4,8 +4,6 @@ package apsd.classes.containers.collections.concretecollections;
  import apsd.classes.utilities.Natural;
  import apsd.interfaces.containers.base.TraversableContainer;
  import apsd.interfaces.containers.collections.SortedChain;
- import apsd.interfaces.containers.iterators.BackwardIterator;
- import apsd.interfaces.containers.iterators.ForwardIterator;
  import apsd.interfaces.containers.sequences.DynVector;
 
 /** Object: Concrete set implementation via (dynamic circular) vector. */
