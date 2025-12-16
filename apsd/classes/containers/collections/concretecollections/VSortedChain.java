@@ -38,9 +38,7 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
 
     @Override
     public boolean Insert(Data dat) {
-        if (dat == null) {
-            return false;
-        }
+        if (dat == null) return false;
         Natural pred = SearchPredecessor(dat);
         Natural pos = (pred == null) ? Natural.ZERO : pred.Increment();
         if(pos !=null) {
@@ -56,9 +54,7 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
 
     @Override
     public boolean InsertIfAbsent(Data dat) {
-        if (dat == null) {
-            return false;
-        }
+        if (dat == null) return false;
         Natural pred = SearchPredecessor(dat);
         Natural pos = (pred == null) ? Natural.ZERO : pred.Increment();
         if(pos !=null) {
@@ -77,10 +73,10 @@ public class VSortedChain<Data extends Comparable<? super Data>> extends VChainB
     @Override
     public void RemoveOccurrences(Data dat) {
         if (dat == null) return;
-        Natural firstOccurrenceIndex = Search(dat);
-        if (firstOccurrenceIndex == null) return;
+        Natural occurrenceIndex = Search(dat);
+        if (occurrenceIndex == null) return;
         Natural successorIndex = SearchSuccessor(dat);
-        long start = firstOccurrenceIndex.ToLong();
+        long start = occurrenceIndex.ToLong();
         long end = (successorIndex == null) ? vec.Size().ToLong() : successorIndex.ToLong();
         long count = end - start;
         if (count > 0)

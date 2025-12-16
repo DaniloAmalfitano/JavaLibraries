@@ -46,12 +46,10 @@ abstract public class VectorBase<Data> implements Vector<Data>{
   /* Override specific member functions from ClearableContainer               */
   /* ************************************************************************ */
 
-    //Clear
     public void Clear() {
         ArrayAlloc(Natural.ZERO);
     }
 
-    //IsEmpty
     public boolean IsEmpty() {
       return arr.length == 0;
     }

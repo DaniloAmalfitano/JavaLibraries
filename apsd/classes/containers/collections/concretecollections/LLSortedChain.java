@@ -37,7 +37,7 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
   /* ************************************************************************ */
 
     protected LLNode<Data> PredFind(Data dat){
-        if(dat == null) return null;
+        if(dat == null || headref.IsNull()) return null;
         Box<LLNode<Data>> curr = headref;
         long len = Size().ToLong();
         LLNode<Data> pred = null;
@@ -59,7 +59,7 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
     }
 
     public LLNode<Data> PredPredFind(Data dat) {
-        if (dat == null) return null;
+        if(dat == null || headref.IsNull()) return null;
         Box<LLNode<Data>> curr = headref;
         long len = Size().ToLong();
         LLNode<Data> predPred = null;
@@ -216,13 +216,13 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
 
     @Override
     public Data Predecessor(Data dat) {
-        if (dat == null || headref.IsNull()) return null;
+        if (dat == null) return null;
         LLNode<Data> pred = PredFind(dat);
         return pred == null ? null : pred.Get();
     }
     @Override
     public void RemovePredecessor(Data dat) {
-        LLNode<Data> predNode= PredFind(dat);
+        LLNode<Data> predNode = PredFind(dat);
         LLNode<Data> predPredNode = PredPredFind(dat);
         if(predNode == null) return;
         Box<LLNode<Data>> predBox = (predPredNode == null) ? headref : predPredNode.GetNext();
@@ -234,7 +234,7 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
 
 
     public Data PredecessorNRemove(Data dat) {
-        if (dat == null || headref.IsNull()) return null;
+        if (dat == null) return null;
         LLNode<Data> predNode = PredFind(dat);
         if (predNode == null) return null;
         Data predData = predNode.Get();
@@ -244,13 +244,13 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
 
     @Override
     public Data Successor(Data dat) {
-        if (dat == null || headref.IsNull()) return null;
+        if (dat == null) return null;
         LLNode<Data> succ = SuccFind(dat);
         return succ == null ? null : succ.Get();
     }
 
     public void RemoveSuccessor(Data dat) {
-        if (dat == null || headref.IsNull()) return;
+        if (dat == null) return;
         LLNode<Data> succNode = SuccFind(dat);
         if (succNode == null) return;
         LLNode<Data> predSuccNode = PredSuccFind(dat);
@@ -264,7 +264,7 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
 
     @Override
     public Data SuccessorNRemove(Data dat) {
-        if (dat == null || headref.IsNull()) return null;
+        if (dat == null) return null;
 
         LLNode<Data> succNode = SuccFind(dat);
         if (succNode == null) return null;

@@ -24,9 +24,7 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
 
     @Override
     public void ArrayAlloc(Natural size) {
-        if( size == null) {
-            throw new NullPointerException("Size cannot be null!");
-        }
+        if( size == null) throw new NullPointerException("Size cannot be null!");
         super.ArrayAlloc(size);
         start = 0L;
     }
@@ -34,17 +32,17 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
     /* ************************************************************************ */
     /* Override specific member functions from ReallocableContainer             */
     /* ************************************************************************ */
+
     @Override
     public void Realloc(Natural size) {
-        if (size == null) {
-            throw new NullPointerException("Size cannot be null!");
-        }
+        if (size == null) throw new NullPointerException("Size cannot be null!");
 
         if(arr == null) {
             super.ArrayAlloc(size);
             start = 0L;
             return;
         }
+
         Data[] oldArr = arr;
         long oldStart = start;
         long oldLogicalSize = Size().ToLong();
@@ -66,7 +64,6 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
 
     @Override
     public Data GetAt(Natural index) {
-        if (index == null) throw new NullPointerException("Index cannot be null!");
         long idx = ExcIfOutOfBound(index);
         return arr[(int) ((start + idx) % arr.length)];
     }
@@ -88,12 +85,12 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
 
     @Override
     public void ShiftLeft(Natural position, Natural howMany) {
-        long logicalStart = position.ToLong();
+        long logicalStart = ExcIfOutOfBound(position);
         long size = Size().ToLong();
         long shiftAmount = Math.min(howMany.ToLong(), size - logicalStart);
-        if (shiftAmount <= 0) {
-            return;
-        }
+
+        if (shiftAmount <= 0) return;
+
         if (logicalStart == 0) {
             for (long i = 0; i < shiftAmount; i++)
                 SetAt(null, Natural.Of(i));

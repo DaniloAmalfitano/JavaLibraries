@@ -5,7 +5,7 @@ import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.TraversableContainer;
 
 /** Object: Concrete (static linear) vector implementation. */
-public class Vector<Data> extends LinearVectorBase<Data>{ // Must extend LinearVectorBase
+public class Vector<Data> extends LinearVectorBase<Data>{
 
   public Vector(){
         super();

@@ -6,7 +6,7 @@ import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.TraversableContainer;
 
 /** Object: Concrete dynamic (linear) vector implementation. */
-public class DynVector<Data> extends DynLinearVectorBase<Data>{ // Must extend DynLinearVectorBase
+public class DynVector<Data> extends DynLinearVectorBase<Data>{
   public DynVector(){
       super();
   }
@@ -18,7 +18,6 @@ public class DynVector<Data> extends DynLinearVectorBase<Data>{ // Must extend D
 
   public DynVector(TraversableContainer<Data> con){
         long size = con.Size().ToLong();
-        if(size >= Integer.MAX_VALUE) { throw new ArithmeticException("Overflow: size cannot exceed Integer.MAX_VALUE!"); }
         super.ArrayAlloc(Natural.Of(size));
         this.size = size;
         Box<Natural> index = new Box<>(Natural.Of(0));

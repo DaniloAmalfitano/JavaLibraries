@@ -52,19 +52,19 @@ public class WQueue<Data> implements Queue<Data>{
 
     @Override
     public Data Head() {
-        if (Size().ToLong() == 0) return null;
+        if (Size().IsZero()) return null;
         return lst.GetFirst();
     }
 
     @Override
     public void Dequeue() {
-        if (Size().ToLong() == 0) return;
+        if (Size().IsZero()) return;
         lst.RemoveFirst();
     }
 
     @Override
     public Data HeadNDequeue() {
-        if (Size().ToLong() == 0) return null;
+        if (Size().IsZero()) return null;
         Data head = Head();
         Dequeue();
         return head;
@@ -72,7 +72,7 @@ public class WQueue<Data> implements Queue<Data>{
 
     @Override
     public void Enqueue(Data dat) {
-        if (dat == null) throw new IllegalArgumentException("Data cannot be null");
+        if (dat == null) return;
         lst.InsertLast(dat);
     }
 }

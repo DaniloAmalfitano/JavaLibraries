@@ -4,9 +4,8 @@ import apsd.classes.utilities.Natural;
 import apsd.interfaces.containers.base.TraversableContainer;
 
 /** Object: Abstract (static) linear vector base implementation. */
-abstract public class LinearVectorBase<Data> extends VectorBase<Data>{ // Must extend VectorBase
+abstract public class LinearVectorBase<Data> extends VectorBase<Data>{
 
-  // LinearVectorBase
     public LinearVectorBase() {
         super();
     }
@@ -45,7 +44,6 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data>{ // Must e
 
     @Override
     public Data GetAt(Natural index){
-        if(index == null) throw new NullPointerException("Index cannot be null!");
         long idx = ExcIfOutOfBound(index);
         return arr[(int)idx];
     }
@@ -55,7 +53,6 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data>{ // Must e
 
     @Override
     public void SetAt(Data dat, Natural index){
-        if(index == null) throw new NullPointerException("Index cannot be null!");
         long idx = ExcIfOutOfBound(index);
         arr[(int)idx] = dat;
     }

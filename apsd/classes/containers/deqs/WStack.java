@@ -25,7 +25,7 @@ public class WStack<Data> implements Stack<Data>{
 
    public WStack(List<Data> lst, TraversableContainer<Data> con){
         this.lst = lst;
-        if(con!=null)
+        if(con != null)
             con.TraverseForward(dat -> {this.lst.Insert(dat); return false;});
    }
 
@@ -82,6 +82,7 @@ public class WStack<Data> implements Stack<Data>{
          Push(dat);
          return top;
    }
+   @Override
    public void Push(Data data) {
        lst.InsertFirst(data);
    }

@@ -68,8 +68,7 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
       @Override
       public void Expand(Natural increment) {
           if (increment == null) throw new IllegalArgumentException("Increment argument is null.");
-          long newCapacity = this.Capacity().ToLong() + increment.ToLong();
-          Grow(Natural.Of(newCapacity));
+          Grow(increment);
           this.size += increment.ToLong();
       }
 
@@ -85,7 +84,7 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
 
 
     @Override
-    public void ArrayAlloc(Natural size) {//TODO check
+    public void ArrayAlloc(Natural size) {
         super.ArrayAlloc(size);
     }
 }

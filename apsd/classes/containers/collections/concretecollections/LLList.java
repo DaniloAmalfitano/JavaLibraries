@@ -52,43 +52,41 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{
   /* ************************************************************************ */
 
     @Override
-    public void SetAt(Data data, Natural index) {
-        if (index.ToLong() >= Size().ToLong() || index.ToLong() < 0) throw new IndexOutOfBoundsException("Index: " + index);
+    public void SetAt(Data dat, Natural index) {
+        long idx = ExcIfOutOfBound(index);
         LLNode<Data> node = headref.Get();
         long i = 0;
-        long target = index.ToLong();
-        while (i < target && node != null) {
+        while (i < idx && node != null) {
             node = node.GetNext().Get();
             i++;
         }
-        if (node == null) {
-            throw new IllegalStateException("Internal list structure corrupted");
-        }
-        node.Set(data);
+        if (node == null) return;
+        node.Set(dat);
     }
 
     @Override
-    public void SetFirst(Data data) {
+    public void SetFirst(Data dat) {
+        if(dat == null) return;
         if (headref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
-        headref.Get().Set(data);
+        headref.Get().Set(dat);
     }
 
     @Override
-    public void SetLast(Data data) {
+    public void SetLast(Data dat) {
         if (tailref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
-        tailref.Get().Set(data);
+        tailref.Get().Set(dat);
     }
 
     @Override
     public MutableSequence<Data> SubSequence(Natural startindex, Natural endindex) {
-        if (startindex.ToLong() < 0 || endindex.ToLong() > size.ToLong() || startindex.ToLong() > endindex.ToLong()) {
-            throw new IndexOutOfBoundsException("Invalid start or end index");
-        }
-        LLList<Data> subList = new LLList<Data>();
+        long startIndex = ExcIfOutOfBound(startindex);
+        long endIndex = ExcIfOutOfBound(endindex);
+        if (startIndex > endIndex) throw new IndexOutOfBoundsException("Start index greater than end index");
+        LLList<Data> subList = new LLList<>();
         LLNode<Data> cur = headref.Get();
         long index = 0;
-        while (cur != null && index < endindex.ToLong()) {
-            if (index >= startindex.ToLong()) {
+        while (cur != null && index < endIndex) {
+            if (index >= startIndex) {
                 subList.InsertLast(cur.Get());
             }
             cur = cur.GetNext().Get();
@@ -97,19 +95,19 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{
         return subList;
     }
 
-
     /* ************************************************************************ */
     /* Override specific member functions from InsertableAtSequence             */
     /* ************************************************************************ */
 
     @Override
-    public void InsertAt(Data data, Natural index) {
+    public void InsertAt(Data dat, Natural index) {
+        if(dat == null) return;
         long idx = index.ToLong();
-        if (idx < 0 || idx > size.ToLong()) throw new IndexOutOfBoundsException("Index: " + idx);
+        if (idx > size.ToLong()) throw new IndexOutOfBoundsException("Index: " + idx);
         if (idx == 0) {
-            InsertFirst(data);
+            InsertFirst(dat);
         } else if (idx == size.ToLong()) {
-            InsertLast(data);
+            InsertLast(dat);
         } else {
             LLNode<Data> node = headref.Get();
             long i = 0;
@@ -118,7 +116,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{
                 i++;
             }
             if(node == null) throw new IllegalStateException("Internal list structure corrupted");
-            LLNode<Data> newNode = new LLNode<Data>(data);
+            LLNode<Data> newNode = new LLNode<Data>(dat);
             newNode.SetNext(node.GetNext().Get());
             node.SetNext(newNode);
             size.Increment();
@@ -126,8 +124,9 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{
     }
 
     @Override
-    public void InsertFirst(Data data) {
-        LLNode<Data> newNode = new LLNode<>(data);
+    public void InsertFirst(Data dat) {
+        if(dat == null) return;
+        LLNode<Data> newNode = new LLNode<>(dat);
         newNode.SetNext(headref.Get());
         headref.Set(newNode);
         if (tailref.Get() == null) {
@@ -137,8 +136,9 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{
     }
 
     @Override
-    public void InsertLast(Data data) {
-        LLNode<Data> newNode = new LLNode<Data>(data);
+    public void InsertLast(Data dat) {
+        if(dat == null) return;
+        LLNode<Data> newNode = new LLNode<>(dat);
         if (tailref.Get() == null) {
             headref.Set(newNode);
             tailref.Set(newNode);

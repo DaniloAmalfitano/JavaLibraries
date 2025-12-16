@@ -27,7 +27,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
         tailref.Set(null);
     }
 
-    public LLChainBase(TraversableContainer<Data> con) { //Se il dato è null non va bene, modificare, questa deve essere una collezione, ma gli passo un cointainer
+    public LLChainBase(TraversableContainer<Data> con) {
         size.Assign(con.Size());
         final Box<Boolean> first = new Box<>(true);
         con.TraverseForward(dat -> {
@@ -79,7 +79,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
     @Override
     public boolean Remove(Data dat) {
         if (dat == null) return false;
-        if( Size().IsZero()) return  false;
+        if( Size().IsZero()) return false;
         Box<LLNode<Data>> prev = new Box<>();
         ForwardIterator<Box<LLNode<Data>>> itr = FRefIterator();
         while (itr.IsValid()) {
@@ -110,11 +110,11 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
     protected class ListFRefIterator implements ForwardIterator<Box<LLNode<Data>>> {
         protected Box<LLNode<Data>> cur;
 
-        public ListFRefIterator() {
+        protected ListFRefIterator() {
             this.cur = headref;
         }
 
-        public ListFRefIterator(ListFRefIterator itr) {
+        protected ListFRefIterator(ListFRefIterator itr) {
             this.cur = itr.cur;
         }
 
@@ -308,7 +308,6 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
         return new ListBIterator();
     }
 
-
   /* ************************************************************************ */
   /* Override specific member functions from Sequence                         */
   /* ************************************************************************ */
@@ -359,8 +358,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
 
   @Override
   public Data AtNRemove(Natural index) {
-      long idx = index.ToLong();
-      if (idx < 0 || idx >= size.ToLong()) throw new IndexOutOfBoundsException("Index out of bounds: " + idx);
+      long idx = ExcIfOutOfBound(index);
       if(Size().IsZero()) throw new IndexOutOfBoundsException("Cannot remove from empty chain.");
 
       final Box<Data> removed = new Box<>();

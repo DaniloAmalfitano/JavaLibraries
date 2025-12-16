@@ -99,23 +99,23 @@ abstract public class VChainBase<Data> implements Chain<Data>{
     public boolean Filter(Predicate<Data> fun) {
         long del = 0;
         if (fun != null) {
-            MutableForwardIterator<Data> wrt = vec.FIterator();
-            for (; wrt.IsValid(); wrt.Next()) {
-                Data currentData = wrt.GetCurrent();
+            MutableForwardIterator<Data> itr = vec.FIterator();
+            for (; itr.IsValid(); itr.Next()) {
+                Data currentData = itr.GetCurrent();
                 if (!fun.Apply(currentData)) {
                     del++;
-                    wrt.SetCurrent(null);
+                    itr.SetCurrent(null);
                 }
             }
             if (del > 0) {
-                wrt.Reset();
+                itr.Reset();
                 MutableForwardIterator<Data> rdr = vec.FIterator();
                 for (; rdr.IsValid(); rdr.Next()) {
                     Data dat = rdr.GetCurrent();
                     if (dat != null) {
                         rdr.SetCurrent(null);
-                        wrt.SetCurrent(dat);
-                        wrt.Next();
+                        itr.SetCurrent(dat);
+                        itr.Next();
                     }
                 }
                 vec.Reduce(Natural.Of(del));
