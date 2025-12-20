@@ -3,6 +3,7 @@ package zapsdtest.simpletest.apsd.classes.containers.sequences.generic;
 import apsd.classes.utilities.Natural;
 
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 abstract public class XVectorITest extends XVectorTest<Long> {
 
@@ -232,6 +233,119 @@ abstract public class XVectorITest extends XVectorTest<Long> {
       TestFoldBackward((dat, acc) -> dat, 0L, 1L);
     }
 
+    @Test
+    @DisplayName("ShiftRight clamps num > remaining (tail becomes nulls)")
+    public void ShiftRightClampsLargeNum() {
+      AddTest(8);
+      NewEmptyContainer();
+      TestRealloc(Natural.Of(5));
+      ThisContainer().SetAt(1L, Natural.ZERO);
+      ThisContainer().SetAt(2L, Natural.Of(1));
+      ThisContainer().SetAt(3L, Natural.Of(2));
+      ThisContainer().SetAt(4L, Natural.Of(3));
+      ThisContainer().SetAt(5L, Natural.Of(4));
+
+      assertDoesNotThrow(() -> ThisContainer().ShiftRight(Natural.ONE, Natural.Of(10)));
+      assertEquals(1L, ThisContainer().GetAt(Natural.ZERO));
+      assertNull(ThisContainer().GetAt(Natural.Of(1)));
+      assertNull(ThisContainer().GetAt(Natural.Of(2)));
+      assertNull(ThisContainer().GetAt(Natural.Of(3)));
+      assertNull(ThisContainer().GetAt(Natural.Of(4)));
+      TestSize(5, false);
+    }
+
+    @Test
+    @DisplayName("ShiftLeft clamps num > size (everything becomes null)")
+    public void ShiftLeftClampsLargeNum() {
+      AddTest(7);
+      NewEmptyContainer();
+      TestRealloc(Natural.Of(5));
+      ThisContainer().SetAt(1L, Natural.ZERO);
+      ThisContainer().SetAt(2L, Natural.Of(1));
+      ThisContainer().SetAt(3L, Natural.Of(2));
+      ThisContainer().SetAt(4L, Natural.Of(3));
+      ThisContainer().SetAt(5L, Natural.Of(4));
+
+      assertDoesNotThrow(() -> ThisContainer().ShiftLeft(Natural.ZERO, Natural.Of(10)));
+      for (long i = 0; i < 5; i++) assertNull(ThisContainer().GetAt(Natural.Of(i)));
+      TestSize(5, false);
+    }
+
+    @Test
+    @DisplayName("Shift with num=0 is a no-op")
+    public void ShiftZeroIsNoOp() {
+      AddTest(6);
+      NewEmptyContainer();
+      TestRealloc(Natural.Of(3));
+      ThisContainer().SetAt(7L, Natural.ZERO);
+      ThisContainer().SetAt(8L, Natural.Of(1));
+      ThisContainer().SetAt(9L, Natural.Of(2));
+
+      assertDoesNotThrow(() -> ThisContainer().ShiftRight(Natural.ONE, Natural.ZERO));
+      assertEquals(7L, ThisContainer().GetAt(Natural.ZERO));
+      assertEquals(8L, ThisContainer().GetAt(Natural.Of(1)));
+      assertEquals(9L, ThisContainer().GetAt(Natural.Of(2)));
+
+      assertDoesNotThrow(() -> ThisContainer().ShiftLeft(Natural.ONE, Natural.ZERO));
+      assertEquals(7L, ThisContainer().GetAt(Natural.ZERO));
+      assertEquals(8L, ThisContainer().GetAt(Natural.Of(1)));
+      assertEquals(9L, ThisContainer().GetAt(Natural.Of(2)));
+    }
+
+    @Test
+    @DisplayName("Shift out of bounds throws")
+    public void ShiftOutOfBoundsThrows() {
+      AddTest(2);
+      NewEmptyContainer();
+      TestRealloc(Natural.Of(2));
+      assertThrows(RuntimeException.class, () -> ThisContainer().ShiftLeft(Natural.Of(2), Natural.ONE));
+      assertThrows(RuntimeException.class, () -> ThisContainer().ShiftRight(Natural.Of(2), Natural.ONE));
+    }
+  }
+
+  @Nested
+  @DisplayName("Vector Null Parameter Tests")
+  public class VectorNullParameterTests {
+
+    @Test
+    @DisplayName("GetAt with null position throws")
+    public void GetAtNullThrows() {
+      AddTest(2);
+      NewNonEmptyContainer();
+      assertThrows(NullPointerException.class, () -> ThisContainer().GetAt(null));
+      NewEmptyContainer();
+      assertThrows(NullPointerException.class, () -> ThisContainer().GetAt(null));
+    }
+
+    @Test
+    @DisplayName("SetAt with null position throws")
+    public void SetAtNullThrows() {
+      AddTest(2);
+      NewNonEmptyContainer();
+      assertThrows(NullPointerException.class, () -> ThisContainer().SetAt(1L, null));
+      NewEmptyContainer();
+      assertThrows(NullPointerException.class, () -> ThisContainer().SetAt(1L, null));
+    }
+
+    @Test
+    @DisplayName("Swap with null positions throws")
+    public void SwapNullThrows() {
+      AddTest(3);
+      NewNonEmptyContainer();
+      assertThrows(NullPointerException.class, () -> ThisContainer().Swap(null, Natural.ZERO));
+      assertThrows(NullPointerException.class, () -> ThisContainer().Swap(Natural.ZERO, null));
+      assertThrows(NullPointerException.class, () -> ThisContainer().Swap(null, null));
+    }
+
+    @Test
+    @DisplayName("Realloc with null throws (no-op, but verify)")
+    public void ReallocNullNoOp() {
+      AddTest(2);
+      NewNonEmptyContainer();
+      long beforeSize = ThisContainer().Size().ToLong();
+      assertDoesNotThrow(() -> ThisContainer().Realloc(null));
+      assertEquals(beforeSize, ThisContainer().Size().ToLong());
+    }
   }
 
 }

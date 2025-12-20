@@ -34,7 +34,7 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
 
     @Override
     public void Realloc(Natural size) {
-        if (size == null) throw new NullPointerException("Size cannot be null!");
+        if (size == null) return;
 
         if(arr == null) {
             super.ArrayAlloc(size);

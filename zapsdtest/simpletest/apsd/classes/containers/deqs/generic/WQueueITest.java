@@ -1,6 +1,7 @@
 package zapsdtest.simpletest.apsd.classes.containers.deqs.generic;
 
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 abstract public class WQueueITest extends WQueueTest<Long> {
 
@@ -156,5 +157,42 @@ abstract public class WQueueITest extends WQueueTest<Long> {
       TestHead(5L);
     }
 
+    @Test
+    @DisplayName("Enqueue null throws exception")
+    public void EnqueueNullThrows() {
+      AddTest(1);
+      NewEmptyContainer();
+      assertThrows(IllegalArgumentException.class, () -> ThisContainer().Enqueue(null));
+    }
+  }
+
+  @Nested
+  @DisplayName("Queue Constructor Edge Cases")
+  public class QueueConstructorEdgeCases {
+
+    @Test
+    @DisplayName("Constructor with null List throws")
+    public void ConstructorNullListThrows() {
+      AddTest(1);
+      assertThrows(NullPointerException.class, () -> new apsd.classes.containers.deqs.WQueue<Long>((apsd.interfaces.containers.collections.List<Long>) null));
+    }
+
+    @Test
+    @DisplayName("Constructor with null TraversableContainer throws")
+    public void ConstructorNullContainerThrows() {
+      AddTest(1);
+      assertThrows(NullPointerException.class, () -> new apsd.classes.containers.deqs.WQueue<Long>((apsd.interfaces.containers.base.TraversableContainer<Long>) null));
+    }
+
+    @Test
+    @DisplayName("Constructor with null List and TraversableContainer throws")
+    public void ConstructorNullBothThrows() {
+      AddTest(2);
+      apsd.interfaces.containers.collections.List<Long> list = new apsd.classes.containers.collections.concretecollections.VList<>();
+      apsd.classes.containers.collections.concretecollections.VList<Long> container = new apsd.classes.containers.collections.concretecollections.VList<>();
+      container.Insert(1L);
+      assertThrows(NullPointerException.class, () -> new apsd.classes.containers.deqs.WQueue<Long>(null, container));
+      assertThrows(NullPointerException.class, () -> new apsd.classes.containers.deqs.WQueue<Long>(list, null));
+    }
   }
 }

@@ -12,6 +12,12 @@ public interface ContainerTest<Con extends Container> {
   void BeginTest(String str);
   void EndTest();
 
+  default void TestThisContainerNotNull() {
+    BeginTest("ThisContainer");
+    assertNotNull(ThisContainer(), "ThisContainer() should not be null after container initialization");
+    EndTest();
+  }
+
   default void TestSize(long expectedSize, boolean edgeCase) {
     BeginTest("Size");
     Natural size = ThisContainer().Size();

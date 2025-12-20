@@ -1,6 +1,7 @@
 package zapsdtest.simpletest.apsd.classes.containers.deqs.generic;
 
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 abstract public class WStackITest extends WStackTest<Long> {
 
@@ -155,6 +156,68 @@ abstract public class WStackITest extends WStackTest<Long> {
       TestIsEmpty(true, false);
       TestPush(5L);
       TestTop(5L);
+    }
+
+    @Test
+    @DisplayName("SwapTop operations")
+    public void SwapTopOperations() {
+      AddTest(8);
+      NewEmptyContainer();
+      TestPush(1L);
+      TestPush(2L);
+      TestPush(3L);
+      assertDoesNotThrow(() -> ThisContainer().SwapTop(10L));
+      assertEquals(10L, ThisContainer().Top());
+      assertEquals(3, ThisContainer().Size().ToLong());
+      assertDoesNotThrow(() -> ThisContainer().TopNSwap(20L));
+      assertEquals(20L, ThisContainer().Top());
+    }
+
+    @Test
+    @DisplayName("SwapTop on empty stack")
+    public void SwapTopEmpty() {
+      AddTest(2);
+      NewEmptyContainer();
+      assertDoesNotThrow(() -> ThisContainer().SwapTop(1L));
+      assertNull(ThisContainer().TopNSwap(2L));
+    }
+
+    @Test
+    @DisplayName("Push null throws exception")
+    public void PushNullThrows() {
+      AddTest(1);
+      NewEmptyContainer();
+      assertThrows(IllegalArgumentException.class, () -> ThisContainer().Push(null));
+    }
+  }
+
+  @Nested
+  @DisplayName("Stack Constructor Edge Cases")
+  public class StackConstructorEdgeCases {
+
+    @Test
+    @DisplayName("Constructor with null List throws")
+    public void ConstructorNullListThrows() {
+      AddTest(1);
+      assertThrows(NullPointerException.class, () -> new apsd.classes.containers.deqs.WStack<Long>((apsd.interfaces.containers.collections.List<Long>) null));
+    }
+
+    @Test
+    @DisplayName("Constructor with null TraversableContainer throws")
+    public void ConstructorNullContainerThrows() {
+      AddTest(1);
+      assertThrows(NullPointerException.class, () -> new apsd.classes.containers.deqs.WStack<Long>((apsd.interfaces.containers.base.TraversableContainer<Long>) null));
+    }
+
+    @Test
+    @DisplayName("Constructor with null List and TraversableContainer throws")
+    public void ConstructorNullBothThrows() {
+      AddTest(2);
+      apsd.interfaces.containers.collections.List<Long> list = new apsd.classes.containers.collections.concretecollections.VList<>();
+      apsd.classes.containers.collections.concretecollections.VList<Long> container = new apsd.classes.containers.collections.concretecollections.VList<>();
+      container.Insert(1L);
+      assertThrows(NullPointerException.class, () -> new apsd.classes.containers.deqs.WStack<Long>(null, container));
+      assertThrows(NullPointerException.class, () -> new apsd.classes.containers.deqs.WStack<Long>(list, null));
     }
   }
 

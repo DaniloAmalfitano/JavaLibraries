@@ -1,6 +1,7 @@
 package zapsdtest.simpletest.apsd.classes.containers.collections.concretecollections.generic;
 
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import apsd.classes.utilities.Natural;
 
@@ -344,7 +345,69 @@ abstract public class XListITest extends XListTest<Long> {
       TestFoldForward((dat, acc) -> acc + dat, 0L, 30L);
       TestPrintContent("");
     }
+  }
 
+  @Nested
+  @DisplayName("List Null Parameter Tests")
+  public class ListNullParameterTests {
+
+    @Test
+    @DisplayName("InsertAt with null position throws")
+    public void InsertAtNullPositionThrows() {
+      AddTest(1);
+      NewNonEmptyContainer();
+      assertThrows(NullPointerException.class, () -> ThisContainer().InsertAt(1L, null));
+    }
+
+    @Test
+    @DisplayName("GetAt with null position throws")
+    public void GetAtNullThrows() {
+      AddTest(1);
+      NewNonEmptyContainer();
+      assertThrows(NullPointerException.class, () -> ThisContainer().GetAt(null));
+    }
+
+    @Test
+    @DisplayName("SetAt with null position throws")
+    public void SetAtNullPositionThrows() {
+      AddTest(1);
+      NewNonEmptyContainer();
+      assertThrows(NullPointerException.class, () -> ThisContainer().SetAt(1L, null));
+    }
+
+    @Test
+    @DisplayName("RemoveAt with null position throws")
+    public void RemoveAtNullThrows() {
+      AddTest(1);
+      NewNonEmptyContainer();
+      assertThrows(NullPointerException.class, () -> ThisContainer().RemoveAt(null));
+    }
+
+    @Test
+    @DisplayName("AtNRemove with null position throws")
+    public void AtNRemoveNullThrows() {
+      AddTest(1);
+      NewNonEmptyContainer();
+      assertThrows(NullPointerException.class, () -> ThisContainer().AtNRemove(null));
+    }
+
+    @Test
+    @DisplayName("Remove null element returns false")
+    public void RemoveNullReturnsFalse() {
+      AddTest(2);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      assertFalse(ThisContainer().Remove(null));
+    }
+
+    @Test
+    @DisplayName("Exists with null element returns false")
+    public void ExistsNullReturnsFalse() {
+      AddTest(2);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      assertFalse(ThisContainer().Exists(null));
+    }
   }
 
 }

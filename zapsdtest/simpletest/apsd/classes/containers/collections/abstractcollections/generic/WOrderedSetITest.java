@@ -1,6 +1,7 @@
 package zapsdtest.simpletest.apsd.classes.containers.collections.abstractcollections.generic;
 
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 abstract public class WOrderedSetITest extends WOrderedSetTest<Long> {
 
@@ -79,7 +80,7 @@ abstract public class WOrderedSetITest extends WOrderedSetTest<Long> {
       TestFoldBackward((dat, acc) -> acc + dat, 0L, 2L);
       TestClear();
       TestSize(0, false);
-
+      
       TestClear();
       TestInsert(4L, true);
       TestInsert(5L, true);
@@ -253,6 +254,96 @@ abstract public class WOrderedSetITest extends WOrderedSetTest<Long> {
       TestPrintContent("");
     }
 
+    @Test
+    @DisplayName("Predecessor/Successor with null value")
+    public void PredSuccNullValue() {
+      AddTest(8);
+      NewEmptyContainer();
+      TestInsert(10L, true);
+      TestInsert(20L, true);
+      TestInsert(30L, true);
+      // Null handling
+      assertNull(ThisContainer().Predecessor(null));
+      assertNull(ThisContainer().Successor(null));
+      assertNull(ThisContainer().PredecessorNRemove(null));
+      assertNull(ThisContainer().SuccessorNRemove(null));
+    }
+
+    @Test
+    @DisplayName("Multiple RemoveMin/RemoveMax operations")
+    public void MultipleRemoveMinMax() {
+      AddTest(18);
+      NewEmptyContainer();
+      TestInsert(5L, true);
+      TestInsert(3L, true);
+      TestInsert(7L, true);
+      TestInsert(1L, true);
+      TestInsert(9L, true);
+      TestMinNRemove(1L);
+      TestMaxNRemove(9L);
+      TestSize(3, false);
+      TestMin(3L);
+      TestMax(7L);
+      TestRemoveMin();
+      TestRemoveMax();
+      TestSize(1, false);
+      TestMin(5L);
+      TestMax(5L);
+      TestRemoveMin();
+      TestIsEmpty(true, false);
+      assertDoesNotThrow(() -> ThisContainer().RemoveMin());
+      assertDoesNotThrow(() -> ThisContainer().RemoveMax());
+    }
+
+    @Test
+    @DisplayName("Large scale Min/Max operations")
+    public void LargeScaleMinMax() {
+      AddTest(57);
+      NewEmptyContainer();
+      for (long i = 100L; i > 75L; i--) {
+        TestInsert(i, true);
+      }
+      TestMin(76L);
+      TestMax(100L);
+      for (int i = 0; i < 10; i++) {
+        TestRemoveMin();
+      }
+      TestMin(86L);
+      for (int i = 0; i < 5; i++) {
+        TestRemoveMax();
+      }
+      TestMax(95L);
+      TestSize(10, false);
+    }
+  }
+
+  @Nested
+  @DisplayName("WOrderedSet Null Handling")
+  public class WOrderedSetNullHandling {
+
+    @Test
+    @DisplayName("Insert null returns false")
+    public void InsertNullReturnsFalse() {
+      AddTest(1);
+      NewEmptyContainer();
+      assertFalse(ThisContainer().Insert(null));
+    }
+
+    @Test
+    @DisplayName("Remove null returns false")
+    public void RemoveNullReturnsFalse() {
+      AddTest(1);
+      NewEmptyContainer();
+      assertFalse(ThisContainer().Remove(null));
+    }
+
+    @Test
+    @DisplayName("Exists null returns false")
+    public void ExistsNullReturnsFalse() {
+      AddTest(1);
+      NewEmptyContainer();
+      assertFalse(ThisContainer().Exists(null));
+    }
   }
 
 }

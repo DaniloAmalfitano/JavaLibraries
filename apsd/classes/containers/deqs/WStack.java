@@ -16,17 +16,19 @@ public class WStack<Data> implements Stack<Data>{
    }
 
    public WStack(List<Data> lst){
+    if(lst == null) throw new NullPointerException("List cannot be null!");
     this.lst = lst;
    }
 
    public WStack(TraversableContainer<Data> con){
-    this.lst = new VList<>(con);
+       if(con == null) throw new NullPointerException("Container cannot be null!");
+       this.lst = new VList<>(con);
    }
 
    public WStack(List<Data> lst, TraversableContainer<Data> con){
-        this.lst = lst;
-        if(con != null)
-            con.TraverseForward(dat -> {this.lst.Insert(dat); return false;});
+       if(lst == null || con == null) throw new NullPointerException("List and Container cannot be null!");
+       this.lst = lst;
+        con.TraverseForward(dat -> {this.lst.Insert(dat); return false;});
    }
 
   /* ************************************************************************ */
@@ -72,8 +74,9 @@ public class WStack<Data> implements Stack<Data>{
    }
    @Override
    public void SwapTop(Data dat){
-       Pop();
-       Push(dat);
+      if(this.IsEmpty()) return;
+      Pop();
+      Push(dat);
    }
    @Override
    public Data TopNSwap(Data dat){
@@ -83,6 +86,7 @@ public class WStack<Data> implements Stack<Data>{
    }
    @Override
    public void Push(Data data) {
-       lst.InsertFirst(data);
+      if(data == null) throw new IllegalArgumentException("Data cannot be null!");
+      lst.InsertFirst(data);
    }
 }

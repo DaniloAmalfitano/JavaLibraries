@@ -1,6 +1,7 @@
 package zapsdtest.simpletest.apsd.classes.containers.collections.concretecollections.generic;
 
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import apsd.classes.utilities.Natural;
 
@@ -225,6 +226,52 @@ abstract public class XSortedChainITest extends XSortedChainTest<Long> {
       TestPrintContent("");
     }
 
+    @Test
+    @DisplayName("Insert null element")
+    public void InsertNull() {
+      AddTest(3);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      assertFalse(ThisContainer().Insert(null));
+      TestSize(1, false);
+    }
+
+    @Test
+    @DisplayName("Remove null element")
+    public void RemoveNull() {
+      AddTest(3);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      assertFalse(ThisContainer().Remove(null));
+      TestSize(1, false);
+    }
+
+    @Test
+    @DisplayName("Exists with null element")
+    public void ExistsNull() {
+      AddTest(2);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      assertFalse(ThisContainer().Exists(null));
+    }
+
+    @Test
+    @DisplayName("GetAt with null throws")
+    public void GetAtNull() {
+      AddTest(2);
+      NewNonEmptyContainer();
+      assertThrows(NullPointerException.class, () -> ThisContainer().GetAt(null));
+      NewEmptyContainer();
+      assertThrows(NullPointerException.class, () -> ThisContainer().GetAt(null));
+    }
+
+    @Test
+    @DisplayName("AtNRemove with null throws")
+    public void AtNRemoveNull() {
+      AddTest(1);
+      NewNonEmptyContainer();
+      assertThrows(NullPointerException.class, () -> ThisContainer().AtNRemove(null));
+    }
   }
 
 }

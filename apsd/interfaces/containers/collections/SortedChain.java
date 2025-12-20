@@ -125,19 +125,23 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
       RemoveAt(Size().Decrement());
     }
     @Override
-    default Data MinNRemove(){
+    default Data MinNRemove() {
+        if (IsEmpty()) return null;
         Data min = GetAt(Natural.ZERO);
         RemoveAt(Natural.ZERO);
         return min;
     }
+
     @Override
-    default Data MaxNRemove(){
+    default Data MaxNRemove() {
+        if (IsEmpty()) return null;
         Data max = GetAt(Size().Decrement());
         RemoveAt(Size().Decrement());
         return max;
     }
     @Override
     default Data Predecessor(Data data) {
+        if(data == null) return null;
         Natural index = SearchPredecessor(data);
         if (index == null) return null;
         if (index.ToLong() >= 0 && index.compareTo(Size()) < 0) return GetAt(index);
@@ -153,12 +157,12 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
     @Override
     default void RemovePredecessor(Data data){
         Natural index = SearchPredecessor(data);
-        if(index.compareTo(Natural.ZERO.Decrement()) > 0) RemoveAt(index);
+        if(index != null && index.compareTo(Natural.ZERO.Decrement()) > 0) RemoveAt(index);
     }
     @Override
     default void RemoveSuccessor(Data data) {
         Natural index = SearchSuccessor(data);
-        if (index.compareTo(Size()) < 0)
+        if (index != null && index.compareTo(Size()) < 0)
             RemoveAt(index);
     }
     @Override
@@ -174,7 +178,7 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
     @Override
     default Data SuccessorNRemove(Data data){
         Natural index = SearchSuccessor(data);
-        if (index.compareTo(Size()) < 0) {
+        if (index != null && index.compareTo(Size()) < 0) {
             Data succ = GetAt(index);
             RemoveAt(index);
             return succ;

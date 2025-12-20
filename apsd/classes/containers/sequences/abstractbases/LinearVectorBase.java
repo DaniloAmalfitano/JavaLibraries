@@ -28,7 +28,7 @@ abstract public class LinearVectorBase<Data> extends VectorBase<Data>{
 
     @Override
     public void Realloc(Natural size) {
-        if (size == null) throw new NullPointerException("Size cannot be null!");
+        if (size == null) return;
         Data[] oldArr = arr;
         ArrayAlloc(size);
         int newCap = arr.length;
