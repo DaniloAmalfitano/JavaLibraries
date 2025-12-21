@@ -1,7 +1,7 @@
 package apsd.interfaces.containers.collections;
 
-
 import apsd.interfaces.containers.base.IterableContainer;
+import apsd.interfaces.containers.iterators.ForwardIterator;
 
 public interface Set<Data> extends Collection<Data>{
 
@@ -21,12 +21,9 @@ public interface Set<Data> extends Collection<Data>{
     }
   }
 
-  default void Intersection(Set<Data> set){
-    if(set == null){
-        this.Clear();
-    }
-    else{
-      Filter(set::Exists);
+  default void Intersection(Set<Data> set) {
+    if(set != null) {
+      this.Filter(set::Exists);
     }
   }
 
@@ -37,6 +34,7 @@ public interface Set<Data> extends Collection<Data>{
   @Override
   default boolean IsEqual(IterableContainer<Data> con) {
     if (con == null || !this.Size().equals(con.Size())) return false;
-    return this.TraverseForward(con::Exists);
+    if ( this == con ) return true;
+    return !con.TraverseForward(elm -> !this.Exists(elm));
   }
 }

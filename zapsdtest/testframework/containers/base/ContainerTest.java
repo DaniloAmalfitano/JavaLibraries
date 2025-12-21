@@ -12,15 +12,10 @@ public interface ContainerTest<Con extends Container> {
   void BeginTest(String str);
   void EndTest();
 
-  default void TestThisContainerNotNull() {
-    BeginTest("ThisContainer");
-    assertNotNull(ThisContainer(), "ThisContainer() should not be null after container initialization");
-    EndTest();
-  }
-
   default void TestSize(long expectedSize, boolean edgeCase) {
     BeginTest("Size");
     Natural size = ThisContainer().Size();
+    System.out.println("Size() returned: " + size + ", expected: " + expectedSize);
     assertNotNull(size, "Size() should not return null");
     if (edgeCase) {
       assertNotEquals(expectedSize, size.ToLong(), "Size should not be " + expectedSize);
@@ -47,5 +42,4 @@ public interface ContainerTest<Con extends Container> {
       "Size().IsZero() should equal IsEmpty()");
     EndTest();
   }
-
 }

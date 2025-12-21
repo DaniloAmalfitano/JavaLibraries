@@ -9,16 +9,18 @@ public interface DynVector<Data> extends ResizableContainer,InsertableAtSequence
   /* ************************************************************************ */
 
     @Override
-    default void InsertAt(Data element, Natural idx) {
-        if (element == null) throw new NullPointerException("Element cannot be null");
-        if (idx == null) throw new NullPointerException("Index cannot be null");
-        long index = idx.ToLong();
-        long size = Size().ToLong();
-        long cap  = Capacity().ToLong();
-        if (index < 0 || index > size) throw new IndexOutOfBoundsException("Index out of bounds for insert: " + index + "; Size: " + size + "!");
-        if (size + 1 > cap) Grow();
-        ShiftRight(Natural.Of(index));
-        SetAt(element, Natural.Of(index));
+    default void InsertAt(Data elem, Natural pos) {
+        if (pos == null) throw new NullPointerException("Position cannot be null");
+        if (pos.compareTo(Size()) > 0) throw new IndexOutOfBoundsException("out of bound");
+
+        long idx = pos.ToLong();
+        long curSize = Size().ToLong();
+
+        if (idx == curSize)
+            Expand();
+        else
+            ShiftRight(pos);
+        SetAt(elem, pos);
     }
 
 

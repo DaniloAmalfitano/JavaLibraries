@@ -30,8 +30,9 @@ abstract public class WOrderedSetBase<Data extends Comparable<? super Data>, Chn
   /* ************************************************************************ */
 
     @Override
-    public boolean IsEqual(IterableContainer<Data> con){
-        return chn.IsEqual(con);
+    public boolean IsEqual(IterableContainer<Data> con) {
+        if (con == null || !this.Size().equals(con.Size())) return false;
+        return !con.TraverseForward(elm -> !Exists(elm));
     }
 
   /* ************************************************************************ */

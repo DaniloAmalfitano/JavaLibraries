@@ -31,6 +31,7 @@ public interface Queue<Data> extends ClearableContainer, InsertableContainer<Dat
 
     @Override
     default boolean Insert(Data data){
+        if(data == null) return false;
         Enqueue(data);
         return true;
     }

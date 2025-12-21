@@ -50,6 +50,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{
 
     @Override
     public void SetAt(Data dat, Natural index) {
+        if(dat == null) return;
         long idx = ExcIfOutOfBound(index);
         LLNode<Data> node = headref.Get();
         long i = 0;
@@ -71,6 +72,7 @@ public class LLList<Data> extends LLChainBase<Data> implements List<Data>{
     @Override
     public void SetLast(Data dat) {
         if (tailref.Get() == null) throw new IndexOutOfBoundsException("Container is empty");
+        if(dat == null) return;
         tailref.Get().Set(dat);
     }
 

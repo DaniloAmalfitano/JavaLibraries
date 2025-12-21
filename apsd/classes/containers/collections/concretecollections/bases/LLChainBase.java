@@ -27,20 +27,51 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
     }
 
     public LLChainBase(TraversableContainer<Data> con) {
-        size.Assign(con.Size());
+        this.size.Assign(0);
+        this.headref.Set(null);
+        this.tailref.Set(null);
+
+        if (con == null) return;
+
         final Box<Boolean> first = new Box<>(true);
+
         con.TraverseForward(dat -> {
-            if (dat == null) return true;
-            LLNode<Data> node = new LLNode<>(dat);
+            if (dat == null) return false;
+            LLNode<Data> newNode = new LLNode<>(dat);
+            newNode.SetNext(null);
+
             if (first.Get()) {
-                headref.Set(node);
+                this.headref.Set(newNode);
                 first.Set(false);
             } else {
-                tailref.Get().SetNext(node);
+                this.tailref.Get().SetNext(newNode);
             }
-            tailref.Set(node);
+            this.tailref.Set(newNode);
+            this.size.Increment();
+
             return false;
         });
+    }
+    public LLChainBase(LLChainBase<Data> chn) {
+        size.Assign(0);
+        headref.Set(null);
+        tailref.Set(null);
+
+        if (chn != null) {
+            chn.TraverseForward(dat -> {
+                if (dat != null) {
+                    LLNode<Data> newNode = new LLNode<>(dat);
+                    if (headref.IsNull()) {
+                        headref.Set(newNode);
+                    } else {
+                        tailref.Get().SetNext(newNode);
+                    }
+                    tailref.Set(newNode);
+                    size.Increment();
+                }
+                return false;
+            });
+        }
     }
     public LLChainBase(long size, LLNode<Data> head, LLNode<Data> tail) {
         this.size.Assign(size);
@@ -432,4 +463,5 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
         }
         return oldSize != size.ToLong();
     }
+
 }

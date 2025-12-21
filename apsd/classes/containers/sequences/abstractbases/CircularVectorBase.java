@@ -15,10 +15,11 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
         super(size);
     }
     public CircularVectorBase(Data[] arr) {
-        super.arr = arr;
+        super(arr);
     }
     public CircularVectorBase(TraversableContainer<Data> con) {
         super(con);
+        start = 0L;
     }
 
     @Override
@@ -84,6 +85,7 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
 
     @Override
     public void ShiftLeft(Natural position, Natural howMany) {
+        if(position == null || howMany == null) throw new NullPointerException("Position or howMany cannot be null!");
         long logicalStart = ExcIfOutOfBound(position);
         long size = Size().ToLong();
         long shiftAmount = Math.min(howMany.ToLong(), size - logicalStart);
@@ -107,12 +109,12 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
     }
 
     @Override
-    public void ShiftRight(Natural pos, Natural num) {
-        if (pos == null || num == null) return;
+    public void ShiftRight(Natural pos, Natural howMany) {
+        if (pos == null || howMany == null) throw new NullPointerException("Position or howMany cannot be null!");
 
         long idx = ExcIfOutOfBound(pos);
         long size = Size().ToLong();
-        long shiftAmount = Math.min(num.ToLong(), size - idx);
+        long shiftAmount = Math.min(howMany.ToLong(), size - idx);
         if (shiftAmount <= 0) return;
         for (long i = size - 1; i >= idx + shiftAmount; i--) {
             SetAt(GetAt(Natural.Of(i - shiftAmount)), Natural.Of(i));
@@ -121,4 +123,5 @@ abstract public class CircularVectorBase<Data> extends VectorBase<Data> {
             SetAt(null, Natural.Of(i));
         }
     }
+
 }

@@ -19,7 +19,13 @@ public class LLSortedChain<Data extends Comparable<? super Data>> extends LLChai
   }
 
   public LLSortedChain(TraversableContainer<Data> con){
-        super(con);
+      super();
+      if (con != null) {
+          con.TraverseForward(dat -> {
+              this.Insert(dat);
+              return false;
+          });
+      }
   }
 
   protected LLSortedChain(long size, LLNode<Data> head, LLNode<Data> tail){

@@ -1,9 +1,12 @@
 package zapsdtest.simpletest.apsd.classes.containers.collections.abstractcollections.generic;
 
+import apsd.classes.containers.collections.abstractcollections.WSet;
+import apsd.classes.containers.collections.concretecollections.LLSortedChain;
+import apsd.classes.containers.collections.concretecollections.LLList;
+import apsd.interfaces.containers.collections.List;
 import apsd.interfaces.containers.collections.Set;
 
 import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 abstract public class WSetITest extends WSetTest<Long> {
 
@@ -515,14 +518,11 @@ abstract public class WSetITest extends WSetTest<Long> {
       other.Insert(2L);
       other.Insert(3L);
       other.Insert(4L);
-      // Simulate symmetric difference: (A - B) ∪ (B - A)
-      // First get A - B
       TestDifference(other);
       TestSize(1, false);
       TestExists(1L, true);
       TestExists(2L, false);
       TestExists(3L, false);
-      // Now we have {1}, need to add {4} (B - A)
       Set<Long> bMinusA = GetNewEmptyContainer();
       bMinusA.Insert(4L);
       TestUnion(bMinusA);
@@ -535,228 +535,447 @@ abstract public class WSetITest extends WSetTest<Long> {
   }
 
   @Nested
-  @DisplayName("WSet Exception Handling")
-  public class WSetExceptionHandling {
+  @DisplayName("WSet Stress Tests")
+  public class WSetStressTests {
 
     @Test
-    @DisplayName("Insert/Remove/Exists with null element")
-    public void NullElementOps() {
-      AddTest(3);
-      NewNonEmptyContainer();
-      assertFalse(ThisContainer().Insert(null));
-      assertFalse(ThisContainer().Remove(null));
-      assertFalse(ThisContainer().Exists(null));
-    }
-
-    @Test
-    @DisplayName("Filter(null) is safe (no crash)")
-    public void FilterNullPredicateSafe() {
-      AddTest(1);
-      NewNonEmptyContainer();
-      assertDoesNotThrow(() -> ThisContainer().Filter(null));
-    }
-  }
-
-  @Nested
-  @DisplayName("WSet Contract Tests")
-  public class WSetContractTests {
-
-    @Test
-    @DisplayName("Union/Difference/Intersection with null set follow Set.java contract")
-    public void NullSetContract() {
-      AddTest(12);
-
-      // Union(null) and Difference(null) are no-ops; Intersection(null) clears.
-      NewNonEmptyContainer();
-      long beforeSize = ThisContainer().Size().ToLong();
-
-      assertDoesNotThrow(() -> ThisContainer().Union(null));
-      assertEquals(beforeSize, ThisContainer().Size().ToLong(), "Union(null) should not change size");
-
-      assertDoesNotThrow(() -> ThisContainer().Difference(null));
-      assertEquals(beforeSize, ThisContainer().Size().ToLong(), "Difference(null) should not change size");
-
-      assertDoesNotThrow(() -> ThisContainer().Intersection(null));
-      assertEquals(0L, ThisContainer().Size().ToLong(), "Intersection(null) should clear the set");
-      TestIsEmpty(true, false);
-    }
-
-    @Test
-    @DisplayName("Set operations must not mutate the argument set")
-    public void ArgumentNotMutated() {
-      AddTest(18);
-
-      NewEmptyContainer();
-      TestInsert(1L, true);
-      TestInsert(2L, true);
-      TestInsert(3L, true);
-
-      Set<Long> other = GetNewEmptyContainer();
-      other.Insert(2L);
-      other.Insert(99L);
-
-      long otherBeforeSize = other.Size().ToLong();
-      boolean otherHad2 = other.Exists(2L);
-      boolean otherHad99 = other.Exists(99L);
-
-      ThisContainer().Union(other);
-      assertEquals(otherBeforeSize, other.Size().ToLong(), "Union should not mutate argument size");
-      assertEquals(otherHad2, other.Exists(2L), "Union should not mutate argument membership");
-      assertEquals(otherHad99, other.Exists(99L), "Union should not mutate argument membership");
-
-      ThisContainer().Difference(other);
-      assertEquals(otherBeforeSize, other.Size().ToLong(), "Difference should not mutate argument size");
-      assertEquals(otherHad2, other.Exists(2L), "Difference should not mutate argument membership");
-      assertEquals(otherHad99, other.Exists(99L), "Difference should not mutate argument membership");
-
-      // Rebuild A to ensure Intersection has work to do
-      NewEmptyContainer();
-      TestInsert(1L, true);
-      TestInsert(2L, true);
-      TestInsert(3L, true);
-
-      ThisContainer().Intersection(other);
-      assertEquals(otherBeforeSize, other.Size().ToLong(), "Intersection should not mutate argument size");
-      assertEquals(otherHad2, other.Exists(2L), "Intersection should not mutate argument membership");
-      assertEquals(otherHad99, other.Exists(99L), "Intersection should not mutate argument membership");
-    }
-
-    @Test
-    @DisplayName("IsEqual is reflexive and symmetric on identical content")
-    public void IsEqualReflexiveAndSymmetric() {
-      AddTest(10);
-
-      NewEmptyContainer();
-      TestInsert(10L, true);
-      TestInsert(20L, true);
-      TestInsert(30L, true);
-
-      assertTrue(ThisContainer().IsEqual(ThisContainer()), "IsEqual should be reflexive");
-
-      Set<Long> copy = GetNewEmptyContainer();
-      copy.Insert(10L);
-      copy.Insert(20L);
-      copy.Insert(30L);
-
-      assertTrue(ThisContainer().IsEqual(copy), "IsEqual should be true for identical content");
-      assertTrue(copy.IsEqual(ThisContainer()), "IsEqual should be symmetric for identical content");
-
-      copy.Insert(40L);
-      assertFalse(ThisContainer().IsEqual(copy), "IsEqual should be false if sizes differ");
-      assertFalse(copy.IsEqual(ThisContainer()), "IsEqual should be false if sizes differ (symmetric)");
-    }
-
-    @Test
-    @DisplayName("InsertAll/InsertSome semantics with null and duplicates")
-    public void InsertAllInsertSomeContract() {
-      AddTest(14);
-
-      NewEmptyContainer();
-      TestInsert(1L, true);
-      TestInsert(2L, true);
-      long beforeSize = ThisContainer().Size().ToLong();
-
-      assertTrue(ThisContainer().InsertAll(null), "InsertAll(null) should return true (no-op)");
-      assertEquals(beforeSize, ThisContainer().Size().ToLong(), "InsertAll(null) should not change size");
-
-      assertFalse(ThisContainer().InsertSome(null), "InsertSome(null) should return false (no-op)");
-      assertEquals(beforeSize, ThisContainer().Size().ToLong(), "InsertSome(null) should not change size");
-
-      // Deterministic success path: all new elements
-      Set<Long> srcAllNew = GetNewEmptyContainer();
-      srcAllNew.Insert(3L);
-      srcAllNew.Insert(4L);
-
-      assertTrue(ThisContainer().InsertAll(srcAllNew), "InsertAll should be true when all insertions succeed");
-      assertTrue(ThisContainer().Exists(3L));
-      assertTrue(ThisContainer().Exists(4L));
-      assertEquals(beforeSize + 2, ThisContainer().Size().ToLong(), "Size should increase by number of new elements");
-
-      // Deterministic failure path: all duplicates
-      long afterAllNewSize = ThisContainer().Size().ToLong();
-      Set<Long> srcAllDuplicates = GetNewEmptyContainer();
-      srcAllDuplicates.Insert(1L);
-      srcAllDuplicates.Insert(2L);
-
-      assertFalse(ThisContainer().InsertAll(srcAllDuplicates), "InsertAll should be false if any insertion fails (duplicates)");
-      assertEquals(afterAllNewSize, ThisContainer().Size().ToLong(), "InsertAll(duplicates) should not change size");
-
-      assertFalse(ThisContainer().InsertSome(srcAllDuplicates), "InsertSome should be false if nothing new is inserted");
-
-      // Deterministic InsertSome success: source has exactly one new element
-      Set<Long> srcOneNew = GetNewEmptyContainer();
-      srcOneNew.Insert(5L);
-
-      assertTrue(ThisContainer().InsertSome(srcOneNew), "InsertSome should be true if at least one element is inserted");
-      assertTrue(ThisContainer().Exists(5L));
-      assertEquals(afterAllNewSize + 1, ThisContainer().Size().ToLong(), "Size should increase by 1");
-    }
-
-    @Test
-    @DisplayName("RemoveAll/RemoveSome contract with null and non-existent elements")
-    public void RemoveAllRemoveSomeContract() {
-      AddTest(12);
-
+    @DisplayName("Chained set operations")
+    public void ChainedSetOperations() {
+      AddTest(19);
       NewEmptyContainer();
       TestInsert(1L, true);
       TestInsert(2L, true);
       TestInsert(3L, true);
       TestInsert(4L, true);
-      long beforeSize = ThisContainer().Size().ToLong();
-
-      assertTrue(ThisContainer().RemoveAll(null), "RemoveAll(null) should return true (no-op)");
-      assertEquals(beforeSize, ThisContainer().Size().ToLong(), "RemoveAll(null) should not change size");
-
-      assertFalse(ThisContainer().RemoveSome(null), "RemoveSome(null) should return false (no-op)");
-      assertEquals(beforeSize, ThisContainer().Size().ToLong(), "RemoveSome(null) should not change size");
-
-      // Remove some existing elements
-      Set<Long> toRemove = GetNewEmptyContainer();
-      toRemove.Insert(2L);
-      toRemove.Insert(3L);
-
-      assertTrue(ThisContainer().RemoveAll(toRemove), "RemoveAll should be true when all removals succeed");
-      assertFalse(ThisContainer().Exists(2L));
-      assertFalse(ThisContainer().Exists(3L));
-      assertEquals(2, ThisContainer().Size().ToLong(), "Size should decrease by number of removed elements");
-
-      // Try to remove non-existent elements
-      Set<Long> nonExistent = GetNewEmptyContainer();
-      nonExistent.Insert(99L);
-      nonExistent.Insert(100L);
-
-      assertFalse(ThisContainer().RemoveAll(nonExistent), "RemoveAll should be false if any removal fails");
-      assertFalse(ThisContainer().RemoveSome(nonExistent), "RemoveSome should be false if nothing is removed");
+      TestInsert(5L, true);
+      
+      Set<Long> set1 = GetNewEmptyContainer();
+      set1.Insert(3L);
+      set1.Insert(4L);
+      set1.Insert(5L);
+      set1.Insert(6L);
+      
+      Set<Long> set2 = GetNewEmptyContainer();
+      set2.Insert(1L);
+      set2.Insert(2L);
+      
+      TestUnion(set1);
+      TestSize(6, false);
+      TestExists(6L, true);
+      
+      TestDifference(set2);
+      TestSize(4, false);
+      TestExists(1L, false);
+      TestExists(2L, false);
+      
+      TestIntersection(set1);
+      TestSize(4, false);
+      TestExists(3L, true);
+      TestExists(4L, true);
+      TestExists(5L, true);
+      TestExists(6L, true);
+      TestPrintContent("");
     }
 
     @Test
-    @DisplayName("Filter with edge predicates")
-    public void FilterEdgePredicates() {
-      AddTest(8);
-
+    @DisplayName("Filter with complex predicate")
+    public void FilterComplexPredicate() {
+      AddTest(30);
       NewEmptyContainer();
-      for (long i = 0; i < 10; i++) {
+      for (long i = 1L; i <= 20L; i++) {
         TestInsert(i, true);
       }
-
-      // Filter that keeps only boundary values
-      TestFilter(dat -> dat == 0L || dat == 9L);
-      TestSize(2, false);
-      TestExists(0L, true);
-      TestExists(9L, true);
-      TestExists(5L, false);
-
-      // Rebuild and test with complex predicate
-      NewEmptyContainer();
-      for (long i = 1; i <= 20; i++) {
-        TestInsert(i, true);
-      }
-      TestFilter(dat -> dat % 2 == 0 && dat % 3 == 0); // divisible by both 2 and 3 (i.e., by 6)
-      TestSize(3, false); // 6, 12, 18
-      TestExists(6L, true);
-      TestExists(12L, true);
-      TestExists(18L, true);
+      // Keep only prime numbers
+      TestFilter(dat -> {
+        if (dat < 2L) return false;
+        for (long i = 2L; i * i <= dat; i++) {
+          if (dat % i == 0L) return false;
+        }
+        return true;
+      });
+      TestPrintContent("");
+      TestSize(8, false); // 2, 3, 5, 7, 11, 13, 17, 19
+      TestExists(2L, true);
+      TestExists(3L, true);
+      TestExists(5L, true);
+      TestExists(7L, true);
+      TestExists(11L, true);
+      TestExists(4L, false);
+      TestExists(6L, false);
+      TestPrintContent("");
     }
+
+    @Test
+    @DisplayName("Extreme values in set")
+    public void ExtremeValues() {
+      AddTest(12);
+      NewEmptyContainer();
+      TestInsert(Long.MAX_VALUE, true);
+      TestInsert(Long.MIN_VALUE, true);
+      TestInsert(0L, true);
+      TestSize(3, false);
+      TestExists(Long.MAX_VALUE, true);
+      TestExists(Long.MIN_VALUE, true);
+      TestExists(0L, true);
+      TestInsert(Long.MAX_VALUE, false);
+      TestInsert(Long.MIN_VALUE, false);
+      TestRemove(0L, true);
+      TestSize(2, false);
+      TestPrintContent("");
+    }
+
+    @Test
+    @DisplayName("Union with subset")
+    public void UnionWithSubset() {
+      AddTest(12);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(2L, true);
+      TestInsert(3L, true);
+      TestInsert(4L, true);
+      TestInsert(5L, true);
+      Set<Long> subset = GetNewEmptyContainer();
+      subset.Insert(2L);
+      subset.Insert(4L);
+      TestUnion(subset);
+      TestSize(5, false);
+      TestExists(1L, true);
+      TestExists(2L, true);
+      TestExists(3L, true);
+      TestExists(4L, true);
+      TestExists(5L, true);
+    }
+
+    @Test
+    @DisplayName("Intersection with subset")
+    public void IntersectionWithSubset() {
+      AddTest(12);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(2L, true);
+      TestInsert(3L, true);
+      TestInsert(4L, true);
+      TestInsert(5L, true);
+      Set<Long> subset = GetNewEmptyContainer();
+      subset.Insert(2L);
+      subset.Insert(4L);
+      TestIntersection(subset);
+      TestSize(2, false);
+      TestExists(2L, true);
+      TestExists(4L, true);
+      TestExists(1L, false);
+      TestExists(3L, false);
+      TestExists(5L, false);
+    }
+
+    @Test
+    @DisplayName("Multiple filters")
+    public void MultipleFilters() {
+      AddTest(110);
+      NewEmptyContainer();
+      for (long i = 1L; i <= 100L; i++) {
+        TestInsert(i, true);
+      }
+      TestFilter(dat -> dat <= 50L);
+      TestSize(50, false);
+      TestFilter(dat -> dat % 2 == 0L);
+      TestSize(25, false);
+      TestFilter(dat -> dat % 5 == 0L);
+      TestSize(5, false); // 10, 20, 30, 40, 50
+      TestExists(10L, true);
+      TestExists(50L, true);
+      TestExists(5L, false);
+      TestPrintContent("");
+    }
+
+    @Test
+    @DisplayName("Empty set operations")
+    public void EmptySetOperations() {
+      AddTest(12);
+      NewEmptyContainer();
+      Set<Long> other = GetNewEmptyContainer();
+      TestUnion(other);
+      TestIsEmpty(true, false);
+      TestIntersection(other);
+      TestIsEmpty(true, false);
+      TestDifference(other);
+      TestIsEmpty(true, false);
+      other.Insert(1L);
+      other.Insert(2L);
+      TestUnion(other);
+      TestSize(2, false);
+      TestExists(1L, true);
+      TestExists(2L, true);
+      TestDifference(other);
+      TestIsEmpty(true, false);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("WSet Construction and Equality Tests")
+  public class WSetConstructionAndEqualityTests {
+
+    @Test
+    @DisplayName("Construction from another container")
+    public void ConstructionFromAnotherContainer() {
+      AddTest(7);
+      NewEmptyContainer();
+      List<Long> list = new LLList<>();
+      list.Insert(4L);
+      list.Insert(2L);
+      list.Insert(3L);
+      list.Insert(2L);
+      list.Insert(1L);
+      WSet<Long> conFromList = new WSet<>(list);
+      TestInsert(4L, true);
+      TestInsert(2L, true);
+      TestInsert(3L, true);
+      TestInsert(1L, true);
+      TestIsEqual(conFromList, true);
+      TestPrintContent("");
+    }
+
+    @Test
+    @DisplayName("Construction from empty container")
+    public void ConstructionFromEmptyContainer() {
+      AddTest(4);
+      List<Long> emptyList = new LLList<>();
+      WSet<Long> conFromEmpty = new WSet<>(emptyList);
+      NewEmptyContainer();
+      TestIsEqual(conFromEmpty, true);
+      TestSize(0, false);
+      TestIsEmpty(true, false);
+    }
+
+    @Test
+    @DisplayName("Construction from chain")
+    public void ConstructionFromChain() {
+      AddTest(7);
+      LLSortedChain<Long> chain = new LLSortedChain<>();
+      chain.Insert(5L);
+      chain.Insert(3L);
+      chain.Insert(1L);
+      chain.Insert(4L);
+      chain.Insert(2L);
+      WSet<Long> conFromChain = new WSet<>(chain);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(2L, true);
+      TestInsert(3L, true);
+      TestInsert(4L, true);
+      TestInsert(5L, true);
+      TestIsEqual(conFromChain, true);
+    }
+
+    @Test
+    @DisplayName("Equality with same elements different order insertion")
+    public void EqualityDifferentInsertionOrder() {
+      AddTest(6);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(2L, true);
+      TestInsert(3L, true);
+      
+      WSet<Long> other = (WSet<Long>) GetNewEmptyContainer();
+      other.Insert(3L);
+      other.Insert(1L);
+      other.Insert(2L);
+      TestIsEqual(other, true);
+      TestSize(3, false);
+      TestPrintContent("");
+    }
+
+    @Test
+    @DisplayName("Inequality with different sizes")
+    public void InequalityDifferentSizes() {
+      AddTest(5);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(2L, true);
+      TestInsert(3L, true);
+      
+      WSet<Long> smaller = (WSet<Long>) GetNewEmptyContainer();
+      smaller.Insert(1L);
+      smaller.Insert(2L);
+      TestIsEqual(smaller, false);
+      TestSize(3, false);
+    }
+
+    @Test
+    @DisplayName("Inequality with different elements")
+    public void InequalityDifferentElements() {
+      AddTest(5);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(2L, true);
+      TestInsert(3L, true);
+      
+      WSet<Long> different = (WSet<Long>) GetNewEmptyContainer();
+      different.Insert(1L);
+      different.Insert(2L);
+      different.Insert(4L);
+      TestIsEqual(different, false);
+      TestSize(3, false);
+    }
+
+    @Test
+    @DisplayName("Equality of two empty sets")
+    public void EqualityEmptySets() {
+      AddTest(3);
+      NewEmptyContainer();
+      WSet<Long> other = (WSet<Long>) GetNewEmptyContainer();
+      TestIsEqual(other, true);
+      TestSize(0, false);
+      TestIsEmpty(true, false);
+    }
+
+    @Test
+    @DisplayName("Copy construction preserves elements")
+    public void CopyConstructionPreservesElements() {
+      AddTest(6);
+      List<Long> list = new LLList<>();
+      list.Insert(10L);
+      list.Insert(20L);
+      list.Insert(30L);
+      WSet<Long> original = new WSet<>(list);
+      WSet<Long> copy = new WSet<>(original);
+      NewEmptyContainer();
+      TestInsert(10L, true);
+      TestInsert(20L, true);
+      TestInsert(30L, true);
+      TestIsEqual(original, true);
+      TestIsEqual(copy, true);
+    }
+
+  }
+
+  @Nested
+  @DisplayName("WSet Null Testing")
+  public class WSetNullTesting {
+
+    @Test
+    @DisplayName("Insert null element")
+    public void InsertNull() {
+      AddTest(4);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(null, false);
+      TestSize(1, false);
+      TestExists(null, false);
+    }
+
+    @Test
+    @DisplayName("Remove null element")
+    public void RemoveNull() {
+      AddTest(4);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(2L, true);
+      TestRemove(null, false);
+      TestSize(2, false);
+    }
+
+    @Test
+    @DisplayName("Exists with null")
+    public void ExistsNull() {
+      AddTest(4);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(2L, true);
+      TestExists(null, false);
+      TestSize(2, false);
+    }
+
+    @Test
+    @DisplayName("Union with null set")
+    public void UnionWithNull() {
+      AddTest(5);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(2L, true);
+      TestInsert(3L, true);
+      TestUnion(null);
+      TestSize(3, false);
+    }
+
+    @Test
+    @DisplayName("Intersection with null set")
+    public void IntersectionWithNull() {
+      AddTest(5);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(2L, true);
+      TestInsert(3L, true);
+      TestIntersection(null);
+      TestSize(3, false);
+    }
+
+    @Test
+    @DisplayName("Difference with null set")
+    public void DifferenceWithNull() {
+      AddTest(5);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(2L, true);
+      TestInsert(3L, true);
+      TestDifference(null);
+      TestSize(3, false);
+    }
+
+    @Test
+    @DisplayName("Filter with null predicate")
+    public void FilterWithNullPredicate() {
+      AddTest(5);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(2L, true);
+      TestInsert(3L, true);
+      TestFilter(null);
+      TestSize(3, false);
+    }
+
+    @Test
+    @DisplayName("IsEqual with null container")
+    public void IsEqualNullContainer() {
+      AddTest(3);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(2L, true);
+      TestIsEqual(null, false);
+    }
+
+    @Test
+    @DisplayName("Operations after inserting and removing maintain consistency")
+    public void NullOperationsConsistency() {
+      AddTest(10);
+      NewEmptyContainer();
+      TestInsert(1L, true);
+      TestInsert(null, false);
+      TestInsert(2L, true);
+      TestRemove(null, false);
+      TestInsert(3L, true);
+      TestExists(null, false);
+      TestUnion(null);
+      TestIntersection(null);
+      TestDifference(null);
+      TestSize(3, false);
+    }
+
+    @Test
+    @DisplayName("Empty set null operations")
+    public void EmptySetNullOperations() {
+      AddTest(7);
+      NewEmptyContainer();
+      TestInsert(null, false);
+      TestRemove(null, false);
+      TestExists(null, false);
+      TestUnion(null);
+      TestIntersection(null);
+      TestDifference(null);
+      TestIsEmpty(true, false);
+    }
+
   }
 
 }

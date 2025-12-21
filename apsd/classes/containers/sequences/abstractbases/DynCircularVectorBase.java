@@ -66,17 +66,21 @@ abstract public class DynCircularVectorBase<Data> extends CircularVectorBase<Dat
 
     @Override
     public void Expand(Natural increment) {
-        if (increment == null) throw new NullPointerException("Increment argument is null.");
+        if (increment == null) return;
         Grow(increment);
         this.size += increment.ToLong();
     }
 
     @Override
     public void Reduce(Natural decrement) {
-        if (decrement == null) throw new NullPointerException("Decrement argument is null.");
+        if (decrement == null) return;
         if (decrement.ToLong() > this.size) throw new IllegalArgumentException("Decrement greater than current size.");
-        Shrink();
+
         this.size -= decrement.ToLong();
+        if (this.size == 0)
+            this.Realloc(Natural.ZERO);
+        else
+            Shrink();
     }
 
   /* ************************************************************************ */

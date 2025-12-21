@@ -15,21 +15,31 @@ public class WStack<Data> implements Stack<Data>{
     this.lst = new VList<>();
    }
 
-   public WStack(List<Data> lst){
-    if(lst == null) throw new NullPointerException("List cannot be null!");
-    this.lst = lst;
-   }
+    public WStack(List<Data> lst) {
+        if (lst == null) throw new NullPointerException("List cannot be null!");
+        this.lst = lst;
+    }
 
-   public WStack(TraversableContainer<Data> con){
-       if(con == null) throw new NullPointerException("Container cannot be null!");
-       this.lst = new VList<>(con);
-   }
+    public WStack(TraversableContainer<Data> con) {
+        this.lst = new VList<>();
+        if (con != null) {
+            con.TraverseForward(dat -> {
+                if (dat != null) this.lst.InsertLast(dat);
+                return false;
+            });
+        }
+    }
 
-   public WStack(List<Data> lst, TraversableContainer<Data> con){
-       if(lst == null || con == null) throw new NullPointerException("List and Container cannot be null!");
-       this.lst = lst;
-        con.TraverseForward(dat -> {this.lst.Insert(dat); return false;});
-   }
+    public WStack(List<Data> lst, TraversableContainer<Data> con) {
+        if (lst == null) throw new NullPointerException("List cannot be null!");
+        this.lst = lst;
+        if (con != null) {
+            con.TraverseForward(dat -> {
+                if (dat != null) this.lst.InsertLast(dat);
+                return false;
+            });
+        }
+    }
 
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */
@@ -86,7 +96,7 @@ public class WStack<Data> implements Stack<Data>{
    }
    @Override
    public void Push(Data data) {
-      if(data == null) throw new IllegalArgumentException("Data cannot be null!");
+      if(data == null) return;
       lst.InsertFirst(data);
    }
 }

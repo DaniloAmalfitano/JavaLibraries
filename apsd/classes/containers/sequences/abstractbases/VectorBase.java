@@ -25,11 +25,15 @@ abstract public class VectorBase<Data> implements Vector<Data>{
         ArrayAlloc(size);
     }
     public VectorBase(TraversableContainer<Data> con) {
-        if(con == null) throw new NullPointerException("TraversableContainer cannot be null!");
+        if (con == null) throw new NullPointerException("TraversableContainer cannot be null!");
+
         ArrayAlloc(con.Size());
+
         final MutableNatural index = new MutableNatural();
-        con.TraverseForward(dat ->{
-            SetAt(dat, index.GetNIncrement()); return false;
+        con.TraverseForward(dat -> {
+            Natural currentIdx = index.GetNIncrement();
+            this.arr[(int)currentIdx.ToLong()] = dat;
+            return false;
         });
     }
     abstract protected VectorBase<Data> NewVector(Data[] arr);

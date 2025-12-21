@@ -7,7 +7,7 @@ public interface Vector<Data> extends ReallocableContainer, MutableSequence<Data
 
     @Override
     default Natural Size() {
-      return ReallocableContainer.super.Size();
+        return Capacity();
     }
 
    default void ShiftLeft(Natural pos, Natural num) {

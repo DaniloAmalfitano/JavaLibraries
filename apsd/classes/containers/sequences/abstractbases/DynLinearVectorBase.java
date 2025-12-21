@@ -47,6 +47,7 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
 
     @Override
     public void Realloc(Natural newCapacity){
+        if(newCapacity == null) return;
         super.Realloc(newCapacity);
         if(size > newCapacity.ToLong()){
             size = newCapacity.ToLong();
@@ -64,27 +65,29 @@ abstract public class DynLinearVectorBase<Data> extends LinearVectorBase<Data> i
 
       @Override
       public void Expand(Natural increment) {
-          if (increment == null) throw new NullPointerException("Increment argument is null.");
+          if (increment == null) return;
           Grow(increment);
           this.size += increment.ToLong();
       }
 
     @Override
     public void Reduce(Natural decrement){
-        if(decrement == null) throw new NullPointerException("Size cannot be null!");
-        if(decrement.ToLong() > size){
-            throw new IllegalArgumentException("Decrement size cannot be greater than current size!");
-        }
-        if(decrement.ToLong() > arr.length){
-            throw new IllegalArgumentException("New size cannot be greater than current capacity!");
-        }
-        Shrink();
-        size -= decrement.ToLong();
-    }
+        if(decrement == null) return;
+        long decVal = decrement.ToLong();
+        if(decVal > size) throw new IllegalArgumentException("Decrement size cannot be greater than current size!");
 
+        size -= decVal;
+
+        if (size == 0)
+            Realloc(Natural.ZERO);
+        else
+            Shrink();
+
+    }
 
     @Override
     public void ArrayAlloc(Natural size) {
         super.ArrayAlloc(size);
     }
+
 }

@@ -17,7 +17,13 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
       ChainAlloc();
   }
   public WSetBase(Chn chn){
-      this.chn = chn;
+      ChainAlloc();
+      if (chn != null) {
+          chn.TraverseForward(dat -> {
+              if (dat != null) this.chn.InsertIfAbsent(dat);
+              return false;
+          });
+      }
   }
     public WSetBase(TraversableContainer<Data> con){
         ChainAlloc();
@@ -29,14 +35,20 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
         });
     }
 
-    public WSetBase(Chn chn, TraversableContainer<Data> con){
-        this.chn = chn;
-        con.TraverseForward(dat -> {
-            if (dat != null) {
-                this.chn.InsertIfAbsent(dat);
-            }
-            return false;
-        });
+    public WSetBase(Chn chn, TraversableContainer<Data> con) {
+        ChainAlloc();
+        if (chn != null) {
+            chn.TraverseForward(dat -> {
+                if (dat != null) this.chn.InsertIfAbsent(dat);
+                return false;
+            });
+        }
+        if (con != null) {
+            con.TraverseForward(dat -> {
+                if (dat != null) this.chn.InsertIfAbsent(dat);
+                return false;
+            });
+        }
     }
 
   abstract protected void ChainAlloc();
@@ -109,5 +121,4 @@ abstract public class WSetBase<Data, Chn extends Chain<Data>> implements Set<Dat
     public void Intersection(Set<Data> other) {
         chn.Intersection(other);
     }
-
 }

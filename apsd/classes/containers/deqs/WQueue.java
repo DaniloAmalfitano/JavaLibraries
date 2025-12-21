@@ -20,15 +20,27 @@ public class WQueue<Data> implements Queue<Data>{
        this.lst = lst;
    }
 
-   public WQueue(TraversableContainer<Data> con){
-       if(con == null) throw new NullPointerException("TraversableContainer cannot be null!");
-       this.lst = new VList<>(con);
-   }
 
-   public WQueue(List<Data> lst, TraversableContainer<Data> con){
-       this.lst = lst;
-       con.TraverseForward(dat -> {this.lst.Insert(dat); return false;});
-   }
+    public WQueue(TraversableContainer<Data> con){
+        this.lst = new VList<>();
+        if (con != null) {
+            con.TraverseForward(dat -> {
+                if (dat != null) this.lst.InsertLast(dat);
+                return false;
+            });
+        }
+    }
+
+    public WQueue(List<Data> lst, TraversableContainer<Data> con) {
+        if (lst == null) throw new NullPointerException("List cannot be null!");
+        this.lst = lst;
+        if (con != null) {
+            con.TraverseForward(dat -> {
+                if (dat != null) this.lst.InsertLast(dat);
+                return false;
+            });
+        }
+    }
 
   /* ************************************************************************ */
   /* Override specific member functions from Container                        */
@@ -74,7 +86,7 @@ public class WQueue<Data> implements Queue<Data>{
 
     @Override
     public void Enqueue(Data dat) {
-        if (dat == null) throw new IllegalArgumentException("Data cannot be null!");
+        if (dat == null) return;
         lst.InsertLast(dat);
     }
 }
