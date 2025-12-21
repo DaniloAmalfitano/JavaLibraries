@@ -1,7 +1,6 @@
 package apsd.interfaces.containers.collections;
 
 import apsd.interfaces.containers.base.IterableContainer;
-import apsd.interfaces.containers.iterators.ForwardIterator;
 
 public interface Set<Data> extends Collection<Data>{
 

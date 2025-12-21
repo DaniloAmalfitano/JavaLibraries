@@ -5,10 +5,8 @@ import apsd.classes.utilities.Natural;
 /** Interface: Sequence con supporto alla rimozione di un dato tramite posizione. */
 public interface RemovableAtSequence<Data> extends Sequence<Data>{
     default void RemoveAt(Natural index){
-        if(index.ToLong() < 0 || index.ToLong() >= Size().ToLong()){
-            throw new IndexOutOfBoundsException("Index out of bounds: " + index.ToLong() + "; Size: " + Size().ToLong() + "!");
-        }
-        AtNRemove(Natural.Of(index.ToLong()));
+        long idx = ExcIfOutOfBound(index);
+        AtNRemove(Natural.Of(idx));
     }
     Data AtNRemove (Natural index);
 
