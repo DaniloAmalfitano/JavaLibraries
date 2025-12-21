@@ -12,7 +12,7 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
         long predecessor = -1;
 
         while (left <= right) {
-            long mid = left + (right - left) / 2; //? utilizza la distanza per evitare overflow
+            long mid = left + (right - left) / 2;
             Natural midNat = Natural.Of(mid);
             Data midVal = GetAt(midNat);
             if (midVal.compareTo(data) < 0) {
@@ -34,7 +34,7 @@ public interface SortedChain<Data extends Comparable<? super Data>> extends Orde
         long successor = -1;
 
         while (left <= right) {
-            long mid = left + (right - left) / 2; //? utilizza la distanza per evitare overflow
+            long mid = left + (right - left) / 2;
             Natural midNat = Natural.Of(mid);
             Data midVal = GetAt(midNat);
             if (midVal.compareTo(data) > 0) {

@@ -17,19 +17,19 @@ public interface IterableContainer<Data> extends TraversableContainer<Data>{
         if (other == null) return false;
         if (this.Size().compareTo(other.Size()) != 0) return false;
 
-        ForwardIterator<Data> itThis = this.FIterator();
-        ForwardIterator<Data> itOther = other.FIterator();
+        ForwardIterator<Data> it1 = this.FIterator();
+        ForwardIterator<Data> it2 = other.FIterator();
 
-        while (itThis.IsValid() && itOther.IsValid()) {
-            Data dataThis = itThis.DataNNext();
-            Data dataOther = itOther.DataNNext();
+        while (it1.IsValid() && it2.IsValid()) {
+            Data dataThis = it1.DataNNext();
+            Data dataOther = it2.DataNNext();
 
             if ((dataThis == null && dataOther != null) ||
                     (dataThis != null && !dataThis.equals(dataOther))) {
                 return false;
             }
         }
-        return !(itThis.IsValid() || itOther.IsValid());
+        return !(it1.IsValid() || it2.IsValid());
     }
 
     /* ************************************************************************ */

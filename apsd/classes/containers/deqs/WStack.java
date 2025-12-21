@@ -16,7 +16,6 @@ public class WStack<Data> implements Stack<Data>{
    }
 
     public WStack(List<Data> lst) {
-        if (lst == null) throw new NullPointerException("List cannot be null!");
         this.lst = lst;
     }
 
@@ -31,7 +30,6 @@ public class WStack<Data> implements Stack<Data>{
     }
 
     public WStack(List<Data> lst, TraversableContainer<Data> con) {
-        if (lst == null) throw new NullPointerException("List cannot be null!");
         this.lst = lst;
         if (con != null) {
             con.TraverseForward(dat -> {

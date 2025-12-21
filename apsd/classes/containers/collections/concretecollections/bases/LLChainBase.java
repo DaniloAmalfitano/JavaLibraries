@@ -33,7 +33,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
 
         if (con == null) return;
 
-        final Box<Boolean> first = new Box<>(true);
+        Box<Boolean> first = new Box<>(true);
 
         con.TraverseForward(dat -> {
             if (dat == null) return false;
@@ -109,7 +109,7 @@ abstract public class LLChainBase<Data> implements Chain<Data> {
     @Override
     public boolean Remove(Data dat) {
         if (Size().IsZero()) return false;
-        final Box<LLNode<Data>> prev = new Box<>();
+        Box<LLNode<Data>> prev = new Box<>();
 
         return FRefIterator().ForEachForward(cur -> {
             LLNode<Data> node = cur.Get();

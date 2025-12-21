@@ -16,7 +16,6 @@ public class WQueue<Data> implements Queue<Data>{
    }
 
    public WQueue(List<Data> lst){
-       if (lst == null) throw new NullPointerException("List cannot be null!");
        this.lst = lst;
    }
 
@@ -32,7 +31,6 @@ public class WQueue<Data> implements Queue<Data>{
     }
 
     public WQueue(List<Data> lst, TraversableContainer<Data> con) {
-        if (lst == null) throw new NullPointerException("List cannot be null!");
         this.lst = lst;
         if (con != null) {
             con.TraverseForward(dat -> {

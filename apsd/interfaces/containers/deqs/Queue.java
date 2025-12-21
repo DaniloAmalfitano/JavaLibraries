@@ -9,6 +9,7 @@ public interface Queue<Data> extends ClearableContainer, InsertableContainer<Dat
     void Dequeue();
 
     default Data HeadNDequeue(){
+        if(this.IsEmpty()) return null;
         Data head = Head();
         Dequeue();
         return head;

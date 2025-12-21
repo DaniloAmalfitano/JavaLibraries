@@ -17,16 +17,16 @@ abstract public class VectorBase<Data> implements Vector<Data>{
         ArrayAlloc(new Natural(0));
     }
     public VectorBase(Data[] arr) {
-        if (arr == null) throw new NullPointerException("Array cannot be null!");
         this.arr = arr;
     }
     public VectorBase(Natural size) {
-        if(size == null) throw new NullPointerException("Size cannot be null!");
+        if(size == null)
+            ArrayAlloc(Natural.ZERO);
+        else{
         ArrayAlloc(size);
+        }
     }
     public VectorBase(TraversableContainer<Data> con) {
-        if (con == null) throw new NullPointerException("TraversableContainer cannot be null!");
-
         ArrayAlloc(con.Size());
 
         final MutableNatural index = new MutableNatural();
